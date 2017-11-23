@@ -1,3 +1,4 @@
+#!/bin/sh
 # Docker setup
 bash ./install.sh
 

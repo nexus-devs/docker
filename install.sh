@@ -1,3 +1,4 @@
+#!/bin/sh
 # Repo setup
 apt-get update -y
 apt-get install apt-transport-https ca-certificates curl software-properties-common
