@@ -1,4 +1,7 @@
 #!/bin/sh
+# Create keyfile which is used in replica set
+openssl rand -base64 741 > /data/config/keyfile
+
 # Docker entrypoint (pid 1), run as root
 [ "$1" = "mongod" ] || exec "$@" || exit $?
 
