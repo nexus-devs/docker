@@ -19,8 +19,7 @@ For Windows, make sure you're running the latest version of Windows 10. We'll us
 4. `bash` in your command line, then locate this repo and run `sudo bash install-windows.sh`
 
 ### Mac
-For Mac, you'll have to rely on a VM with a supported Linux kernel. These instructions aren't tested, but should work:
-1. Get [Boot 2 Docker](http://boot2docker.io/) and install.
+Get [Boot 2 Docker](http://boot2docker.io/) and install.
 
 <br>
 
