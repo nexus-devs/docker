@@ -7,8 +7,8 @@ rm /usr/bin/mongoperf
 VOLUME /data/db
 EXPOSE 27017 28017
 
-# Copy mongo shell scripts for db setup
-COPY ./mongo /root
+# Add hosts
+COPY ./config/hosts /data/config/hosts
 
 # Entry point for starting mongo
 COPY ./entry.sh /root
