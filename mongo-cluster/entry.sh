@@ -1,12 +1,23 @@
 #!/bin/sh
-adminPwd="123456"
-clusterPwd="123456"
-
 # Docker entrypoint (pid 1), run as root
 [ "$1" = "mongod" ] || exec "$@" || exit $?
 
 # Make sure that database is owned by user mongodb
 [ "$(stat -c %U /data/db)" = mongodb ] || chown -R mongodb /data/db
+
+# Allow port override
+if [ -z $DB_PORT ]; then
+  DB_PORT=27017 # DB_PORT not set
+fi
+
+# Run mongod instance for init process, but forked, so we can still run the
+# commands below.
+mkdir /data/logs
+mongod --fork --logpath /data/logs/mongod.log --port $DB_PORT --replSet nexus-rs
+until nc -z localhost $DB_PORT
+do
+    sleep 1
+done
 
 # Check if we already initialized our setup
 init=false
@@ -23,44 +34,45 @@ for path in \
 done
 
 # Create admin and cluster users if not already done
-if [ "$init" ]; then
+if [ $init && -z $DB_SLAVE ]; then
+  # Extend hosts with provided replica set members
+  cat "/data/config/hosts" >> "/etc/hosts"
+
+  # Generate replica set members from host file
+  master=""
   members=""
   id=0
 
-  # run mongod instance for init process
-  mkdir /data/logs
-  mongod --fork --logpath /data/logs/mongod.log
-  until nc -z localhost 27017
-  do
-      sleep 1
-  done
-
-  # Generate replica set members from host file
   while read line; do
-    host="${line##* }" # last word in line
-    members="${members}{ _id: $id, host: $host}, "
+    host="${line% *}" # last word in line
+    members="${members}{ _id: $id, host: '$host'},"
     let "id++"
   done < /data/config/hosts
 
-  # Create db admin and replica set admin, then initiate replica set
+  # Initiate replica set
   mongo "admin" <<-EOJS
-		db.createUser({
-			user: "admin",
-			pwd: "$adminPwd",
-			roles: [{ role: "root", db: "admin")}]
-		})
+    rs.initiate({
+      _id: "nexus-rs",
+      members: [${members%?}]
+    })
+	EOJS
+
+  sleep 5 # apparently mongodb needs time to set itself as primary first
+
+  # Add admin users. Requires restart without replSet flag, since replica
+  # members aren't joined yet, which means we wouldn't be on primary.
+  mongo "admin" <<-EOJS
+    db.createUser({
+      user: "admin",
+      pwd: "$DB_ADMIN_PWD",
+      roles: [{ role: "root", db: "admin"}]
+    })
     db.createUser({
       user: "clusterAdmin",
-      pwd: "$clusterPwd",
+      pwd: "$DB_CLUSTER_PWD",
       roles: [{ role: "clusterAdmin", db: "admin" }]
-    })
-    rs.initiate({
-      _id: "mongo-rs",
-      members: [$members]
     })
 	EOJS
 fi
 
-# Drop root privilege (no way back), exec provided command as user mongodb
-cmd=exec; for i; do cmd="$cmd '$i'"; done
-exec su -s /bin/sh -c "$cmd" mongodb
+while true; do sleep 1000; done
