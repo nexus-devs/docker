@@ -34,15 +34,12 @@ for path in \
 done
 
 # Create admin and cluster users if not already done
-if [ $init && -z $DB_SLAVE ]; then
+if [ $init ] && [ -z $DB_SLAVE ]; then
   # Extend hosts with provided replica set members
   cat "/data/config/hosts" >> "/etc/hosts"
 
   # Generate replica set members from host file
-  master=""
-  members=""
   id=0
-
   while read line; do
     host="${line% *}" # last word in line
     members="${members}{ _id: $id, host: '$host'},"
