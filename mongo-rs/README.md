@@ -12,7 +12,7 @@ Setup for Mongodb replica sets, including internal authentication and DNS manage
 #### Distributed Replica Set
 1. Set your replica set IPs in [/config/hosts](https://github.com/nexus-devs/docker/blob/master/mongo-cluster/config/hosts). (We'll use that for DNS records in our mongo cluster)
 2. Set your database passwords in [/config/env](https://github.com/nexus-devs/docker/blob/master/mongo-cluster/config/env)
-3. Ensure your secondary mongod instances are running first with `bash run.sh '--env DB_SLAVE=true'`
+3. Ensure your secondary mongod instances are running first with `bash run.sh '--env IS_SECONDARY=true'`
 4. Only then, run your intended primary instance with `bash run.sh`
 
 Keep in mind that the primary may switch to any other instance at runtime. But

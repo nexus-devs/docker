@@ -1,20 +1,12 @@
 #!/bin/sh
-# Docker entrypoint (pid 1), run as root
-[ "$1" = "mongod" ] || exec "$@" || exit $?
-
 # Make sure that database is owned by user mongodb
 [ "$(stat -c %U /data/db)" = mongodb ] || chown -R mongodb /data/db
-
-# Allow port override
-if [ -z $DB_PORT ]; then
-  DB_PORT=27017 # DB_PORT not set
-fi
 
 # Run mongod instance for init process, but forked, so we can still run the
 # commands below.
 mkdir /data/logs
-mongod --fork --logpath /data/logs/mongod.log --port $DB_PORT --replSet nexus-rs
-until nc -z localhost $DB_PORT
+mongod --fork --logpath /data/logs/mongod.log--replSet nexus-rs
+until nc -z localhost 27017
 do
     sleep 1
 done
@@ -33,8 +25,8 @@ for path in \
   fi
 done
 
-# Create admin and cluster users if not already done
-if [ $init ] && [ -z $DB_SLAVE ]; then
+# Set up replica cluster on primary
+if [ $init ] && [ -z $IS_SECONDARY ]; then
   # Extend hosts with provided replica set members
   cat "/data/config/hosts" >> "/etc/hosts"
 
@@ -53,8 +45,6 @@ if [ $init ] && [ -z $DB_SLAVE ]; then
     let "id++"
   done < /data/config/hosts
 
-  echo $members
-
   # Initiate replica set
   mongo "admin" <<-EOJS
     rs.initiate({
@@ -62,20 +52,20 @@ if [ $init ] && [ -z $DB_SLAVE ]; then
       members: [${members%?}]
     })
 	EOJS
+fi
 
+# Add admin users. Need to wait for replSet to set up first
+if [ $init ]; then
   sleep 5 # apparently mongodb needs time to set itself as primary first
-
-  # Add admin users. Requires restart without replSet flag, since replica
-  # members aren't joined yet, which means we wouldn't be on primary.
   mongo "admin" <<-EOJS
     db.createUser({
       user: "admin",
-      pwd: "$DB_ADMIN_PWD",
+      pwd: "$ADMIN_PWD",
       roles: [{ role: "root", db: "admin"}]
     })
     db.createUser({
       user: "clusterAdmin",
-      pwd: "$DB_CLUSTER_PWD",
+      pwd: "$CLUSTER_PWD",
       roles: [{ role: "clusterAdmin", db: "admin" }]
     })
 	EOJS
