@@ -1,2 +1,2 @@
 #!/bin/sh
-docker run --env-file ./config/env -d $@ mongo-cluster
+docker run --name rs0 --env-file ./config/env -d $@ mongo-cluster

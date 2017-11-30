@@ -19,7 +19,7 @@ do
     sleep 1
 done
 
-# Check if we already initialized our setup
+# Check if we already initialized our setup on the given volume
 init=false
 for path in \
   /data/db/WiredTiger \
@@ -41,10 +41,19 @@ if [ $init ] && [ -z $DB_SLAVE ]; then
   # Generate replica set members from host file
   id=0
   while read line; do
-    host="${line% *}" # last word in line
+    # Self-reference directly with IP, so mongo doesn't do weird things like
+    # not resolving the DNS to itself.
+    if [ "${line}" != "${line%"127.0.0.1"*}" ]; then
+      host="${line%% *}" # first word in line (IP)
+    else
+      host="${line##* }" # last word in line (DNS)
+    fi
+    echo $host
     members="${members}{ _id: $id, host: '$host'},"
     let "id++"
   done < /data/config/hosts
+
+  echo $members
 
   # Initiate replica set
   mongo "admin" <<-EOJS
