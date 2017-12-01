@@ -14,7 +14,7 @@ while read line || [ -n "$line" ]; do
 
     # Run the secondary member first
     else
-      docker run --name "rs${id}" --env-file ./config/env -d -p ${host##*:}:27017 --env IS_SECONDARY=true mongo-rs
+      docker run --name "rs$(($id - 1))" --env-file ./config/env -d -p ${host##*:}:27017 --env IS_SECONDARY=true mongo-rs
     fi
   fi
 done < ./config/members
