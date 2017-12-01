@@ -5,10 +5,9 @@ RUN \
 apk add --no-cache mongodb && \
 rm /usr/bin/mongoperf
 VOLUME /data/db
-EXPOSE 27017 27017
 
 # Add hosts
-COPY ./config/hosts /data/config/hosts
+COPY ./config/members /data/config/members
 
 # Entry point for starting mongo
 COPY ./entry.sh /root

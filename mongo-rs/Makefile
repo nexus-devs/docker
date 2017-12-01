@@ -1,5 +1,5 @@
 VERSION = 0.0.0
-IMAGE = mongo-cluster
+IMAGE = mongo-rs
 
 all:
 

@@ -2,6 +2,7 @@
 # Make sure that database is owned by user mongodb
 [ "$(stat -c %U /data/db)" = mongodb ] || chown -R mongodb /data/db
 
+
 # Run mongod instance for init process, but forked, so we can still run the
 # commands below.
 mkdir /data/logs
@@ -11,8 +12,10 @@ do
     sleep 1
 done
 
+
 # Check if we already initialized our setup on the given volume
 init=false
+
 for path in \
   /data/db/WiredTiger \
   /data/db/journal \
@@ -25,25 +28,29 @@ for path in \
   fi
 done
 
+
 # Set up replica cluster on primary
 if [ $init ] && [ -z $IS_SECONDARY ]; then
-  # Extend hosts with provided replica set members
-  cat "/data/config/hosts" >> "/etc/hosts"
 
-  # Generate replica set members from host file
+  # Extend hosts with provided replica set members
+  cat "/data/config/members" >> "/etc/hosts"
+
+  # Generate replica set members from member config
   id=0
-  while read line; do
+
+  while read line || [ -n "$line" ]; do
+
     # Self-reference directly with IP, so mongo doesn't do weird things like
     # not resolving the DNS to itself.
-    if [ "${line}" != "${line%"127.0.0.1"*}" ]; then
+    if [ "$line" != "${line%"127.0.0.1"*}" ]; then
       host="${line%% *}" # first word in line (IP)
     else
       host="${line##* }" # last word in line (DNS)
     fi
-    echo $host
-    members="${members}{ _id: $id, host: '$host'},"
+
+    members="$members{ _id: $id, host: '$host'},"
     let "id++"
-  done < /data/config/hosts
+  done < /data/config/members
 
   # Initiate replica set
   mongo "admin" <<-EOJS
@@ -53,6 +60,7 @@ if [ $init ] && [ -z $IS_SECONDARY ]; then
     })
 	EOJS
 fi
+
 
 # Add admin users. Need to wait for replSet to set up first
 if [ $init ]; then
