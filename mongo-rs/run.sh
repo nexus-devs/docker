@@ -14,14 +14,18 @@ while read line || [ -n "$line" ]; do
 
     # Run the secondary member first
     else
-      docker run --name "rs$(($id - 1))" --env-file ./config/env -d -p ${host##*:}:27017 --env IS_SECONDARY=true mongo-rs
+      echo "* Starting mongod on ${host} (SECONDARY)"
+      docker run --name "rs$(($id - 1))" --env-file config/env -d -p ${host##*:}:27017 --env IS_SECONDARY=true --net bridge $@ mongo-rs
+      echo ""
     fi
   fi
 done < ./config/members
 
 
 # Found that replica set should be initiated here
-if [ -z $rs_initiate ]; then
+if [ $rs_initiate == true ]; then
+  echo "* Starting mongod on 127.0.0.1:27017 (PRIMARY)"
   sleep 10 #TODO: should actually wait until secondaries are up
-  docker run --name rs0 --env-file ./config/env -d -p 27017:27017 mongo-rs
+  docker run --name rs0 --env-file config/env -d -p 27017:27017 --net bridge $@ mongo-rs
+  echo ""
 fi

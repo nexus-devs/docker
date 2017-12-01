@@ -6,7 +6,7 @@
 # Run mongod instance for init process, but forked, so we can still run the
 # commands below.
 mkdir /data/logs
-mongod --fork --logpath /data/logs/mongod.log--replSet nexus-rs
+mongod --fork --logpath /data/logs/mongod.log --replSet nexus-rs
 until nc -z localhost 27017
 do
     sleep 1
@@ -59,12 +59,9 @@ if [ $init ] && [ -z $IS_SECONDARY ]; then
       members: [${members%?}]
     })
 	EOJS
-fi
 
-
-# Add admin users. Need to wait for replSet to set up first
-if [ $init ]; then
   sleep 5 # apparently mongodb needs time to set itself as primary first
+
   mongo "admin" <<-EOJS
     db.createUser({
       user: "admin",
