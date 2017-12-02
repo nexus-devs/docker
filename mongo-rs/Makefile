@@ -3,6 +3,9 @@ IMAGE = mongo-rs
 
 all:
 
+keyfile:
+	openssl rand -base64 756 > config/keyfile
+
 image:
 	docker build -t $(IMAGE) --no-cache .
 
