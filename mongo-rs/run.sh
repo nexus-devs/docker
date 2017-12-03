@@ -10,40 +10,45 @@ if [ ! -f config/keyfile ]; then
 fi
 
 
-# Figure out which hosts are local, so we start them here
+# Run members locally or add them to hosts
 count=0
+add_hosts=""
+rs_initiate=false
 
-# Read replica set members
+# Check for remote members and add to hosts
 while read line || [ -n "$line" ]; do
-  if [ "$line" != "${line%"127.0.0.1"*}" ]; then
-    host="${line%% *}"
-    name="${line##* }"
+  host="${line%% *}"
+  name="${line##* }"
 
-    # First member considered primary => we need to initiate the replica set here
-    if [ $count == 0 ]; then
-      rs_initiate=true
-      rs_primary_host=$host
-      rs_primary_name=$name
+  if [ "$host" == "${host%"127.0.0.1"*}" ]; then
+    add_hosts+="--add-host ${name}:${host%%:*} "
+  fi
+done < config/members
 
-    # Run the secondary member first
-    else
-      echo ""
-      echo "* Starting ${name} on ${host} (SECONDARY)"
-      port=${host##*:}
-      docker run --name $name --env-file config/env -d -p $port:27017 --env IS_SECONDARY=true --net mongo-rs $@ mongo-rs
-    fi
+# Check for local members and start locally
+while read line || [ -n "$line" ]; do
+  host="${line%% *}"
+  name="${line##* }"
+  port=${host##*:}
+
+  if [ "$host" != "${host%"127.0.0.1"*}" ]; then
+    echo ""
+
+    # Distinguish primary from secondary. Primary will initiate the replica set
+    # and wait for secondaries to become available first.
+    [[ $count == 0 ]] && mtype="PRIMARY" || mtype="SECONDARY"
+    echo "* Starting ${name} on ${host} (${mtype})"
+    docker run --name $name \
+               -v $name:/data/db \
+               --env-file config/env \
+               -d \
+               -p $port:27017 \
+               --net mongo-rs \
+               $add_hosts \
+               $([ mtype == "SECONDARY" ] && echo "--env IS_SECONDARY=true" || echo "") \
+               $@ \
+               mongo-rs
   fi
   let "count++"
 done < config/members
 echo ""
-
-
-# Found that replica set should be initiated here
-if [ $rs_initiate == true ]; then
-  echo "* Starting ${rs_primary_name} on ${rs_primary_host} (PRIMARY)"
-
-  # Start mongod instance which initiates the replica set
-  port=${rs_primary_host##*:}
-  docker run --name $rs_primary_name --env-file config/env -d -p $port:27017 --net mongo-rs $@ mongo-rs
-  echo ""
-fi
