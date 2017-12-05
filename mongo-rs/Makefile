@@ -7,6 +7,7 @@ keyfile:
 	openssl rand -base64 756 > config/keyfile
 
 image:
+	bash util/check-keyfile.sh
 	docker build -t $(IMAGE) --no-cache .
 
 publish:

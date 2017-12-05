@@ -3,13 +3,6 @@
 [ ! "$(docker network ls | grep nexus-bridge)" ] && docker network create nexus-bridge
 
 
-# Generate keyfile for mongodb replica set internal authentication
-# (won't overwrite existing file)
-if [ ! -f config/keyfile ]; then
-  make keyfile
-fi
-
-
 # Run members locally or add them to hosts
 count=0
 add_hosts=""
@@ -51,4 +44,3 @@ while read line || [ -n "$line" ]; do
   fi
   let "count++"
 done < config/members
-echo ""
