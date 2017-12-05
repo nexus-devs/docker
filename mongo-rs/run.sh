@@ -1,6 +1,6 @@
 #!/bin/bash
 # Create local bridge network
-[ ! "$(docker network ls | grep mongo-rs)" ] && docker network create mongo-rs
+[ ! "$(docker network ls | grep nexus-bridge)" ] && docker network create nexus-bridge
 
 
 # Generate keyfile for mongodb replica set internal authentication
@@ -39,15 +39,15 @@ while read line || [ -n "$line" ]; do
     [[ $count == 0 ]] && mtype="PRIMARY" || mtype="SECONDARY"
     echo "* Starting ${name} on ${host} (${mtype})"
     docker run --name $name \
-               -v $name:/data/db \
-               --env-file config/env \
-               -d \
-               -p $port:27017 \
-               --net mongo-rs \
-               $add_hosts \
-               $([ mtype == "SECONDARY" ] && echo "--env IS_SECONDARY=true" || echo "") \
-               $@ \
-               mongo-rs
+      -v $name:/data/db     \
+      --env-file config/env \
+      -d                    \
+      -p $port:27017        \
+      --net nexus-bridge    \
+      $add_hosts            \
+      $([ mtype == "SECONDARY" ] && echo "--env IS_SECONDARY=true" || echo "") \
+      $@                    \
+      mongo-rs
   fi
   let "count++"
 done < config/members

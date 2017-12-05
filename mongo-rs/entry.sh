@@ -23,7 +23,7 @@ if [ -z $IS_SECONDARY ]; then
 fi
 
 # Run mongod main instance
-mongod --fork --logpath /data/logs/mongod.log --replSet nexus-rs --auth --keyFile /data/config/keyfile
+mongod --fork --logpath /data/logs/mongod.log --replSet nexus --auth --keyFile /data/config/keyfile
 until nc -z localhost 27017
 do
     sleep 1
@@ -51,7 +51,7 @@ if [ -z $IS_SECONDARY ]; then
   # Initiate replica set
   mongo "admin" -u clusterAdmin -p $CLUSTER_PWD --authenticationDatabase admin <<-EOJS
     rs.initiate({
-      _id: "nexus-rs",
+      _id: "nexus",
       members: [${members%?}]
     })
 	EOJS

@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:latest
 
 # Install mongodb
 RUN apk add --no-cache mongodb && rm /usr/bin/mongoperf
