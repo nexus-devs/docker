@@ -8,7 +8,7 @@ keyfile:
 
 image:
 	bash util/check-keyfile.sh
-	docker build -t $(IMAGE) --no-cache .
+	docker build -t $(IMAGE) .
 
 publish:
 	docker push $(IMAGE):$(VERSION)
