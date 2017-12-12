@@ -1,28 +1,46 @@
+/**
+ * NOTE: All paths are relative to the nexus-stats repo config folder
+ */
+const mongo = require('../hooks/mongo')
+const db = require('../hooks/db')
+
 module.exports = {
   blitz: {
-    logLevel: 'monitor',
+    logLevel: 'silly',
     environment: 'development'
   },
-  auth: {
-    core: {
-      mongoURL: 'mongodb://admin:123456@rs0,rs1,rs2/warframe-nexus-auth?authSource=admin'
-    }
+  api: {
+    redisUrl: 'redis://redis',
   },
   core: {
-    disable: true // we'll load them in index separately
+    endpointPath: __dirname + '/../api',
+    mongoUrl: 'mongodb://admin:123456@rs0,rs1,rs2/warframe-nexus-core?authSource=admin',
+    redisUrl: 'redis://redis'
+    hooks: [mongo.verifyItemIndices, db.verifyItemList]
+  },
+  auth: {
+    api: {
+      redisUrl: 'redis://redis',
+    },
+    core: {
+      mongoUrl: 'mongodb://admin:123456@rs0,rs1,rs2/warframe-nexus-auth?authSource=admin',
+      redisUrl: 'redis://redis',
+    }
   },
   view: {
+    api: {
+      redisUrl: 'redis://redis',
+    },
     core: {
-      mongoURL: 'mongodb://admin:123456@rs0,rs1,rs2/warframe-nexus-view',
+      mongoUrl: 'mongodb://admin:123456@rs0,rs1,rs2/warframe-nexus-view?authSource=admin',
+      redisUrl: 'redis://redis',
       endpointPath: __dirname + '/../view/endpoints',
       sourcePath: __dirname + '/../view',
       publicPath: __dirname + '/../assets'
     },
     client: {
-      api: 'https://api.nexus-stats.com',
-      auth: 'https://auth.nexus-stats.com',
-      user_key: 'UaGcdduMzAdMmuML9Sk45epsaxjh74x1B97qdzYkgBfI9CDaZFoYAhu5YPA6w982',
-      user_secret: 'OHCufWlBHM4izpfBcZB3HYN2IqBrFpBk8Z1xjEhlQ6VeKLgQ0pX03TjQmHNoIYEI'
+      apiUrl: 'https://api.nexus-stats.com',
+      authUrl: 'https://auth.nexus-stats.com'
     }
   }
 }
