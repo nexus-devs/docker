@@ -4,7 +4,7 @@ IMAGE = nexus-stats
 all:
 
 image:
-	docker build -t $(IMAGE) --no-cache .
+	docker build -t $(IMAGE) .
 
 publish:
 	docker push $(IMAGE):$(VERSION)
