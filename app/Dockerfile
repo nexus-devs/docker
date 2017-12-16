@@ -20,6 +20,11 @@ RUN cd /app/nexus-stats \
 # Copy blitz-js config
 COPY config /app/nexus-stats/config/
 
+# Drop root perms
+RUN adduser -D nexus \
+  && chown -R nexus /app
+USER nexus
+
 # Entry point for starting the app
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
