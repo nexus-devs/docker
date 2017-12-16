@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Install mongodb
-RUN apk add --no-cache mongodb && rm /usr/bin/mongoperf
+RUN apk add --update mongodb && rm /usr/bin/mongoperf
 
 # Add config
 COPY config/members /data/config/members
@@ -13,10 +13,10 @@ RUN mkdir /data/logs /data/db
 RUN chown -R mongodb /data
 
 # Entry point for starting mongo
-COPY entry.sh /
+COPY entrypoint.sh /
 
 # Switch to non-root user
 USER mongodb
 RUN chmod 400 /data/config/keyfile
 
-ENTRYPOINT [ "/entry.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]

@@ -3,7 +3,7 @@ FROM alpine:latest
 ENV NGINX_VERSION=1.12.2
 
 # Get build requirements
-RUN apk --update add build-base ca-certificates linux-headers openssl openssl-dev pcre pcre-dev wget zlib zlib-dev
+RUN apk add --update build-base ca-certificates linux-headers openssl openssl-dev pcre pcre-dev wget zlib zlib-dev
 
 # Get nginx source files
 RUN cd /tmp \

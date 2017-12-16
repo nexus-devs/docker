@@ -29,7 +29,6 @@ do
     sleep 1
 done
 
-
 # Set up replica cluster on primary
 if [ -z $IS_SECONDARY ]; then
 

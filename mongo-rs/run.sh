@@ -24,6 +24,7 @@ while read line || [ -n "$line" ]; do
   name="${line##* }"
   port=${host##*:}
 
+  # if host DOES include 127.0.0.1 (bash is weird)
   if [ "$host" != "${host%"127.0.0.1"*}" ]; then
     echo ""
 
@@ -38,7 +39,7 @@ while read line || [ -n "$line" ]; do
       -p $port:27017        \
       --net nexus-bridge    \
       $add_hosts            \
-      $([ mtype == "SECONDARY" ] && echo "--env IS_SECONDARY=true" || echo "") \
+      $([ $mtype == "SECONDARY" ] && echo "--env IS_SECONDARY=true" || echo "") \
       $@                    \
       mongo-rs
   fi

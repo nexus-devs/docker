@@ -1,3 +1,4 @@
+#!/bin/bash
 # Generate keyfile for mongodb replica set internal authentication
 # (won't overwrite existing file)
 if [ ! -f config/keyfile ]; then

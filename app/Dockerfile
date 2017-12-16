@@ -1,14 +1,25 @@
 FROM alpine:latest
 
 # Install node.js and npm (LTS)
-RUN apk add --no-cache nodejs
+RUN apk add --update nodejs \
+  && npm install pm2 -g
 
-# Get the nexus-stats repo
-RUN apk add --no-cache git python build-base \
-  && npm install node-gyp -g \
-  && mkdir /app \
+# Install build requirements
+RUN apk add --update git python build-base libpng-dev \
+  && npm install node-gyp -g
+
+# Clone the nexus-stats repo
+RUN mkdir /app \
   && cd app \
-  && git clone https://github.com/nexus-devs/nexus-stats \
-  && cd nexus-stats \
+  && git clone https://github.com/nexus-devs/nexus-stats
+
+# Build node modules
+RUN cd /app/nexus-stats \
   && npm install
-COPY config/blitz.config.js /app/nexus-stats/config
+
+# Copy blitz-js config
+COPY config /app/nexus-stats/config/
+
+# Entry point for starting the app
+COPY entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh" ]
