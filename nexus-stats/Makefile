@@ -1,5 +1,5 @@
-VERSION = 0.0.0
-IMAGE = nexus-stats
+IMAGE = app
+REGISTRY = 127.0.0.1:5000
 
 all:
 
@@ -15,7 +15,5 @@ keypair:
 
 image:
 	bash util/check-keypair.sh
-	docker build -t $(IMAGE) .
-
-publish:
-	docker push $(IMAGE):$(VERSION)
+	docker build -t $(REGISTRY)/$(IMAGE) .
+	docker push $(REGISTRY)/$(IMAGE)

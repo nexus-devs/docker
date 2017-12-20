@@ -1,16 +1,7 @@
-version: '3'
+version: '3.4'
 
 services:
-  mongodb:
-    build: mongo-rs
   redis:
-    build: redis
-  web:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    image: 127.0.0.1:5000/redis
     ports:
-      - "8000:8000"
-    depends_on:
-      - db
+      - 6379:6379
