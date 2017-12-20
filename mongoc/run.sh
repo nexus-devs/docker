@@ -1,6 +1,4 @@
 #!/bin/sh
-[ ! "$(docker network ls | grep nexus-app)" ] && docker network create --driver overlay nexus-app
-
 docker service create --name nexus-mongo \
   --replicas 3 \
   -p 27017:27017 \
@@ -14,6 +12,6 @@ docker service create --name nexus-mongoc \
   -p 9999:9999 \
   --detach=false \
   --mount type=bind,src=//var/run/docker.sock,dst=/var/run/docker.sock \
-  --mount type=bind,src=/d/dev/nexus-stats/docker/mongoc,dst=/app \
+  --mount type=bind,src=/c/dev/nexus-stats/docker/mongoc,dst=/app \
   --network=nexus-app \
   127.0.0.1:5000/mongoc

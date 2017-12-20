@@ -14,6 +14,7 @@ VOLUME [ "/data/db" ]
 
 # Switch to non-root user
 USER mongodb
-RUN chmod 400 /data/config/keyfile
 
-ENTRYPOINT [ "mongod", "--replSet", "nexus-rs", "--auth" ]
+# Entrypoint
+COPY entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh" ]
