@@ -4,4 +4,6 @@ FROM alpine:latest
 RUN apk add --no-cache python3 docker mongodb \
 	&& pip3 install docker pymongo
 
-ENTRYPOINT [ "top" ]
+COPY controller.py /
+
+ENTRYPOINT [ "python3", "-u", "/controller.py" ]
