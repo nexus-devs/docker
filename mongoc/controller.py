@@ -32,12 +32,8 @@ def get_host_names():
     return host_names
 
 
-def connect(target):
-    return pymongo.MongoClient('mongodb://%s:%s@%s/?authSource=admin' % ('admin', pwd, target), 27017)
-
-
 def get_rs_config(hosts):
-    config = { '_id': 'nexus-rs', 'members': [] }
+    config = { '_id': 'nexus', 'members': [] }
 
     for i in range(len(hosts)):
         config['members'].append({ '_id': i, 'host': hosts[i] + ':27017' })
@@ -55,6 +51,13 @@ def rs_initiate(target, config):
         pass
 
 
+def rs_reconfig(config):
+    mongo = pymongo.MongoClient(replicaset='nexus', username='admin',
+                                password=pwd, authSource='admin')
+    mongo.admin.command('replSetReconfig', config)
+    mongo.close()
+
+
 # Shut down the initiation listener without initiating. This will be necessary
 # for every container that we do NOT initiate on. (so basically all but one)
 def kill_listeners(hosts):
@@ -70,27 +73,31 @@ def kill_listeners(hosts):
 # Application Logic
 # --------------------
 while True:
-    print('* Checking for new hosts..')
     hosts_current = get_host_names()
     added = [host for host in hosts_current if host not in hosts]
-    print(hosts_current)
     active = [host for host in hosts_current if host not in added]
+    config = get_rs_config(hosts_current)
+
+    print('* Checking for new hosts..')
+    print(hosts_current)
 
     # If new hosts detected: rs.reconfig() or rs.initiate() with available hosts
     if len(added):
         if len(active):
             print('> Found new hosts! Adding..')
+            rs_reconfig(config)
+            print('> Reconfigured replica set. Killing listeners on new nodes..')
 
         # Send rs.initiate() to single container's listener, tell the others to
         # shutdown without initializing.
         else:
             print('> First time setup, initiating on ' + added[0])
-            rs_initiate(added[0], get_rs_config(hosts_current))
+            rs_initiate(added[0], config)
+            print('> Replica set initiated! Killing remaining listeners..')
 
-            # Kill remaining listeners
-            time.sleep(30)
-            added.pop(0)
-            kill_listeners(added)
+        # Kill listeners of new nodes in both cases
+        kill_listeners(added)
+        print('> Listeners killed, replica set is now ready!')
     else:
         print('> Nothing new.')
 

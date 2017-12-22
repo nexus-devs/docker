@@ -8,28 +8,25 @@
 
 from flask import Flask
 from flask import request
-import pymongo
-import json
+import sys
 import time
 import requests
+import json
+import pymongo
 
 # Config
 with open('/run/secrets/mongo-admin-pwd') as f: pwd = f.read().rstrip()
 app = Flask(__name__)
-i_can_die_now = False
 
-def add_admin():
-    # Create admin user
-    mongo = pymongo.MongoClient(replicaset='nexus-rs')
-    time.sleep(10) # wait for connection
-    mongo.admin.add_user('admin', pwd, roles=[{ 'role': 'root', 'db': 'admin' }])
 
-# Listen to routes
+# Kill switch to exit this process
 @app.route('/kill', methods=['GET'])
 def kill():
-    i_can_die_now = True
+    sys.exit()
     return "ok"
 
+
+# Initiate replica set with provided config
 @app.route('/initiate', methods=['POST'])
 def initiate():
     config = request.json['config']
@@ -38,25 +35,45 @@ def initiate():
 
     # Connect to mongo and initiate, then add admin user
     if secret == pwd:
+
+        # Init
         mongo = pymongo.MongoClient()
         mongo.admin.command('replSetInitiate', config)
-        mongo.close()
-        add_admin()
 
-        i_can_die_now = True
+        # Get primary
+        time.sleep(20)
+        rs = mongo.admin.command('replSetGetStatus')
+        mongo.close()
+        primary = None
+        for member in rs['members']:
+            if member['stateStr'] == 'PRIMARY':
+                primary = member['name'].split(':')[0]
+
+        # Create admin user on primary (either here or remote)
+        # > Here
+        if primary == target:
+            admin()
+        # > Remote
+        else:
+            try:
+                requests.get('http://' + primary + ':27027/admin')
+            except:
+                pass
+
         return "ok"
+
+    # Incorrect secret
     else:
         return '403'
 
+
+# Create admin user. This only gets triggered on the primary container in order
+# to make use of the localhost exception for creating users.
 @app.route('/admin', methods=['GET'])
 def admin():
-    add_admin()
+    mongo = pymongo.MongoClient()
+    mongo.admin.add_user('admin', pwd, roles=[{ 'role': 'root', 'db': 'admin' }])
+    mongo.close()
     return "ok"
 
 app.run(host='0.0.0.0', port=27027)
-
-# Kill check
-while True:
-    if i_can_die_now:
-        quit()
-    time.sleep(10)

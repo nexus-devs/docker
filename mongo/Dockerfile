@@ -3,7 +3,7 @@ FROM alpine:latest
 # Install mongodb
 RUN apk add --update mongodb && rm /usr/bin/mongoperf \
   && apk add --no-cache python3 build-base \
-  && pip3 install pymongo flask \
+  && pip3 install pymongo flask requests \
   && apk del build-base
 
 # Create database volume directory so we can get perms for mongodb user
