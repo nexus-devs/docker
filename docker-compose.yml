@@ -1,16 +1,42 @@
-version: '3'
+version: '3.4'
+
 
 services:
-  mongodb:
-    build: mongo-rs
-  redis:
-    build: redis
-  web:
-    build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+  mongo:
+    image: 127.0.0.1:5000/mongo
+    deploy:
+      replicas: 3
+    networks:
+      - nexus_app
+    secrets:
+      - mongo-keyfile
+      - mongo-admin-pwd
+
+  mongoc:
+    image: 127.0.0.1:5000/mongoc
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    environment:
+      - SERVICE_NAME=nexus_mongo
+    networks:
+      - nexus_app
+    secrets:
+      - mongo-admin-pwd
     volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
+      - //var/run/docker.sock:/var/run/docker.sock
+
+
+networks:
+  nexus_app:
+    external: true
+
+
+secrets:
+  mongo-keyfile:
+    external: true
+
+  mongo-admin-pwd:
+    external: true
