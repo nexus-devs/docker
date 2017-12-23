@@ -16,6 +16,8 @@ import pymongo
 with open('/run/secrets/mongo-admin-pwd') as f: pwd = f.read().rstrip()
 docker = docker.APIClient(base_url='unix://var/run/docker.sock')
 service = os.environ['SERVICE_NAME'] or 'mongo'
+version = 0
+config = { '_id': 'nexus', 'version': version, 'members': [] }
 hosts = []
 
 
@@ -33,10 +35,29 @@ def get_host_names():
 
 
 def get_rs_config(hosts):
-    config = { '_id': 'nexus', 'members': [] }
+    global version
+    members = list(config['members']) # clone list so we can mutate in loop
 
+    # Remove old hosts
+    for mongo in members:
+        host = mongo['host'].split(':')[0]
+
+        # Already exists => remove from new hosts
+        if host in hosts:
+            hosts.remove(host)
+        # Got dropped => remove from config
+        else:
+            config['members'] = [m for m in config['members'] if m['_id'] != mongo['_id']]
+
+    # Set new version
+    version += 1
+    config['version'] = version
+
+    # Append new hosts to config
+    x = len(members) - 1
+    last_id = members[x]['_id'] if x >= 0 else 0
     for i in range(len(hosts)):
-        config['members'].append({ '_id': i, 'host': hosts[i] + ':27017' })
+        config['members'].append({ '_id': last_id + i + 1, 'host': hosts[i] + ':27017' })
     return config
 
 
@@ -51,9 +72,9 @@ def rs_initiate(target, config):
         pass
 
 
-def rs_reconfig(config):
-    mongo = pymongo.MongoClient(replicaset='nexus', username='admin',
-                                password=pwd, authSource='admin')
+def rs_reconfig(target, config):
+    mongo = pymongo.MongoClient(target + ':27017', replicaset='nexus',
+                                username='admin', password=pwd, authSource='admin')
     mongo.admin.command('replSetReconfig', config)
     mongo.close()
 
@@ -76,20 +97,19 @@ while True:
     hosts_current = get_host_names()
     added = [host for host in hosts_current if host not in hosts]
     active = [host for host in hosts_current if host not in added]
-    config = get_rs_config(hosts_current)
 
     print('* Checking for new hosts..')
     print(hosts_current)
 
     # If new hosts detected: rs.reconfig() or rs.initiate() with available hosts
-    if len(added):
+    if len(added) or len(hosts_current) != len(hosts):
+        config = get_rs_config(list(hosts_current))
+        time.sleep(30) # Give container enough time to start up
+
         if len(active):
             print('> Found new hosts! Adding..')
-            rs_reconfig(config)
+            rs_reconfig(active[0], config)
             print('> Reconfigured replica set. Killing listeners on new nodes..')
-
-        # Send rs.initiate() to single container's listener, tell the others to
-        # shutdown without initializing.
         else:
             print('> First time setup, initiating on ' + added[0])
             rs_initiate(added[0], config)
