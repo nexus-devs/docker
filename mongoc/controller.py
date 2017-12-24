@@ -25,6 +25,20 @@ hosts = []
 # --------------------
 # Network/DB functions
 # --------------------
+# Ping listener to figure out when container is ready
+def ping(hosts):
+    for host in hosts:
+        resolved = False
+
+        while not resolved:
+            try:
+                requests.get('http://' + host + ':27027/ping')
+                resolved = True
+            except:
+                time.sleep(1)
+    time.sleep(5) # grace period for mongod after script is running
+
+
 def get_host_names():
     containers = docker.tasks(filters = { 'service': service })
     host_names = []
@@ -104,7 +118,7 @@ while True:
     # If new hosts detected: rs.reconfig() or rs.initiate() with available hosts
     if len(added) or len(hosts_current) != len(hosts):
         config = get_rs_config(list(hosts_current))
-        time.sleep(30) # Give container enough time to start up
+        ping(added)
 
         if len(active):
             print('> Found new hosts! Adding..')

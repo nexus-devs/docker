@@ -16,4 +16,9 @@ docker service create -d \
 make images
 
 # Deploy nexus stack
-docker stack deploy --compose-file docker-compose.yml nexus
+if [ $1 == '--dev' ]; then
+  # sed -i "/<bind volume placeholder>/c\			- $2:/destination/path"
+  docker stack deploy --compose-file docker-compose-dev.yml nexus
+else
+  docker stack deploy --compose-file docker-compose.yml nexus
+fi
