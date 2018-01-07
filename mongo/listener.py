@@ -18,10 +18,19 @@ import pymongo
 with open('/run/secrets/mongo-admin-pwd') as f: pwd = f.read().rstrip()
 app = Flask(__name__)
 
-# Ping to check when listener is up
+# Ping to check when mongodb is up
 @app.route('/ping', methods=['GET'])
 def ping():
-    return "pong"
+    up = False
+    mongo = pymongo.MongoClient()
+
+    while not up:
+        if mongo.admin.command('ping')['ok']:
+            up = True
+            mongo.close()
+            return "pong"
+        else:
+            time.sleep(1)
 
 # Kill switch to exit this process
 @app.route('/kill', methods=['GET'])

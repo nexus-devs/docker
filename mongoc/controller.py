@@ -36,7 +36,6 @@ def ping(hosts):
                 resolved = True
             except:
                 time.sleep(1)
-    time.sleep(5) # grace period for mongod after script is running
 
 
 def get_host_names():
