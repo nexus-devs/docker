@@ -25,4 +25,4 @@ COPY config/redis-override.conf /etc/redis/redis-override.conf
 
 # Drop root perms and run server
 USER redis
-CMD redis-server /etc/redis/redis.conf
+ENTRYPOINT [ "redis-server", "/etc/redis/redis.conf" ]

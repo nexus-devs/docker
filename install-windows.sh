@@ -1,4 +1,6 @@
 #!/bin/sh
+sudo true
+
 # Docker setup
 bash ./install.sh
 

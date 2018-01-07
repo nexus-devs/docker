@@ -15,10 +15,5 @@ docker service create -d \
 # Build images and push to our registry
 make images
 
-# Deploy nexus stack
-if [ $1 == '--dev' ]; then
-  # sed -i "/<bind volume placeholder>/c\			- $2:/destination/path"
-  docker stack deploy --compose-file docker-compose-dev.yml nexus
-else
-  docker stack deploy --compose-file docker-compose.yml nexus
-fi
+# Deploy to swarm
+bash deploy.sh $@

@@ -14,6 +14,8 @@ services:
 
   mongoc:
     image: 127.0.0.1:5000/mongoc
+    depends_on:
+      - mongo
     deploy:
       replicas: 1
       placement:
@@ -28,6 +30,28 @@ services:
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
 
+  redis:
+    image: 127.0.0.1:5000/redis
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+
+  app:
+    image: 127.0.0.1:5000/nexus-stats
+    depends_on:
+      - mongo
+      - mongoc
+      - redis
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - mongo-admin-pwd
+      - nexus-private-key
+      - nexus-public-key
+
 
 networks:
   nexus_app:
@@ -39,4 +63,10 @@ secrets:
     external: true
 
   mongo-admin-pwd:
+    external: true
+
+  nexus-private-key:
+    external: true
+
+  nexus-public-key:
     external: true

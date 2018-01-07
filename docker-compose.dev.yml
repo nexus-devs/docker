@@ -1,0 +1,12 @@
+version: '3.4'
+
+
+services:
+  app:
+    image: 127.0.0.1:5000/nexus-stats-dev
+    volumes:
+      - VOLUME PLACEHOLDER
+    ports:
+      - 3010:3010
+      - 3020:3020
+      - 3030:3030
