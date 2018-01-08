@@ -1,0 +1,104 @@
+version: '3.4'
+
+
+services:
+
+  # API nodes
+  api_warframe:
+    image: 127.0.0.1:5000/nexus-api-warframe
+    depends_on:
+      - redis
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-public-key
+
+  api_auth:
+    image: 127.0.0.1:5000/nexus-api-auth
+    depends_on:
+      - redis
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-public-key
+
+  api_view:
+    image: 127.0.0.1:5000/nexus-api-view
+    depends_on:
+      - redis
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-public-key
+
+
+  # Core nodes
+  core_warframe:
+    image: 127.0.0.1:5000/nexus-core-warframe
+    depends_on:
+      - redis
+      - mongo
+      - mongoc
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-core-warframe-key
+      - nexus-core-warframe-secret
+      - mongo-admin-pwd
+
+  core_auth:
+    image: 127.0.0.1:5000/nexus-core-auth
+    depends_on:
+      - redis
+      - mongo
+      - mongoc
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-core-auth-key
+      - nexus-core-auth-secret
+      - mongo-admin-pwd
+      - nexus-private-key
+
+  core_view:
+    image: 127.0.0.1:5000/nexus-core-view
+    depends_on:
+      - redis
+      - mongo
+      - mongoc
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-core-view-key
+      - nexus-core-view-secret
+      - mongo-admin-pwd
+
+
+# Core credentials
+secrets:
+  nexus-core-warframe-key:
+    external: true
+  nexus-core-warframe-secret:
+    external: true
+
+  nexus-core-auth-key:
+    external: true
+  nexus-core-auth-secret:
+    external: true
+
+  nexus-core-view-key:
+    external: true
+  nexus-core-view-secret:
+    external: true

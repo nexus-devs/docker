@@ -37,22 +37,6 @@ services:
     networks:
       - nexus_app
 
-  app:
-    image: 127.0.0.1:5000/nexus-stats
-    depends_on:
-      - mongo
-      - mongoc
-      - redis
-    deploy:
-      replicas: 1
-    networks:
-      - nexus_app
-    secrets:
-      - mongo-admin-pwd
-      - nexus-private-key
-      - nexus-public-key
-
-
 networks:
   nexus_app:
     external: true

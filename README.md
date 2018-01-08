@@ -9,8 +9,7 @@ configuration.
 
 ## Why Docker?
 If you're unfamiliar with docker, it may seem like just another layer of
-complexity to maintain, but here's a few reasons why it makes our lives easier
-and why we cannot live without it:
+complexity to maintain, but here's a few reasons why we cannot live without it:
 
 **Production** <br>
 - Consistent environments. We spin up literally the same containers everywhere,

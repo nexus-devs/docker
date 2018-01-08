@@ -4,8 +4,7 @@
 const fs = require('fs')
 const certPrivate = fs.readFileSync(`/run/secrets/nexus-private-key`, 'utf-8')
 const certPublic = fs.readFileSync(`/run/secrets/nexus-public-key`, 'utf-8')
-const mongo = require('../hooks/mongo')
-const db = require('../hooks/db')
+const wf = require('../hooks/warframe.js')
 const dbSecret = fs.readFileSync(`/run/secrets/mongo-admin-pwd`, 'utf-8').replace(/(\n|\r)+$/, '')
 const mongoUrl = `mongodb://admin:${dbSecret}@mongo/admin?replicaSet=nexus`
 const redisUrl = 'redis://redis'
@@ -24,7 +23,7 @@ module.exports = {
     mongoUrl,
     mongoDb: 'nexus-core-warframe',
     redisUrl,
-    hooks: [mongo.verifyItemIndices, db.verifyItemList]
+    hooks: [ wf.verifyIndices, wf.verifyItemList ]
   },
   auth: {
     api: {
