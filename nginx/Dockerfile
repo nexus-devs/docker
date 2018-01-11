@@ -23,12 +23,15 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
     --with-threads \
   && make \
   && make install \
+  && mkdir -p /etc/nginx/conf/certs \
   && rm -rf /tmp/* \
   && apk del build-base linux-headers openssl-dev pcre-dev wget zlib-dev \
   && rm -rf /var/cache/apk/*
 
+COPY config /etc/nginx/conf/
+COPY certs /etc/nginx/conf/certs/
+
 # Add nginx user (wouldn't wanna run as root)
 RUN adduser -D nginx
 
-EXPOSE 80 443
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

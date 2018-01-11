@@ -2,6 +2,16 @@ version: '3.4'
 
 
 services:
+  nginx:
+    image: 127.0.0.1:5000/nginx
+    depends_on:
+      - api_warframe
+      - api_auth
+      - api_view
+    deploy:
+      replicas: 1
+    networks:
+      - nexus_app
 
   # API nodes
   api_warframe:

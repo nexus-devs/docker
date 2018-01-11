@@ -10,7 +10,7 @@ RUN mkdir -p /app/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
   && npm install node-gyp -g \
-  && npm install \
+  && npm i \
   && chown -R nexus /app/nexus-stats/node_modules/blitz-js-view
 
 # Override config
