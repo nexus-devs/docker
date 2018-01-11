@@ -9,7 +9,8 @@ const redisUrl = 'redis://redis'
 module.exports = {
   blitz: {
     logLevel: 'monitor',
-    environment: 'production'
+    environment: 'production',
+    skipAuthCheck: true
   },
   api: {
     disable: true
@@ -22,8 +23,8 @@ module.exports = {
       disable: true
     },
     core: {
-      apiUrl: 'http://api_auth',
-      authUrl: 'http://api_auth',
+      apiUrl: 'http://api_auth:3000',
+      authUrl: 'http://api_auth:3000',
       userKey,
       userSecret,
       mongoUrl,

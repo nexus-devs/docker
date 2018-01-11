@@ -9,15 +9,16 @@ const redisUrl = 'redis://redis'
 module.exports = {
   blitz: {
     logLevel: 'monitor',
-    environment: 'production'
+    environment: 'production',
+    skipAuthCheck: true
   },
   api: {
     disable: true
   },
   core: {
     endpointPath: __dirname + '/../api/core-warframe',
-    apiUrl: 'http://api_warframe',
-    authUrl: 'http://api_auth',
+    apiUrl: 'http://api_warframe:3000',
+    authUrl: 'http://api_auth:3000',
     userKey,
     userSecret,
     mongoUrl,

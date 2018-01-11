@@ -25,6 +25,10 @@ services:
       - nexus_app
     secrets:
       - nexus-public-key
+      - nexus-private-key
+      - nexus-core-auth-key
+      - nexus-core-auth-secret
+      - mongo-admin-pwd
 
   api_view:
     image: 127.0.0.1:5000/nexus-api-view
@@ -45,6 +49,7 @@ services:
       - redis
       - mongo
       - mongoc
+      - api_warframe
     deploy:
       replicas: 1
     networks:
@@ -60,6 +65,7 @@ services:
       - redis
       - mongo
       - mongoc
+      - api_auth
     deploy:
       replicas: 1
     networks:
@@ -76,6 +82,7 @@ services:
       - redis
       - mongo
       - mongoc
+      - api_view
     deploy:
       replicas: 1
     networks:

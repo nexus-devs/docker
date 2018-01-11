@@ -8,7 +8,8 @@ const redisUrl = 'redis://redis'
 module.exports = {
   blitz: {
     logLevel: 'monitor',
-    environment: 'production'
+    environment: 'production',
+    skipAuthCheck: true
   },
   api: {
     disable: true
@@ -27,8 +28,8 @@ module.exports = {
       endpointPath: __dirname + '/../view/endpoints',
       sourcePath: __dirname + '/../view',
       publicPath: __dirname + '/../assets',
-      apiUrl: 'http://api_view',
-      authUrl: 'http://api_auth',
+      apiUrl: 'http://api_view:3000',
+      authUrl: 'http://api_auth:3000',
       userKey,
       userSecret,
       mongoUrl,

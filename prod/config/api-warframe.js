@@ -5,10 +5,11 @@ const redisUrl = 'redis://redis'
 module.exports = {
   blitz: {
     logLevel: 'monitor',
-    environment: 'production'
+    environment: 'production',
+    skipAuthCheck: true
   },
   api: {
-    port: 80,
+    port: 3000,
     redisUrl,
     certPublic,
     cacheExp: 60
