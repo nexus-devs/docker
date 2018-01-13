@@ -26,6 +26,7 @@ module.exports = {
     },
     core: {
       disable: true
-    }
+    },
+    skipWebpackBuild: true
   }
 }

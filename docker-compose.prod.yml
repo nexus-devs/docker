@@ -12,6 +12,9 @@ services:
       replicas: 1
     networks:
       - nexus_app
+    ports:
+      - 80:80
+      - 443:443
 
   # API nodes
   api_warframe:

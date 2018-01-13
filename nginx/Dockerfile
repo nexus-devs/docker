@@ -23,7 +23,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
     --with-threads \
   && make \
   && make install \
-  && mkdir -p /etc/nginx/conf/certs \
+  && mkdir -p /etc/nginx/conf/certs /etc/nginx/logs \
   && rm -rf /tmp/* \
   && apk del build-base linux-headers openssl-dev pcre-dev wget zlib-dev \
   && rm -rf /var/cache/apk/*
