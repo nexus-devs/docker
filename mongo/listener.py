@@ -9,6 +9,7 @@
 from flask import Flask
 from flask import request
 import sys
+import shutil
 import time
 import requests
 import json
@@ -17,6 +18,7 @@ import pymongo
 # Config
 with open('/run/secrets/mongo-admin-pwd') as f: pwd = f.read().rstrip()
 app = Flask(__name__)
+
 
 # Ping to check when mongodb is up
 @app.route('/ping', methods=['GET'])
@@ -32,11 +34,6 @@ def ping():
         else:
             time.sleep(1)
 
-# Kill switch to exit this process
-@app.route('/kill', methods=['GET'])
-def kill():
-    sys.exit()
-    return "ok"
 
 
 # Initiate replica set with provided config
@@ -78,6 +75,7 @@ def initiate():
     # Incorrect secret
     else:
         return '403'
+
 
 
 # Create admin user. This only gets triggered on the primary container in order
