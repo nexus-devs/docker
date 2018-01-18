@@ -9,12 +9,12 @@ import time
 import docker
 import requests
 import replica
-import backup
 
 # Config
 docker = docker.APIClient(base_url='unix://var/run/docker.sock')
 service = os.environ['SERVICE_NAME'] or 'mongo'
 hosts = []
+timer = time.time()
 
 
 # Ping listener to figure out when container is ready
@@ -56,10 +56,17 @@ while True:
         ping(added) # Wait for new nodes to run mongo
 
         # Manage replica set changes or initiate
-        replica.config(hosts_current, active, added)
+        replica.reconfig(hosts_current, active, added)
     else:
         print('> Nothing new.')
 
     print(' ')
     hosts = hosts_current
+
+    # Take backup every 24h
+    if time.time() - timer >= 60 * 5:
+        print('* Taking automatic backups...')
+        replica.backup()
+        timer = time.time()
+
     time.sleep(5) # repeat this check every 5 seconds

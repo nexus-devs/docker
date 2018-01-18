@@ -29,7 +29,7 @@ services:
       - mongo-admin-pwd
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
-      - mongo_backup:/data/backup
+      - mongo_backup:/data/backups
 
   redis:
     image: 127.0.0.1:5000/redis

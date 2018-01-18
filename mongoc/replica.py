@@ -6,12 +6,14 @@ import pymongo
 with open('/run/secrets/mongo-admin-pwd') as f: pwd = f.read().rstrip()
 version = 0
 config = { '_id': 'nexus', 'version': version, 'members': [] }
+hidden = ''
 
 
 # Returns replica set config containing all hosts passed as param
 def get_rs_config(hosts):
     global version
-    members = list(config['members']) # clone list so we can mutate in loop
+    global hidden
+    members = config['members']
 
     # Remove old hosts
     for mongo in members:
@@ -24,15 +26,25 @@ def get_rs_config(hosts):
         else:
             config['members'] = [m for m in config['members'] if m['_id'] != mongo['_id']]
 
-    # Set new version
+    # Set new version (can't do rs.reconfig() without this)
     version += 1
     config['version'] = version
 
     # Append new hosts to config
     x = len(members) - 1
     last_id = members[x]['_id'] if x >= 0 else 0
+
     for i in range(len(hosts)):
-        config['members'].append({ '_id': last_id + i + 1, 'host': hosts[i] + ':27017' })
+        member = { '_id': last_id + i + 1, 'host': hosts[i] + ':27017' }
+
+        # Make last member hidden so we can take backups without
+        # interrupting the service.
+        if i >= len(hosts) - 1:
+            member['priority'] = 0
+            hidden = hosts[i]
+            print('> Choosing hidden member: ' + hosts[i])
+
+        config['members'].append(member)
     return config
 
 
@@ -60,8 +72,8 @@ def rs_reconfig(target, config):
 
 
 # Intiate or reconfigure replica set
-def config(hosts_current, active, added):
-    config = get_rs_config(hosts_current)
+def reconfig(hosts_current, active, added):
+    config = get_rs_config(list(hosts_current))
 
     if len(active):
         print('> Found new hosts! Adding..')
@@ -71,3 +83,9 @@ def config(hosts_current, active, added):
         print('> First time setup, initiating on ' + added[0])
         rs_initiate(added[0], config)
         print('> Replica set initiated!')
+
+
+
+# Trigger backup on hidden node. Data will be stored in 'mongo-backup' volume.
+def backup():
+    requests.get('http://' + hidden + ':27027/backup')

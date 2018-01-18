@@ -9,6 +9,7 @@
 from flask import Flask
 from flask import request
 import sys
+import os
 import shutil
 import time
 import requests
@@ -70,11 +71,19 @@ def initiate():
             except:
                 pass
 
-        return "ok"
+        return 'ok'
 
     # Incorrect secret
     else:
         return '403'
+
+
+
+# Take database backup. This will only get called if we're on a secondary node.
+@app.route('/backup', methods=['GET'])
+def backup():
+    os.system('/bin/sh /mongodump.sh')
+    return 'ok'
 
 
 
@@ -91,6 +100,7 @@ def admin():
     mongo.close()
 
     # Rebuild backed up data
-    return "ok"
+    os.system('/bin/sh /mongorestore.sh')
+    return 'ok'
 
 app.run(host='0.0.0.0', port=27027)
