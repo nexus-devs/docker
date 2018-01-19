@@ -9,7 +9,7 @@ const redisUrl = 'redis://redis'
 
 module.exports = {
   blitz: {
-    logLevel: 'monitor',
+    logLevel: 'verbose',
     environment: 'production',
     skipAuthCheck: true
   },

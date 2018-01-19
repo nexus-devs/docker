@@ -64,8 +64,9 @@ while True:
     hosts = hosts_current
 
     # Take backup every 24h
-    if time.time() - timer >= 60 * 5:
+    if time.time() - timer >= 60 * 60 * 12:
         print('* Taking automatic backups...')
+        print(' ')
         replica.backup()
         timer = time.time()
 

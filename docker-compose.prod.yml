@@ -27,6 +27,8 @@ services:
       - nexus_app
     secrets:
       - nexus-public-key
+    ports:
+      - 3000:3000
 
   api_auth:
     image: 127.0.0.1:5000/nexus-api-auth
@@ -42,6 +44,8 @@ services:
       - nexus-core-auth-key
       - nexus-core-auth-secret
       - mongo-admin-pwd
+    ports:
+      - 3001:3000
 
   api_view:
     image: 127.0.0.1:5000/nexus-api-view
@@ -53,6 +57,8 @@ services:
       - nexus_app
     secrets:
       - nexus-public-key
+    ports:
+      - 3002:3000
 
 
   # Core nodes

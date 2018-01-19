@@ -7,3 +7,10 @@ images:
 	cd nginx; make image
 	cd dev; make image
 	cd prod; make image
+
+rebuild:
+	-docker stack rm nexus
+	sleep 20
+	-docker rm $(shell docker ps -a -q)
+	-docker rmi $(shell docker images -q)
+	make images

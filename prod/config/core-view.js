@@ -40,6 +40,7 @@ module.exports = {
     client: {
       apiUrl: 'https://api.nexus-stats.com',
       authUrl: 'https://auth.nexus-stats.com'
-    }
+    },
+    skipWebpackBuild: true
   }
 }
