@@ -11,6 +11,8 @@ services:
     secrets:
       - mongo-keyfile
       - mongo-admin-pwd
+    volumes:
+      - mongo_backup:/data/backups
 
   mongoc:
     image: 127.0.0.1:5000/mongoc
@@ -29,7 +31,6 @@ services:
       - mongo-admin-pwd
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
-      - mongo_backup:/data/backups
 
   redis:
     image: 127.0.0.1:5000/redis
@@ -59,4 +60,3 @@ secrets:
 
 volumes:
   mongo_backup:
-    external: true
