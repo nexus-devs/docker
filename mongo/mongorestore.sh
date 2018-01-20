@@ -7,7 +7,7 @@ if [ -d "/data/backups/latest" ]; then
     -u admin \
     -p $pwd \
     --gzip \
-    --archive \
     --oplogReplay \
+    --writeConcern '{w:0}' \
     /data/backups/latest
 fi
