@@ -60,19 +60,22 @@ Get [Boot 2 Docker](http://boot2docker.io/) and install.
 With Docker installed, we can now build the required docker images and
 deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/)
 
->`bash init-swarm.sh`
-
-to set up the swarm, build images and deploy them to the swarm.
-
+### Deploy for production
 >`bash deploy.sh`
 
-to deploy the service again after the swarm and images have already been set up.
-(Runs automatically with init-swarm.sh)
+To set up the swarm, build images and deploy them to the swarm.
+The application will listen on :80/:443 to nexus-stats.com requests.
 
-### Deploying for development
-Simply pass the `--dev /c/path/to/nexus-stats/repo` flag to each script.
+### Deploy for development
+>`bash deploy.sh --dev /c/path/to/nexus-stats/repo`
+
 This will bind the repo's location to the docker container, which means that we
 can edit our code as usual without accessing the container's filesystem. <br>
+
+Each part of the application will listen on separate ports on `localhost`:
+- View Server: 3030
+- Auth Server: 3020
+- API Server (Warframe): 3010
 
 Furthermore this will run blitz.js in development mode, which means:
 - All nodes will be managed by a single controller in a single container
@@ -85,6 +88,6 @@ transpilation, etc
 Other than that, all is desgined to be parallel to production to avoid sudden
 surprises before going live :^)
 
-<br>
+
 **Note:** This is all done automatically by running the `docker.sh` script in
 the [Nexus-Stats repo](https://github.com/nexus-devs/nexus-stats)
