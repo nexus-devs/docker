@@ -63,8 +63,8 @@ deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/
 ### Deploy for production
 >`bash deploy.sh`
 
-To set up the swarm, build images and deploy them to the swarm.
-The application will listen on :80/:443 to nexus-stats.com requests.
+Sets up the swarm, builds images and deploys them to the swarm.
+The application will listen on :80/:443 to \*.nexus-stats.com requests.
 
 ### Deploy for development
 >`bash deploy.sh --dev /c/path/to/nexus-stats/repo`
