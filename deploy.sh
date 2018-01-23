@@ -21,11 +21,13 @@ make images
 
 # Merge dev or prod file with base compose
 if [[ $1 == '--dev' ]]; then
-  docker-compose -f docker-compose.yml -f docker-compose.dev.yml config > docker-compose.stack.yml
-  sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" docker-compose.stack.yml
+  docker-compose -f compose/base.yml -f compose/dev.yml config > compose/stack.yml
+  sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/stack.yml
+elif [[ $1 == '--ci' ]]; then
+  docker-compose -f compose/base.yml -f compose/ci.yml config > compose/stack.yml
 else
-  docker-compose -f docker-compose.yml -f docker-compose.prod.yml config > docker-compose.stack.yml
+  docker-compose -f compose/base.yml -f compose/prod.yml config > compose/stack.yml
 fi
 
 # Deploy
-docker stack deploy --prune --compose-file docker-compose.stack.yml nexus
+docker stack deploy --prune --compose-file compose/stack.yml nexus
