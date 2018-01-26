@@ -24,23 +24,24 @@ fi
 make images
 
 # Merge dev or prod file with base compose
+[[ $1 = --ci ]] && stack="nexus_ci" || stack="nexus"
+
 if [[ $1 == '--dev' ]]; then
   docker-compose \
-    -f compose/base.yml \
-    -f compose/dev.yml \
-    config > compose/stack.yml
-  sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/stack.yml
+    -f compose/app-base.yml \
+    -f compose/app-dev.yml \
+    config > compose/$stack.yml
+  sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/$stack.yml
 elif [[ $1 == '--ci' ]]; then
   docker-compose \
-    -f compose/drone.yml \
-    config > compose/stack.yml
+    -f compose/ci.yml \
+    config > compose/$stack.yml
 else
   docker-compose \
-    -f compose/base.yml \
-    -f compose/prod.yml \
-    config > compose/stack.yml
+    -f compose/app-base.yml \
+    -f compose/app-prod.yml \
+    config > compose/$stack.yml
 fi
 
 # Deploy
-[[ $1 = --ci ]] && stack="nexus_ci" || stack="nexus"
-docker stack deploy --prune --compose-file compose/stack.yml $stack
+docker stack deploy --prune --compose-file compose/$stack.yml $stack

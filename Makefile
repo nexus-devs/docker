@@ -1,13 +1,13 @@
 all:
 
 images:
-	cd mongo; make image
-	cd mongoc; make image
-	cd redis; make image
-	cd nginx; make image
-	cd dev; make image
-	cd prod; make image
-	cd drone; make image
+	cd app/mongo; make image
+	cd app/mongoc; make image
+	cd app/redis; make image
+	cd app/nginx; make image
+	cd app/dev; make image
+	cd app/prod; make image
+	cd ci/drone; make image
 
 rebuild:
 	-docker stack rm nexus
