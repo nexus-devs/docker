@@ -6,6 +6,10 @@ docker swarm init
 if [ ! "$(docker network ls | grep nexus_app)" ]; then
   docker network create --driver overlay nexus_app
 fi
+# Create overlay networks
+if [ ! "$(docker network ls | grep nexus_ci)" ]; then
+  docker network create --driver overlay nexus_ci
+fi
 
 # Create private image registry on our swarm
 if [ ! "$(docker service ls | grep nexus_registry)" ]; then
@@ -21,13 +25,22 @@ make images
 
 # Merge dev or prod file with base compose
 if [[ $1 == '--dev' ]]; then
-  docker-compose -f compose/base.yml -f compose/dev.yml config > compose/stack.yml
+  docker-compose \
+    -f compose/base.yml \
+    -f compose/dev.yml \
+    config > compose/stack.yml
   sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/stack.yml
 elif [[ $1 == '--ci' ]]; then
-  docker-compose -f compose/base.yml -f compose/ci.yml config > compose/stack.yml
+  docker-compose \
+    -f compose/drone.yml \
+    config > compose/stack.yml
 else
-  docker-compose -f compose/base.yml -f compose/prod.yml config > compose/stack.yml
+  docker-compose \
+    -f compose/base.yml \
+    -f compose/prod.yml \
+    config > compose/stack.yml
 fi
 
 # Deploy
-docker stack deploy --prune --compose-file compose/stack.yml nexus
+[[ $1 = --ci ]] && stack="nexus_ci" || stack="nexus"
+docker stack deploy --prune --compose-file compose/stack.yml $stack

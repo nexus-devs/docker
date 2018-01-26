@@ -60,12 +60,6 @@ Get [Boot 2 Docker](http://boot2docker.io/) and install.
 With Docker installed, we can now build the required docker images and
 deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/)
 
-### Deploy for production
->`bash deploy.sh`
-
-Sets up the swarm, builds images and deploys them to the swarm.
-The application will listen on :80/:443 to \*.nexus-stats.com requests.
-
 ### Deploy for development
 >`bash deploy.sh --dev /c/path/to/nexus-stats/repo`
 
@@ -87,6 +81,16 @@ transpilation, etc
 
 Other than that, all is desgined to be parallel to production to avoid sudden
 surprises before going live :^)
+
+### Deploy for production
+>`bash deploy.sh`
+
+Sets up the swarm, builds images and deploys them to the swarm.
+The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
+
+Note that ssl certs for nginx and drone github credentials have to be set
+manually before building! As a result, the full capabilities of the production
+stack are limited to users with access to those secrets.
 
 
 **Note:** This is all done automatically by running the `docker.sh` script in

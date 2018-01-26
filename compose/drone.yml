@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  server:
+    image: drone/drone:latest
+    volumes:
+      - drone:/var/lib/drone/
+    env_file:
+      - ../drone/config/secrets.env
+      - ../drone/config/server.env
+    networks:
+      - nexus_ci
+
+  agent:
+    image: drone/agent:latest
+    command: agent
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ../drone/config/secrets.env
+      - ../drone/config/server.env
+    networks:
+      - nexus_ci
+
+  nginx:
+    image: 127.0.0.1:5000/drone-nginx
+    networks:
+      - nexus_ci
+    ports:
+      - 80:80
+      - 443:443
+
+
+networks:
+  nexus_ci:
+    external: true
+
+
+volumes:
+  drone:
