@@ -7,7 +7,7 @@ images:
 	cd app/nginx; make image
 	cd app/dev; make image
 	cd app/prod; make image
-	cd ci/drone; make image
+	cd ci/drone-nginx; make image
 
 rebuild:
 	-docker stack rm nexus
