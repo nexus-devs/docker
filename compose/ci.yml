@@ -2,23 +2,27 @@ version: '3.4'
 
 services:
   server:
-    image: drone/drone:latest
+    image: drone/drone:alpine
     volumes:
       - drone:/var/lib/drone/
     env_file:
-      - ../drone/config/secrets.env
-      - ../drone/config/server.env
+      - ../ci/drone/config/server.env
+    environment:
+      - DRONE_SECRET=${DRONE_SECRET}
+      - DRONE_GITHUB_CLIENT=${DRONE_GITHUB_CLIENT}
+      - DRONE_GITHUB_SECRET=${DRONE_GITHUB_SECRET}
     networks:
       - nexus_ci
 
   agent:
-    image: drone/agent:latest
+    image: drone/agent:alpine
     command: agent
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - ../drone/config/secrets.env
-      - ../drone/config/server.env
+      - ../ci/drone/config/agent.env
+    environment:
+      - DRONE_SECRET=${DRONE_SECRET}
     networks:
       - nexus_ci
 
