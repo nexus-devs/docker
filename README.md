@@ -88,9 +88,10 @@ surprises before going live :^)
 Sets up the swarm, builds images and deploys them to the swarm.
 The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
 
-Note that ssl certs for nginx and drone github credentials have to be set
-manually before building! As a result, the full capabilities of the production
-stack are limited to users with access to those secrets.
+Requires the manual addition of the following secrets:
+- SSL certs for https
+- Drone OAuth key/secret
+- Nexus-Bot Github credentials
 
 
 **Note:** This is all done automatically by running the `docker.sh` script in
