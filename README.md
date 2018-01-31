@@ -89,9 +89,8 @@ Sets up the swarm, builds images and deploys them to the swarm.
 The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
 
 Requires the manual addition of the following secrets:
-- SSL certs for https
-- Drone OAuth key/secret
-- Nexus-Bot Github credentials
+- Docker Secret: nexus-cert-public, nexus-cert-private, nexus-ci-github-user, nexus-ci-github-pass
+- Env: DRONE_SECRET, DRONE_GITHUB_CLIENT, DRONE_GITHUB_SECRET
 
 
 **Note:** This is all done automatically by running the `docker.sh` script in

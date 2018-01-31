@@ -29,7 +29,6 @@ RUN cd /tmp/nginx-${NGINX_VERSION} \
   && rm -rf /var/cache/apk/*
 
 COPY config /etc/nginx/conf/
-COPY certs /etc/nginx/conf/certs/
 
 # Add nginx user (wouldn't wanna run as root)
 RUN adduser -D nginx

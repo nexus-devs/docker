@@ -9,6 +9,9 @@ services:
     ports:
       - 80:80
       - 443:443
+    secrets:
+      - nexus-cert-public
+      - nexus-cert-private
 
   # API nodes
   api_warframe:
@@ -75,6 +78,11 @@ services:
 
 # Core credentials
 secrets:
+  nexus-cert-public:
+    external: true
+  nexus-cert-private:
+    external: true
+
   nexus-core-warframe-key:
     external: true
   nexus-core-warframe-secret:

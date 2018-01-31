@@ -33,6 +33,9 @@ services:
     ports:
       - 80:80
       - 443:443
+    secrets:
+      - nexus-cert-public
+      - nexus-cert-private
 
 
 networks:
@@ -42,3 +45,10 @@ networks:
 
 volumes:
   drone:
+
+
+secrets:
+  nexus-cert-public:
+    external: true
+  nexus-cert-private:
+    external: true
