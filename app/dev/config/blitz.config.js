@@ -23,7 +23,8 @@ module.exports = {
     mongoUrl,
     mongoDb: 'nexus-core-warframe',
     redisUrl,
-    hooks: [ wf.verifyIndices, wf.verifyItemList ]
+    hooks: [ wf.verifyIndices, wf.verifyItemList ],
+    id: 'warframe_core'
   },
   auth: {
     api: {
@@ -48,7 +49,7 @@ module.exports = {
       redisUrl,
       endpointPath: __dirname + '/../view/endpoints',
       sourcePath: __dirname + '/../view',
-      publicPath: __dirname + '/../assets'
+      publicPath: __dirname + '/../assets',
     },
     client: {
       apiUrl: 'https://api.nexus-stats.com',
