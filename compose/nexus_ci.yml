@@ -1,6 +1,11 @@
 networks:
   nexus_ci:
     external: true
+secrets:
+  nexus-cert-private:
+    external: true
+  nexus-cert-public:
+    external: true
 services:
   agent:
     command: agent
@@ -21,6 +26,9 @@ services:
       target: 80
     - published: 443
       target: 443
+    secrets:
+    - source: nexus-cert-public
+    - source: nexus-cert-private
   server:
     environment:
       DRONE_ADMIN: Kaptard,Nakroma

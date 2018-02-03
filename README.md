@@ -60,6 +60,8 @@ Get [Boot 2 Docker](http://boot2docker.io/) and install.
 With Docker installed, we can now build the required docker images and
 deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/)
 
+<br>
+
 ### Deploy for development
 >`bash deploy.sh --dev /c/path/to/nexus-stats/repo`
 
@@ -82,6 +84,11 @@ transpilation, etc
 Other than that, all is desgined to be parallel to production to avoid sudden
 surprises before going live :^)
 
+**Note:** This is all done automatically by running the `docker.sh` script in
+the [Nexus-Stats repo](https://github.com/nexus-devs/nexus-stats)
+
+<br>
+
 ### Deploy for production
 >`bash deploy.sh`
 
@@ -91,7 +98,3 @@ The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
 Requires the manual addition of the following secrets:
 - Docker Secret: nexus-cert-public, nexus-cert-private, nexus-ci-github-user, nexus-ci-github-pass
 - Env: DRONE_SECRET, DRONE_GITHUB_CLIENT, DRONE_GITHUB_SECRET
-
-
-**Note:** This is all done automatically by running the `docker.sh` script in
-the [Nexus-Stats repo](https://github.com/nexus-devs/nexus-stats)

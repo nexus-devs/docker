@@ -1,14 +1,10 @@
 FROM alpine:latest
 
-# Add nexus user to which we'll switch later
-RUN adduser --disabled-login --gecos "" nexus
-
 # Install dependencies
-RUN apk add --no-cache python3 docker \
-	&& pip3 install docker
+RUN apk add --no-cache docker
 
-# Drop root perms
-USER nexus
+# Clone docker repo for test images
+git clone https://github.com/nexus-devs/docker
 
 # Entry point for starting the app
 COPY entrypoint.sh /

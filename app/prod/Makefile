@@ -1,3 +1,5 @@
+REGISTRY = 127.0.0.1:5000
+
 all:
 
 keypair:
@@ -13,6 +15,14 @@ keypair:
 	docker secret create nexus-public-key public.pem
 	rm private.pem
 	rm public.pem
+
+prod:
+	docker build -t $(REGISTRY)/nexus-stats -f images/prod.Dockerfile .
+	docker push $(REGISTRY)/nexus-stats
+
+staging:
+	docker build -t $(REGISTRY)/nexus-stats -f images/staging.Dockerfile --no-cache .
+	docker push $(REGISTRY)/nexus-stats
 
 image:
 	bash util/check-keypair.sh
