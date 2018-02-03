@@ -21,30 +21,39 @@ if [ ! "$(docker service ls | grep nexus_registry)" ]; then
 fi
 
 # Build images and push to our registry
-if [[ ! $1 == '--skip-build' ]]; then
-  make images
-fi
 
-# Merge dev or prod file with base compose
+
+# Build target stack docker images and docker-compose file
 [[ $1 = --ci ]] && stack="nexus_ci" || stack="nexus"
 
+# Development
 if [[ $1 == '--dev' ]]; then
+  make dev
   docker-compose \
     -f compose/app-base.yml \
     -f compose/app-dev.yml \
     config > compose/$stack.yml
-  # Add option to attach bind mount of the nexus repo to our dev container
+  # Allow attaching bind mount of the nexus repo to our dev container for easy
+  # file editing on the host machine
   sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/$stack.yml
+
+# Continuous integration
 elif [[ $1 == '--ci' ]]; then
+  make cicd
   docker-compose \
     -f compose/ci.yml \
     config > compose/$stack.yml
+
+# Production
 else
+  if [[ ! $1 == '--skip-build' ]]; then
+    make prod
+  fi
   docker-compose \
     -f compose/app-base.yml \
     -f compose/app-prod.yml \
     config > compose/$stack.yml
 fi
 
-# Deploy
+# Deploy selected stack
 docker stack deploy --prune --compose-file compose/$stack.yml $stack
