@@ -8,4 +8,8 @@ make image
 
 # Deploy stack
 cd /docker
-bash deploy.sh --skip-build
+docker-compose \
+  -f compose/app-base.yml \
+  -f compose/app-prod.yml \
+  config > compose/nexus_staging.yml
+docker stack deploy --prune --compose-file compose/nexus_staging.yml nexus_staging
