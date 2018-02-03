@@ -1,10 +1,10 @@
 FROM alpine:latest
 
 # Install dependencies
-RUN apk add --no-cache docker
+RUN apk add --no-cache docker git
 
 # Clone docker repo for test images
-git clone https://github.com/nexus-devs/docker
+RUN git clone https://github.com/nexus-devs/docker
 
 COPY stage.sh /
 COPY deploy.sh /
