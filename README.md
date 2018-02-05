@@ -7,30 +7,6 @@ configuration.
 <br>
 
 
-## Why Docker?
-If you're unfamiliar with docker, it may seem like just another layer of
-complexity to maintain, but here's a few reasons why we cannot live without it:
-
-**Production** <br>
-- Consistent environments. We spin up literally the same containers everywhere,
-so there's no way to mess up some tiny details when deploying manually.
-- Easily scalable with docker swarm. Need another API worker? Execute a
-single command and you can have 20.
-- No more dependency hell as each container includes all of its requirements
-- Upgrading to new versions and dependencies is done with a simple container
-image rebuild instead of tedious reconfiguration
-
-**Development** <br>
-- Develop as close to production as possible since everything runs in nearly
-the same environment
-- No need to waste hours trying to install all dependencies correctly - you can
-jump right into the code
-- Run everything in one go, then scale things however the circumstances require
-
-
-<br>
-
-
 ## Installing Docker
 We made a couple of scripts to simplify the Docker installation as much as
 possible. Notably, this also includes support to run Linux Docker images on

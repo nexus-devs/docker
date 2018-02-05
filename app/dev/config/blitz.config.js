@@ -19,7 +19,7 @@ module.exports = {
     certPublic
   },
   core: {
-    endpointPath: __dirname + '/../api',
+    endpointPath: __dirname + '/../api/core-warframe',
     mongoUrl,
     mongoDb: 'nexus-core-warframe',
     redisUrl,
