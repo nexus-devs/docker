@@ -11,7 +11,7 @@ const redisUrl = 'redis://redis'
 
 module.exports = {
   blitz: {
-    logLevel: 'silly',
+    logLevel: 'verbose',
     environment: 'development'
   },
   api: {

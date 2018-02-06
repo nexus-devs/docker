@@ -3,10 +3,9 @@
 rm -rf /app/nexus-stats/config/*
 cp -r /tmp/nexus-stats/config /app/nexus-stats/
 
-# Rebuild node_modules in case some deps were installed on a different host OS
 cd app/nexus-stats
-npm install && npm rebuild
+if [! -d "node_modules" ]; then
+  npm install
+fi
 
-# Run in background so errors wouldn't restart container
-pm2 start index.js --name app
-pm2 logs
+npm start
