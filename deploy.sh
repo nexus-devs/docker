@@ -36,7 +36,7 @@ if [[ $1 == '--dev' ]]; then
 
   # Run watchdog to propagate file changes from the repo to our container.
   # Only necessary on windows due to the nature of the filesystem.
-  if [[ ${DOCKER_OS} == 'Windows' ]]; then
+  if [[ ${DOCKER_OS} == 'Windows' && ! "$(jobs | grep docker-volume-watcher)"  ]]; then
     docker-volume-watcher nexus_dev* /view &
   fi
 
