@@ -34,12 +34,6 @@ if [[ $1 == '--dev' ]]; then
     -f compose/app-dev.yml \
     config > compose/$stack.yml
 
-  # Run watchdog to propagate file changes from the repo to our container.
-  # Only necessary on windows due to the nature of the filesystem.
-  if [[ ${DOCKER_OS} == 'Windows' && ! "$(jobs | grep docker-volume-watcher)"  ]]; then
-    docker-volume-watcher nexus_dev* /view &
-  fi
-
   # Allow attaching bind mount of the nexus repo to our dev container for easy
   # file editing on the host machine
   sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/$stack.yml
@@ -66,3 +60,12 @@ fi
 
 # Deploy selected stack
 docker stack deploy --prune --compose-file compose/$stack.yml $stack
+
+# Run watchdog to propagate file changes from the repo to our container.
+# Only necessary on windows due to the nature of the filesystem.
+if [[ $1 == '--dev' && \
+      ${DOCKER_OS} == 'Windows' && \
+      ! "$(jobs | grep docker-volume-watcher)"  ]]; then
+  sleep 30
+  docker-volume-watcher nexus_dev* /view &
+fi
