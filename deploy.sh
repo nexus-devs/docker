@@ -33,9 +33,17 @@ if [[ $1 == '--dev' ]]; then
     -f compose/app-base.yml \
     -f compose/app-dev.yml \
     config > compose/$stack.yml
+
+  # Run watchdog to propagate file changes from the repo to our container.
+  # Only necessary on windows due to the nature of the filesystem.
+  if [[ ${DOCKER_OS} == 'Windows' ]]; then
+    docker-volume-watcher nexus_dev* /view &
+  fi
+
   # Allow attaching bind mount of the nexus repo to our dev container for easy
   # file editing on the host machine
   sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/$stack.yml
+
 
 # Continuous integration
 elif [[ $1 == '--ci' ]]; then
@@ -43,6 +51,7 @@ elif [[ $1 == '--ci' ]]; then
   docker-compose \
     -f compose/ci.yml \
     config > compose/$stack.yml
+
 
 # Production
 else
