@@ -2,14 +2,15 @@
 # Init swarm
 docker swarm init
 
+
 # Create overlay networks
 if [ ! "$(docker network ls | grep nexus_app)" ]; then
   docker network create --driver overlay nexus_app
 fi
-# Create overlay networks
 if [ ! "$(docker network ls | grep nexus_ci)" ]; then
   docker network create --driver overlay nexus_ci
 fi
+
 
 # Create private image registry on our swarm
 if [ ! "$(docker service ls | grep nexus_registry)" ]; then
@@ -19,8 +20,6 @@ if [ ! "$(docker service ls | grep nexus_registry)" ]; then
     --mount type=volume,source=nexus-registry,destination=/var/lib/registry,volume-driver=local \
     registry:latest
 fi
-
-# Build images and push to our registry
 
 
 # Build target stack docker images and docker-compose file
@@ -38,14 +37,12 @@ if [[ $1 == '--dev' ]]; then
   # file editing on the host machine
   sed -i "/VOLUME PLACEHOLDER/c\      - $2:/app/nexus-stats" compose/$stack.yml
 
-
 # Continuous integration
 elif [[ $1 == '--ci' ]]; then
   make cicd
   docker-compose \
     -f compose/ci.yml \
     config > compose/$stack.yml
-
 
 # Production
 else
@@ -58,8 +55,10 @@ else
     config > compose/$stack.yml
 fi
 
+
 # Deploy selected stack
 docker stack deploy --prune --compose-file compose/$stack.yml $stack
+
 
 # Run watchdog to propagate file changes from the repo to our container.
 # Only necessary on windows due to the nature of the filesystem.
