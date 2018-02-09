@@ -26,5 +26,4 @@ staging:
 
 image:
 	bash util/check-keypair.sh
-	bash build.sh api-warframe api-auth api-view \
-		core-warframe core-auth core-view
+	bash build.sh auth view warframe

@@ -6,7 +6,7 @@ RUN adduser --disabled-login --gecos "" nexus
 # Clone the nexus-stats repo and build node_modules
 RUN mkdir -p /app/nexus-stats \
   && cd app \
-  && git clone -b production https://github.com/nexus-devs/nexus-stats \
+  && git clone -b development https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
   && npm install node-gyp -g \

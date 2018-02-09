@@ -4,9 +4,10 @@ version: '3.4'
 services:
   nginx:
     image: 127.0.0.1:5000/nginx
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     ports:
@@ -19,9 +20,10 @@ services:
   # API nodes
   api_warframe:
     image: 127.0.0.1:5000/nexus-api-warframe
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
@@ -31,9 +33,10 @@ services:
 
   api_auth:
     image: 127.0.0.1:5000/nexus-api-auth
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
@@ -47,9 +50,10 @@ services:
 
   api_view:
     image: 127.0.0.1:5000/nexus-api-view
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
@@ -61,9 +65,10 @@ services:
   # Core nodes
   core_warframe:
     image: 127.0.0.1:5000/nexus-core-warframe
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
@@ -73,9 +78,10 @@ services:
 
   core_auth:
     image: 127.0.0.1:5000/nexus-core-auth
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
@@ -86,9 +92,10 @@ services:
 
   core_view:
     image: 127.0.0.1:5000/nexus-core-view
-    update_config:
-      order: start-first
-      failure_action: rollback
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
     networks:
       - nexus_app
     secrets:
