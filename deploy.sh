@@ -69,6 +69,7 @@ if [[ $1 == '--dev' && \
   docker-volume-watcher nexus_dev* /view &
 fi
 
+
 # Automatically log dev container
 if [[ $1 == '--dev' ]]; then
   docker service logs nexus_dev -f
