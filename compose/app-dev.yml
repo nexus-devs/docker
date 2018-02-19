@@ -22,3 +22,5 @@ services:
       - mongo-admin-pwd
       - nexus-private-key
       - nexus-public-key
+    tty: true
+    stdin_open: false
