@@ -2,16 +2,6 @@
 # Init swarm
 docker swarm init
 
-
-# Create overlay networks
-if [ ! "$(docker network ls | grep nexus_app)" ]; then
-  docker network create --driver overlay nexus_app
-fi
-if [ ! "$(docker network ls | grep nexus_ci)" ]; then
-  docker network create --driver overlay nexus_ci
-fi
-
-
 # Create private image registry on our swarm
 if [ ! "$(docker service ls | grep nexus_registry)" ]; then
   docker service create -d \

@@ -40,7 +40,6 @@ services:
 
 networks:
   nexus_ci:
-    external: true
 
 
 volumes:
