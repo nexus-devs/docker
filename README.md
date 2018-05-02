@@ -34,7 +34,11 @@ Get [Boot 2 Docker](http://boot2docker.io/) and install.
 
 ## Deploying the Nexus-Stats stack
 With Docker installed, we can now build the required docker images and
-deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/)
+deploy them to [Docker Swarm](https://docs.docker.com/engine/swarm/key-concepts/).
+
+**IMPORTANT**: You probably won't need this unless you're debugging stuff, so make
+sure to follow the [Quickstart Tutorial](https://github.com/nexus-devs/nexus-stats#quickstart)
+from the Nexus-Stats repo instead.
 
 <br>
 
@@ -42,12 +46,13 @@ deploy them to [docker swarm](https://docs.docker.com/engine/swarm/key-concepts/
 >`bash deploy.sh --dev /c/path/to/nexus-stats/repo`
 
 This will bind the repo's location to the docker container, which means that we
-can edit our code as usual without accessing the container's filesystem. <br>
+can edit our code as usual without accessing the container's filesystem directly.
+<br>
 
 Each part of the application will listen on separate ports on `localhost`:
-- View Server: 3030
-- Auth Server: 3020
-- API Server (Warframe): 3010
+- View Server: 3000
+- API Server: 3003
+- Auth Server: 3030
 
 Furthermore this will run cubic in development mode, which means:
 - All nodes will be managed by a single controller in a single container
@@ -59,9 +64,6 @@ transpilation, etc
 
 Other than that, all is desgined to be parallel to production to avoid sudden
 surprises before going live :^)
-
-**Note:** This is all done automatically by running the `docker.sh` script in
-the [Nexus-Stats repo](https://github.com/nexus-devs/nexus-stats)
 
 <br>
 
