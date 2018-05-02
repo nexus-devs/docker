@@ -49,7 +49,7 @@ Each part of the application will listen on separate ports on `localhost`:
 - Auth Server: 3020
 - API Server (Warframe): 3010
 
-Furthermore this will run blitz.js in development mode, which means:
+Furthermore this will run cubic in development mode, which means:
 - All nodes will be managed by a single controller in a single container
 - API endpoints will not be loaded into cache, so we don't have to restart for
 changes

@@ -5,5 +5,5 @@ cd app/nexus-stats
 # Run script for adding node credentials to mongo
 node prelaunch.js
 
-# Run blitz-js node
+# Run cubic node
 node .

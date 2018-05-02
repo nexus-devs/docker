@@ -7,7 +7,7 @@ const mongoUrl = `mongodb://admin:${dbSecret}@mongo/admin?replicaSet=nexus`
 const redisUrl = 'redis://redis'
 
 module.exports = {
-  blitz: {
+  cubic: {
     logLevel: 'monitor',
     environment: 'production',
     skipAuthCheck: true

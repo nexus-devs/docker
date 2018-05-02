@@ -16,3 +16,4 @@ wget -O - https://bit.ly/docker-install | bash
 
 # Container requirements
 apt-get install -y pwgen
+apt-get install -y build-essential

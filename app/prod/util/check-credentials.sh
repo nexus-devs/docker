@@ -1,5 +1,5 @@
 #!/bin/bash
-# Generate user credentials for blitz-js nodes
+# Generate user credentials for cubic nodes
 if [ ! "$(docker secret ls | grep nexus-$1-key)" ]; then
   echo ""
   echo "* Generating user credentials for $1."

@@ -3,7 +3,7 @@ const certPublic = fs.readFileSync(`/run/secrets/nexus-public-key`, 'utf-8')
 const redisUrl = 'redis://redis'
 
 module.exports = {
-  blitz: {
+  cubic: {
     logLevel: 'monitor',
     environment: 'production',
     skipAuthCheck: true
@@ -27,6 +27,8 @@ module.exports = {
     core: {
       disable: true
     },
-    skipWebpackBuild: true
+    webpack: {
+      skipBuild: true
+    }
   }
 }

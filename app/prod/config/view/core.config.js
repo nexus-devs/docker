@@ -6,7 +6,7 @@ const mongoUrl = `mongodb://admin:${dbSecret}@mongo/admin?replicaSet=nexus`
 const redisUrl = 'redis://redis'
 
 module.exports = {
-  blitz: {
+  cubic: {
     logLevel: 'monitor',
     environment: 'production',
     skipAuthCheck: true
@@ -41,6 +41,8 @@ module.exports = {
       apiUrl: 'https://api.nexus-stats.com',
       authUrl: 'https://auth.nexus-stats.com'
     },
-    skipWebpackBuild: true
+    webpack: {
+      skipBuild: true
+    }
   }
 }

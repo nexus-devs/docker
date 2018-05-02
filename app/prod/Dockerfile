@@ -1,7 +1,7 @@
 FROM 127.0.0.1:5000/nexus-stats
 
 # Override config
-COPY config/blitz.config.js /app/nexus-stats/config/
+COPY config/cubic.config.js /app/nexus-stats/config/
 
 # Drop root perms
 USER nexus

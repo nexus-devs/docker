@@ -1,4 +1,4 @@
-const config = require('./config/blitz.config.js')
+const config = require('./config/cubic.config.js')
 const bcrypt = require('bcryptjs')
 const mongodb = require('mongodb').MongoClient
 const redis = require('redis')

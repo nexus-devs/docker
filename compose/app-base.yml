@@ -41,6 +41,7 @@ services:
 
 networks:
   nexus_app:
+    external: true
 
 
 secrets:
