@@ -1,26 +1,70 @@
 ### Nexus-Stats Mongodb Replica Sets
-Setup for Mongodb replica sets, including internal authentication and DNS management.
+<br>
+Setup for Mongodb replica set members. The base image is mostly a default mongod
+instance with the following data structure:
+
+- `/data/db` - Data storage
+- `/data/config` - Config files
+- `/data/backups` - Auto-generated backups
+
+Beyond that, this image also opens a minimal webserver that will listen to
+instructions from the mongoc image in order to behave accordingly inside its
+replica set and take automatic backups. Here's a quick rundown for each endpoint:
 
 <br>
 
-#### Run locally
-1. Set your database passwords in [/config/env](https://github.com/nexus-devs/docker/blob/master/mongo-rs/config/env)
-2. `make image && bash run.sh`
+#### /ping
+> GET /ping
+
+Simple ping to see when the container is up. Mongoc will perform a check for
+new containers every 5 seconds and apply changes.
 
 <br>
 
-#### Distributed Replica Set
-1. `make keyfile`. This file needs to be present on all machines in the replica
- set. We'll use it for internal authentication.
-2. Set your replica member IPs in [/config/members](https://github.com/nexus-devs/docker/blob/master/mongo-rs/config/members).
- We assume the first member to be the replica set primary.
-3. Set your database passwords in [/config/env](https://github.com/nexus-devs/docker/blob/master/mongo-rs/config/env)
-4. `make image && bash run.sh`
+#### /initiate
+> POST /initiate
+```
+{
+  config: <replica_config>,
+  target: <container>,
+  secret: <db-secret>
+}
+```
 
-**Note:** Keep in mind that the primary may switch to any other instance at
-runtime. But we have to initiate the replica set on only one instance first,
-which then also becomes the first primary.
+This will initiate a replica set starting from the current container. Only one
+container will receive this instruction.
 
-#### Volumes
-Volumes for data persistence are automatically stored by the container name you
-specify through the member config. Run `docker volume ls` to get a list of them.
+The `config` key describes the [replica set configuration object](https://docs.mongodb.com/manual/reference/replica-configuration/).
+
+`target` is the container which will receive this instruction. If mongo selected
+our replica primary to be this container, we'll add the `admin` user locally with
+the password from the `mongo-admin-pwd` docker-secret. If mongo elected another
+container, we'll trigger the `/admin` endpoint there.
+
+The `secret` key in the POST object needs to match this password in order to run
+the initialization.
+
+<br>
+
+#### /admin
+> GET /admin
+
+Creates the admin user (presumably on the primary of the replica set). Mongodb
+has an issue where it can't initialize a replica set when not all members have
+completely clear databases. However, we need our replica set to be protected
+immediately without another restart, so we'll simply check who's the primary
+and tell it to add admin credentials before we initialize the replica set.
+
+<br>
+
+#### /backup
+> GET /backup
+
+Takes a database backup if the container is a hidden member (to prevent any
+performance impact on the primary). This will perform the `mongodump.sh`
+script which stores data to the `mongo_backup` named volume on `/data/backups`.
+`mongorestore.sh` is called automatically when an empty replica set is
+initialized. It makes sure our data persists throughout restarts.
+
+<br>
+

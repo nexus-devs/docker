@@ -79,7 +79,7 @@ def initiate():
 
 
 
-# Take database backup. This will only get called if we're on a secondary node.
+# Take database backup. This will only get called if we're a hidden member.
 @app.route('/backup', methods=['GET'])
 def backup():
     os.system('/bin/sh /mongodump.sh')
