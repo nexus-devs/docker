@@ -26,7 +26,7 @@ This allows us to use the Windows Docker core on a Linux Docker client.
 `sudo bash install-windows.sh`
 
 ### Mac
-Get [Boot 2 Docker](http://boot2docker.io/) and install.
+Check out [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
 
 
 <br>
