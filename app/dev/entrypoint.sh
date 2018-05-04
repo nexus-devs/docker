@@ -1,6 +1,8 @@
 #!/bin/sh
 # Install modules for current OS
 cd app/nexus-stats
+git checkout development
+
 if [ -d "node_modules" ] && [ ! -f "node_modules/.docker" ]; then
   rm -rf node_modules
 fi
