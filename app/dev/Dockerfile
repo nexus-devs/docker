@@ -1,11 +1,12 @@
-FROM node
+FROM node:alpine
 
-# Add node-gyp for building node_modules later on
-RUN npm install node-gyp -g
+# Build dependencies
+RUN apk --update add git openssh make gcc g++ python \
+  && npm install node-gyp -g
 
-# Copy cubic config to tmp folder so we can override bind mount data at
-# runtime
+# Script to ensure databases are up before starting node
 RUN mkdir -p /app/nexus-stats /tmp/nexus-stats
+COPY prelaunch.js /tmp/nexus-stats/prelaunch.js
 
 # Entry point for starting the app
 COPY entrypoint.sh /

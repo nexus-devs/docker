@@ -12,4 +12,8 @@ if [ ! -d "node_modules" ] || [ ! -f "node_modules/.docker" ]; then
   echo '' >> node_modules/.docker # Ensure that we won't rebuild on the next run
 fi
 
+# Wait for databases
+node /tmp/nexus-stats/prelaunch.js
+
+# Launch
 npm start
