@@ -61,7 +61,7 @@ async function waitMongo() {
   }
 }
 
-async wait() {
+async function wait() {
   await waitRedis()
   await waitMongo()
 }
