@@ -16,14 +16,15 @@ keypair:
 	rm private.pem
 	rm public.pem
 
+# Base images, containing only the staging/prod repo.
 prod:
-	docker build -t $(REGISTRY)/nexus-stats -f images/prod.Dockerfile .
+	bash util/check-keypair.sh
+	bash util/check-credentials.sh main auth ui warframe
+	cd images; docker build -t $(REGISTRY)/nexus-stats -f prod.Dockerfile .
 	docker push $(REGISTRY)/nexus-stats
 
 staging:
-	docker build -t $(REGISTRY)/nexus-stats -f images/staging.Dockerfile --no-cache .
-	docker push $(REGISTRY)/nexus-stats
-
-image:
 	bash util/check-keypair.sh
-	bash build.sh auth view warframe
+	bash util/check-credentials.sh main auth ui warframe
+	cd images; docker build -t $(REGISTRY)/nexus-stats-staging -f staging.Dockerfile --no-cache .
+	docker push $(REGISTRY)/nexus-stats-staging

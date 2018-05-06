@@ -12,3 +12,13 @@ RUN mkdir -p /app/nexus-stats \
   && npm install node-gyp -g \
   && npm install \
   && chown -R nexus /app/nexus-stats/node_modules/cubic-ui
+
+# Drop root perms
+USER nexus
+
+# Add script which adds node's credentials to mongo
+COPY prelaunch.js /app/nexus-stats/prelaunch.js
+
+# Entry point for starting the app
+COPY entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh" ]

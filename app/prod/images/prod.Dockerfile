@@ -1,7 +1,11 @@
-FROM node
+FROM node:alpine
 
 # Add nexus user to which we'll switch in custom images
-RUN adduser --disabled-login --gecos "" nexus
+RUN adduser -D nexus
+
+# Build dependencies
+RUN apk --update add git openssh make gcc g++ python \
+  && npm install node-gyp -g
 
 # Clone the nexus-stats repo and build node_modules
 RUN mkdir -p /app/nexus-stats \
@@ -9,6 +13,21 @@ RUN mkdir -p /app/nexus-stats \
   && git clone -b development https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
-  && npm install node-gyp -g \
-  && npm install \
+  && npm install --production \
   && chown -R nexus /app/nexus-stats/node_modules/cubic-ui
+
+# Clean up unnecessary dependencies
+RUN apk del git openssh make gcc g++ python \
+  && npm remove node-gyp -g
+
+# Drop root perms
+USER nexus
+
+# Add script which adds node's credentials to mongo
+COPY prelaunch.js /app/nexus-stats/prelaunch.js
+
+COPY index.js /app/nexus-stats/index.js
+
+# Entry point for starting the app
+COPY entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh" ]

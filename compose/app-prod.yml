@@ -18,8 +18,8 @@ services:
       - nexus-cert-private
 
   # API nodes
-  api_warframe:
-    image: 127.0.0.1:5000/nexus-api-warframe
+  main_api:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -28,11 +28,18 @@ services:
       - nexus_app
     secrets:
       - nexus-public-key
+      - mongo-admin-pwd
+      - nexus-main-key
+      - nexus-main-secret
     ports:
-      - 3000:3000
+      - 3003:3003
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=main-api
 
-  api_auth:
-    image: 127.0.0.1:5000/nexus-api-auth
+  auth_api:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -42,14 +49,18 @@ services:
     secrets:
       - nexus-public-key
       - nexus-private-key
-      - nexus-core-auth-key
-      - nexus-core-auth-secret
+      - nexus-auth-key
+      - nexus-auth-secret
       - mongo-admin-pwd
     ports:
-      - 3001:3000
+      - 3030:3030
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=auth-api
 
-  api_view:
-    image: 127.0.0.1:5000/nexus-api-view
+  ui_api:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -58,13 +69,20 @@ services:
       - nexus_app
     secrets:
       - nexus-public-key
+      - mongo-admin-pwd
+      - nexus-ui-key
+      - nexus-ui-secret
     ports:
-      - 3002:3000
+      - 3000:3000
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=ui-api
 
 
   # Core nodes
-  core_warframe:
-    image: 127.0.0.1:5000/nexus-core-warframe
+  main_core:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -72,12 +90,17 @@ services:
     networks:
       - nexus_app
     secrets:
-      - nexus-core-warframe-key
-      - nexus-core-warframe-secret
+      - nexus-main-key
+      - nexus-main-secret
       - mongo-admin-pwd
+      - nexus-public-key
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=main-core
 
-  core_auth:
-    image: 127.0.0.1:5000/nexus-core-auth
+  auth_core:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -85,13 +108,18 @@ services:
     networks:
       - nexus_app
     secrets:
-      - nexus-core-auth-key
-      - nexus-core-auth-secret
+      - nexus-auth-key
+      - nexus-auth-secret
       - mongo-admin-pwd
       - nexus-private-key
+      - nexus-public-key
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=auth-core
 
-  core_view:
-    image: 127.0.0.1:5000/nexus-core-view
+  ui_core:
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -99,9 +127,32 @@ services:
     networks:
       - nexus_app
     secrets:
-      - nexus-core-view-key
-      - nexus-core-view-secret
+      - nexus-ui-key
+      - nexus-ui-secret
       - mongo-admin-pwd
+      - nexus-public-key
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=ui-core
+
+  warframe_core:
+    image: 127.0.0.1:5000/nexus-stats
+    deploy:
+      update_config:
+        order: start-first
+        failure_action: rollback
+    networks:
+      - nexus_app
+    secrets:
+      - nexus-warframe-key
+      - nexus-warframe-secret
+      - mongo-admin-pwd
+      - nexus-public-key
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+      - NEXUS_TARGET_NODE=warframe-core
 
 
 # Core credentials
@@ -111,17 +162,22 @@ secrets:
   nexus-cert-private:
     external: true
 
-  nexus-core-warframe-key:
+  nexus-main-key:
     external: true
-  nexus-core-warframe-secret:
-    external: true
-
-  nexus-core-auth-key:
-    external: true
-  nexus-core-auth-secret:
+  nexus-main-secret:
     external: true
 
-  nexus-core-view-key:
+  nexus-warframe-key:
     external: true
-  nexus-core-view-secret:
+  nexus-warframe-secret:
+    external: true
+
+  nexus-auth-key:
+    external: true
+  nexus-auth-secret:
+    external: true
+
+  nexus-ui-key:
+    external: true
+  nexus-ui-secret:
     external: true

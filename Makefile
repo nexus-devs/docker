@@ -11,4 +11,4 @@ prod:
 	cd services/mongoc; make image
 	cd services/redis; make image
 	cd services/nginx; make image
-	cd app/prod; make prod; make image
+	cd app/prod; make prod

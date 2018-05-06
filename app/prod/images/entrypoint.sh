@@ -6,4 +6,4 @@ cd app/nexus-stats
 node prelaunch.js
 
 # Run cubic node
-node .
+npm start
