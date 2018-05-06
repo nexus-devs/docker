@@ -105,17 +105,18 @@ fi
 docker stack deploy --prune --compose-file $compose_merged nexus
 
 
-# Run watchdog to propagate file changes from the repo to our container.
-# Only necessary on windows due to the nature of the filesystem.
-if [[ $dev == true && \
-      ${DOCKER_OS} == 'Windows' && \
-      ! $(ps -ef) =~ 'docker-volume-watcher'  ]]; then
-  sleep 30
-  docker-volume-watcher nexus_dev* /ui &
-fi
-
-
 # Automatically log dev container
 if [[ $dev == true ]]; then
+  until [ "`/usr/bin/docker inspect -f {{.State.Running}} nexus_dev`" == "true" ]; do
+      sleep 0.1;
+  done;
+
+  # Run watchdog to propagate file changes from the repo to our container.
+  # Only necessary on windows due to the nature of the filesystem.
+  if [[ $dev == true && ${DOCKER_OS} == 'Windows' && ! $(ps -ef) =~ 'docker-volume-watcher'  ]]; then
+    docker-volume-watcher nexus_dev* /ui &
+  fi
+
+  # Just logging
   docker service logs nexus_dev -f --raw
 fi
