@@ -1,6 +1,3 @@
-IMAGE = mongo
-REGISTRY = 127.0.0.1:5000
-
 all:
 
 pass:
@@ -14,7 +11,10 @@ keyfile:
 	rm keyfile
 
 image:
+	make deps
+	docker build -t $(registry)/mongo .
+	docker push $(registry)/mongo
+
+deps:
 	bash util/check-keyfile.sh
 	bash util/check-admin-pwd.sh
-	docker build -t $(REGISTRY)/$(IMAGE) .
-	docker push $(REGISTRY)/$(IMAGE)

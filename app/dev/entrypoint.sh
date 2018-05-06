@@ -1,15 +1,15 @@
 #!/bin/sh
 # Install modules for current OS
 cd app/nexus-stats
-git checkout development
 
 if [ -d "node_modules" ] && [ ! -f "node_modules/.docker" ]; then
-  rm -rf node_modules
+  npm rebuild
+  echo ' ' >> node_modules/.docker
 fi
-if [ ! -d "node_modules" ] || [ ! -f "node_modules/.docker" ]; then
+if [ ! -d "node_modules" ]; then
   npm install
   npm rebuild node-sass # Don't ask me why it doesn't do this by default
-  echo '' >> node_modules/.docker # Ensure that we won't rebuild on the next run
+  echo ' ' >> node_modules/.docker
 fi
 
 # Wait for databases

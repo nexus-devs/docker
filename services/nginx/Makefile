@@ -1,10 +1,7 @@
-IMAGE = nginx
-REGISTRY = 127.0.0.1:5000
-
 all:
 
 image:
-	docker build -t $(REGISTRY)/$(IMAGE) .
+	docker build -t $(registry)/nginx .
 
 publish:
-	docker push $(REGISTRY)/$(IMAGE)
+	docker push $(registry)/nginx

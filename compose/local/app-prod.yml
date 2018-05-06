@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   nginx:
-    image: nexusstats/nginx
+    image: 127.0.0.1:5000/nginx
     deploy:
       update_config:
         order: start-first
@@ -19,7 +19,7 @@ services:
 
   # API nodes
   main_api:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -39,7 +39,7 @@ services:
       - NEXUS_TARGET_NODE=main-api
 
   auth_api:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -60,7 +60,7 @@ services:
       - NEXUS_TARGET_NODE=auth-api
 
   ui_api:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -82,7 +82,7 @@ services:
 
   # Core nodes
   main_core:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -100,7 +100,7 @@ services:
       - NEXUS_TARGET_NODE=main-core
 
   auth_core:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -119,7 +119,7 @@ services:
       - NEXUS_TARGET_NODE=auth-core
 
   ui_core:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first
@@ -137,7 +137,7 @@ services:
       - NEXUS_TARGET_NODE=ui-core
 
   warframe_core:
-    image: nexusstats/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats
     deploy:
       update_config:
         order: start-first

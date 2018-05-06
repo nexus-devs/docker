@@ -1,5 +1,3 @@
-REGISTRY = 127.0.0.1:5000
-
 all:
 
 keypair:
@@ -18,13 +16,15 @@ keypair:
 
 # Base images, containing only the staging/prod repo.
 prod:
-	bash util/check-keypair.sh
-	bash util/check-credentials.sh main auth ui warframe
-	cd images; docker build -t $(REGISTRY)/nexus-stats -f prod.Dockerfile .
-	docker push $(REGISTRY)/nexus-stats
+	make deps
+	cd images; docker build -t $(registry)/nexus-stats -f prod.Dockerfile .
+	docker push $(registry)/nexus-stats
 
 staging:
+	make deps
+	cd images; docker build -t $(registry)/nexus-stats-staging -f staging.Dockerfile --no-cache .
+	docker push $(registry)/nexus-stats-staging
+
+deps:
 	bash util/check-keypair.sh
 	bash util/check-credentials.sh main auth ui warframe
-	cd images; docker build -t $(REGISTRY)/nexus-stats-staging -f staging.Dockerfile --no-cache .
-	docker push $(REGISTRY)/nexus-stats-staging

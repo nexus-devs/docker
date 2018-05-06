@@ -1,7 +1,3 @@
-IMAGE = app
-REGISTRY = 127.0.0.1:5000
-PREFIX = nexus
-
 all:
 
 keypair:
@@ -19,6 +15,9 @@ keypair:
 	rm public.pem
 
 image:
+	make deps
+	docker build -t $(registry)/nexus-stats-dev .
+	docker push $(registry)/nexus-stats-dev
+
+deps:
 	bash util/check-keypair.sh
-	docker build -t $(REGISTRY)/nexus-stats-dev .
-	docker push $(REGISTRY)/nexus-stats-dev

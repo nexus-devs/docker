@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   mongo:
-    image: nexusstats/mongo
+    image: 127.0.0.1:5000/mongo
     deploy:
       replicas: 3
     networks:
@@ -15,7 +15,7 @@ services:
       - mongo_backup:/data/backups
 
   mongoc:
-    image: nexusstats/mongoc
+    image: 127.0.0.1:5000/mongoc
     depends_on:
       - mongo
     deploy:
@@ -33,7 +33,7 @@ services:
       - //var/run/docker.sock:/var/run/docker.sock
 
   redis:
-    image: nexusstats/redis
+    image: 127.0.0.1:5000/redis
     deploy:
       replicas: 1
     networks:

@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   dev:
-    image: nexusstats/nexus-stats-dev
+    image: 127.0.0.1:5000/nexus-stats-dev
     volumes:
       - VOLUME PLACEHOLDER
     ports:

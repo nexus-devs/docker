@@ -1,8 +1,5 @@
-IMAGE = mongoc
-REGISTRY = 127.0.0.1:5000
-
 all:
 
 image:
-	docker build -t $(REGISTRY)/$(IMAGE) .
-	docker push $(REGISTRY)/$(IMAGE)
+	docker build -t $(registry)/mongoc .
+	docker push $(registry)/mongoc
