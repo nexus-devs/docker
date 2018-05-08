@@ -15,7 +15,7 @@ prod:
 	cd services/mongoc; make image registry=$(registry)
 	cd services/redis; make image registry=$(registry)
 	cd services/nginx; make image registry=$(registry)
-	cd app/prod; make prod
+	cd app/prod; make image registry=$(registry)
 
 prod-deps:
 	cd services/mongo; make deps

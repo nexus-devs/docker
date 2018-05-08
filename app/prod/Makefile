@@ -15,15 +15,10 @@ keypair:
 	rm public.pem
 
 # Base images, containing only the staging/prod repo.
-prod:
+image:
 	make deps
-	cd images; docker build -t $(registry)/nexus-stats -f prod.Dockerfile .
+	docker build -t $(registry)/nexus-stats -f Dockerfile .
 	docker push $(registry)/nexus-stats
-
-staging:
-	make deps
-	cd images; docker build -t $(registry)/nexus-stats-staging -f staging.Dockerfile --no-cache .
-	docker push $(registry)/nexus-stats-staging
 
 deps:
 	bash util/check-keypair.sh
