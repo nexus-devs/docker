@@ -14,6 +14,8 @@ secrets:
     external: true
   nexus-cert-public:
     external: true
+  nexus-dockerhub-token:
+    external: true
   nexus-main-key:
     external: true
   nexus-main-secret:
@@ -194,6 +196,19 @@ services:
     - source: nexus-public-key
     - source: nexus-ui-key
     - source: nexus-ui-secret
+  update:
+    deploy:
+      update_config:
+        failure_action: rollback
+        order: start-first
+    image: 127.0.0.1:5000/update
+    networks:
+      nexus_app: null
+    ports:
+    - published: 5001
+      target: 5000
+    secrets:
+    - source: nexus-dockerhub-token
   warframe_core:
     deploy:
       update_config:

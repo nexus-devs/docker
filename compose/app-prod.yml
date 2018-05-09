@@ -27,7 +27,8 @@ services:
       - nexus_app
     secrets:
       - nexus-dockerhub-token
-    ports: 5000:5000
+    ports:
+      - 5000:5000
 
   # API nodes
   main_api:
@@ -169,6 +170,9 @@ services:
 
 # Core credentials
 secrets:
+  nexus-dockerhub-token:
+    external: true
+
   nexus-cert-public:
     external: true
   nexus-cert-private:
