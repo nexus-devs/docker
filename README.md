@@ -74,4 +74,14 @@ Sets up the swarm, builds images and deploys them to the swarm.
 The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
 
 Requires the manual addition of the following secrets:
-- Docker Secret: nexus-cert-public, nexus-cert-private
+- Docker Secret: nexus-cert-public, nexus-cert-private, nexus-dockerhub-token
+
+<br>
+
+### All deploy options
+| Flag        | Shortcut       | Description   |
+|:------------- |:------------- |:------------- |
+| `--dev`   | `-d` | Deploy with dev image. Requires path to the host's nexus-stats repo as an argument. |
+| `--local` | `-l` | Use local registry instead of hub.docker.com |
+| `--build` | `-b` | Build and publish files to specified registry before deploying. |
+| `--staging` | `-s` | Generate production image from staging branch. Just for the staging server. |

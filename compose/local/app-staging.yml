@@ -1,5 +1,26 @@
 version: '3.4'
 
 services:
+  # API nodes
+  main_api:
+    image: 127.0.0.1:5000/nexus-stats:staging
+
+  auth_api:
+    image: 127.0.0.1:5000/nexus-stats:staging
+
   ui_api:
-    image: nexusstats/nexus-stats:staging
+    image: 127.0.0.1:5000/nexus-stats:staging
+
+
+  # Core nodes
+  main_core:
+    image: 127.0.0.1:5000/nexus-stats:staging
+
+  auth_core:
+    image: 127.0.0.1:5000/nexus-stats:staging
+
+  ui_core:
+    image: 127.0.0.1:5000/nexus-stats:staging
+
+  warframe_core:
+    image: 127.0.0.1:5000/nexus-stats:staging

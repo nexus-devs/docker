@@ -95,7 +95,7 @@ if [[ $dev == true ]]; then
   sed -i "/VOLUME PLACEHOLDER/c\      - $dev_path:/app/nexus-stats" $compose_merged
 
 # Staging server
-else if [[ $staging == true ]]; then
+elif [[ $staging == true ]]; then
   if [[ $skip == false ]]; then
     make staging registry=$registry
   else

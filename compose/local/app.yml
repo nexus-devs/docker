@@ -40,7 +40,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: auth-api
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     ports:
@@ -61,7 +61,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: auth-core
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     secrets:
@@ -79,7 +79,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: main-api
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     ports:
@@ -99,7 +99,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: main-core
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     secrets:
@@ -166,7 +166,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: ui-api
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     ports:
@@ -186,7 +186,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: ui-core
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     secrets:
@@ -203,7 +203,7 @@ services:
       DOCKER: "true"
       NEXUS_TARGET_NODE: warframe-core
       NODE_ENV: production
-    image: 127.0.0.1:5000/nexus-stats
+    image: 127.0.0.1:5000/nexus-stats:staging
     networks:
       nexus_app: null
     secrets:
