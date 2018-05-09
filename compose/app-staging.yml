@@ -1,0 +1,5 @@
+version: '3.4'
+
+services:
+  ui_api:
+    image: nexusstats/nexus-stats:staging

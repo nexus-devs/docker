@@ -15,9 +15,14 @@ keypair:
 	rm public.pem
 
 # Base images, containing only the staging/prod repo.
-image:
+prod:
 	make deps
-	docker build -t $(registry)/nexus-stats -f Dockerfile .
+	docker build -t $(registry)/nexus-stats -f Dockerfile.prod .
+	docker push $(registry)/nexus-stats
+
+staging:
+	make deps
+	docker build -t $(registry)/nexus-stats:staging -f Dockerfile.staging .
 	docker push $(registry)/nexus-stats
 
 deps:

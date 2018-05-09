@@ -1,6 +1,6 @@
 #!/bin/bash
-OPTIONS=d:bl
-LONGOPTIONS=dev:,build,local
+OPTIONS=d:bls
+LONGOPTIONS=dev:,build,local,staging
 skip=true # Skip build by default unless changed in args
 registry=nexusstats # push to dockerhub by default
 
@@ -31,6 +31,10 @@ while true; do
       ;;
     -b|--build)
       skip=false
+      shift
+      ;;
+    -s|--staging)
+      staging=true
       shift
       ;;
     --)
@@ -64,11 +68,13 @@ if [[ $local == true ]]; then
   compose_base=compose/local/app-base.yml
   compose_dev=compose/local/app-dev.yml
   compose_prod=compose/local/app-prod.yml
+  compose_staging=compose/local/app-staging.yml
   compose_merged=compose/local/app.yml
 else
   compose_base=compose/app-base.yml
   compose_dev=compose/app-dev.yml
   compose_prod=compose/app-prod.yml
+  compose_staging=compose/app-staging.yml
   compose_merged=compose/app.yml
 fi
 
@@ -87,6 +93,19 @@ if [[ $dev == true ]]; then
   # Allow attaching bind mount of the nexus repo to our dev container for easy
   # file editing on the host machine
   sed -i "/VOLUME PLACEHOLDER/c\      - $dev_path:/app/nexus-stats" $compose_merged
+
+# Staging server
+else if [[ $staging == true ]]; then
+  if [[ $skip == false ]]; then
+    make staging registry=$registry
+  else
+    make prod-deps
+  fi
+  docker-compose \
+    -f $compose_base \
+    -f $compose_prod \
+    -f $compose_staging \
+    config > $compose_merged
 
 # Production
 else
@@ -108,7 +127,7 @@ docker stack deploy --prune --compose-file $compose_merged nexus
 # Automatically log dev container
 if [[ $dev == true ]]; then
   until [ "`/usr/bin/docker inspect -f {{.State.Running}} nexus_dev`" == "true" ]; do
-      sleep 0.1;
+    sleep 0.1;
   done;
 
   # Run watchdog to propagate file changes from the repo to our container.
