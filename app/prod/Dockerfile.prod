@@ -26,8 +26,6 @@ USER nexus
 # Add script which adds node's credentials to mongo
 COPY prelaunch.js /app/nexus-stats/prelaunch.js
 
-COPY index.js /app/nexus-stats/index.js
-
 # Entry point for starting the app
 COPY entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
