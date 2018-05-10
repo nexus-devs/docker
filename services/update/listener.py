@@ -3,7 +3,6 @@ from flask import request
 import subprocess
 
 # Config
-docker = docker.APIClient(base_url='unix://var/run/docker.sock')
 with open('/run/secrets/nexus-dockerhub-token') as f: token = f.read().rstrip()
 app = Flask(__name__)
 
