@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 # Webhook route. We'll just redeploy the stack
-@app.route(token, methods=['POST'])
+@app.route('/' + token, methods=['POST'])
 def ping():
     print('* Received trigger for new images. Updating...')
     subprocess.Popen(['docker stack deploy -c /docker-compose.yml nexus'])
