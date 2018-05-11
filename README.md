@@ -85,3 +85,11 @@ Requires the manual addition of the following secrets:
 | `--local` | `-l` | Use local registry instead of hub.docker.com |
 | `--build` | `-b` | Build and publish files to specified registry before deploying. |
 | `--staging` | `-s` | Generate production image from staging branch. Just for the staging server. |
+
+<br>
+
+### Building images manually
+Every image can also be easily built manually without the deploy script. Just
+`cd` into the folder of your target image and run `make image registry=<registry>`
+where `registry` is either `127.0.0.1:5000` for the local registry or `nexusstats`
+for the dockerhub repo (requires permissions).
