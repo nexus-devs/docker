@@ -12,6 +12,7 @@ app = Flask(__name__)
 def ping():
     print('* Received trigger for new images. Updating...')
     subprocess.Popen(['docker stack deploy -c /docker-compose.yml nexus'])
+    return 'ok'
 
 
 app.run(host='0.0.0.0', port=5000)

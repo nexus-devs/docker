@@ -17,8 +17,8 @@ services:
       - nexus-cert-public
       - nexus-cert-private
 
-  update:
-    image: nexusstats/update
+  boatswain:
+    image: nexusstats/boatswain
     deploy:
       update_config:
         order: start-first
