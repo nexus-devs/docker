@@ -1,1 +1,2 @@
-compose/*app.yml
+compose/app.yml
+compose/local/app.yml

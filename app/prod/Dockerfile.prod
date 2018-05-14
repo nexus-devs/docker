@@ -1,13 +1,17 @@
 FROM node:alpine
 
+# Add nexus user to which we'll switch in custom images
+RUN adduser -D nexus
+
 # Build dependencies
-RUN apk --update add git openssh make gcc g++ python \
+RUN apk --update add git openssh make gcc g++ python curl \
   && npm install node-gyp -g
 
 # Clone the nexus-stats repo and build node_modules
 RUN mkdir -p /app/nexus-stats \
   && cd app \
   && git clone -b master https://github.com/nexus-devs/nexus-stats \
+  && chown -R nexus nexus-stats \
   && cd nexus-stats \
   && npm install --production
 
@@ -15,9 +19,19 @@ RUN mkdir -p /app/nexus-stats \
 RUN apk del git openssh make gcc g++ python \
   && npm remove node-gyp -g
 
+# Drop root perms
+USER nexus
+
 # Add script which adds node's credentials to mongo
 COPY prelaunch.js /app/nexus-stats/prelaunch.js
 
 # Entry point for starting the app
 COPY entrypoint.sh /
-ENTRYPOINT [ "sh", "/entrypoint.sh" ]
+CMD [ "sh", "/entrypoint.sh" ]
+
+# Healthchecks
+COPY healthcheck.sh /
+HEALTHCHECK --interval=10s \
+  --timeout=5s \
+  --start-period=120s \
+  CMD sh /healthcheck.sh
