@@ -4,7 +4,7 @@ FROM node:alpine
 RUN adduser -D nexus
 
 # Build dependencies
-RUN apk --update add git openssh make gcc g++ python curl \
+RUN apk add --update --no-cache git openssh make gcc g++ python curl libpng-dev bash \
   && npm install node-gyp -g
 
 # Clone the nexus-stats repo and build node_modules
@@ -13,7 +13,7 @@ RUN mkdir -p /app/nexus-stats \
   && git clone -b staging https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
-  && npm install --production
+  && npm install
 
 # Clean up unnecessary dependencies
 RUN apk del git openssh make gcc g++ python \
