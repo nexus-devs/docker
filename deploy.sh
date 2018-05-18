@@ -126,10 +126,6 @@ docker stack deploy --prune --compose-file $compose_merged nexus
 
 # Automatically log dev container
 if [[ $dev == true ]]; then
-  until [ "`/usr/bin/docker inspect -f {{.State.Running}} nexus_dev`" == "true" ]; do
-    sleep 0.1;
-  done;
-
   # Run watchdog to propagate file changes from the repo to our container.
   # Only necessary on windows due to the nature of the filesystem.
   if [[ $dev == true && ${DOCKER_OS} == 'Windows' && ! $(ps -ef) =~ 'docker-volume-watcher'  ]]; then

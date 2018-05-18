@@ -28,7 +28,7 @@ services:
     secrets:
       - nexus-dockerhub-token
     ports:
-      - 5001:5000
+      - 7000:5000
 
   # API nodes
   main_api:

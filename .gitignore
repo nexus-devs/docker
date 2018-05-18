@@ -1,2 +1,4 @@
 compose/app.yml
 compose/local/app.yml
+*keyfile*
+*admin-pwd*
