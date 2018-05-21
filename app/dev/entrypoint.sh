@@ -9,7 +9,8 @@ node prelaunch.js
 cd /app/nexus-stats
 
 if ([ -d "node_modules" ] && [ ! -f "node_modules/.docker" ]) || [ ! -d "node_modules" ]; then
-  echo '\n* Installing pre-compiled node_modules, this may take a while...'
+  echo ' '
+  echo '* Installing pre-compiled node_modules, this may take a while...'
   mv /tmp/nexus-stats/node_modules /app/nexus-stats
   echo ' ' >> node_modules/.docker
 fi
