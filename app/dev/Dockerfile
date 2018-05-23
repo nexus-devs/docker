@@ -13,4 +13,4 @@ COPY prelaunch.js /tmp/nexus-stats/prelaunch.js
 
 # Entry point for starting the app
 COPY entrypoint.sh /
-ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "sh", "/entrypoint.sh" ]
