@@ -17,8 +17,8 @@ services:
       - nexus-cert-public
       - nexus-cert-private
 
-  boatswain:
-    image: nexusstats/boatswain
+  bosun:
+    image: nexusstats/bosun
     deploy:
       placement:
         constraints:

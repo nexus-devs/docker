@@ -33,7 +33,7 @@ async function waitRedis() {
       console.log('* Redis is up!')
       resolved = true
     } catch (err) {
-      await sleep(500)
+      await sleep(100)
     }
   }
 }
@@ -56,7 +56,7 @@ async function waitMongo() {
       mongo.close()
       break
     } catch (err) {
-      await sleep(500)
+      await sleep(100)
     }
   }
 }

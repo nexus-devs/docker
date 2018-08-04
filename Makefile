@@ -15,7 +15,7 @@ staging:
 	cd services/mongoc; make image registry=$(registry)
 	cd services/redis; make image registry=$(registry)
 	cd services/nginx; make image registry=$(registry)
-	cd services/boatswain; make image registry=$(registry)
+	cd services/bosun; make image registry=$(registry)
 	cd app/prod; make staging registry=$(registry)
 
 prod:
@@ -23,7 +23,7 @@ prod:
 	cd services/mongoc; make image registry=$(registry)
 	cd services/redis; make image registry=$(registry)
 	cd services/nginx; make image registry=$(registry)
-	cd services/boatswain; make image registry=$(registry)
+	cd services/bosun; make image registry=$(registry)
 	cd app/prod; make prod registry=$(registry)
 
 prod-deps:

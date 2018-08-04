@@ -17,8 +17,8 @@ services:
       - nexus-cert-public
       - nexus-cert-private
 
-  boatswain:
-    image: 127.0.0.1:5000/boatswain
+  bosun:
+    image: 127.0.0.1:5000/bosun
     deploy:
       update_config:
         order: start-first
