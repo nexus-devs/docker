@@ -4,8 +4,8 @@ FROM alpine:latest
 RUN apk add --update --virtual .build-deps build-base linux-headers openssl
 
 # Get redis source code
-RUN wget https://github.com/antirez/redis/archive/4.0.5.tar.gz \
-    && tar xzf 4.0.5.tar.gz
+RUN wget https://github.com/antirez/redis/archive/4.0.5.tar.gz
+RUN tar xzf 4.0.5.tar.gz
 
 # Build from source
 RUN cd redis-4.0.5 \

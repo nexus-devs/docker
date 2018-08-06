@@ -10,7 +10,7 @@ RUN apk --update add git openssh make gcc g++ python curl \
 # Clone the nexus-stats repo and build node_modules
 RUN mkdir -p /app/nexus-stats \
   && cd app \
-  && git clone -b master https://github.com/nexus-devs/nexus-stats \
+  && git clone -b production https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
   && rm -rf package-lock.json \
