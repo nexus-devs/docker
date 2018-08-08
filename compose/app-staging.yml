@@ -4,23 +4,44 @@ services:
   # API nodes
   main_api:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
   auth_api:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
   ui_api:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
 
   # Core nodes
   main_core:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
   auth_core:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
   ui_core:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
 
   warframe_core:
     image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+      - NODE_DEBUG=true
