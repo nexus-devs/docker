@@ -10,7 +10,8 @@ certbot certonly \
   -d *.nexushub.io -d *.nexushub.co -d nexushub.io -d nexushub.co \
   -m devs@nexus-stats.com \
   --dns-cloudflare \
-  --agree-tos
+  --agree-tos \
+  --non-interactive
 
 # Check for renewal every hour
 while : ; do
