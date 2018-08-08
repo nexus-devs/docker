@@ -28,9 +28,6 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-    ports:
-      - 80:80
-      - 443:443
     volumes:
       - nexus_certs:/etc/letsencrypt
     secrets:
