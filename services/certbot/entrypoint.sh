@@ -7,7 +7,7 @@ echo "dns_cloudflare_email = apps@nexus-stats.com" >> /etc/letsencrypt/dnscloudf
 
 # Initial setup
 certbot certonly \
-  -d *.nexushub.io -d *.nexushub.co -d nexushub.io -d nexushub.co \
+  -d nexushub.co -d *.nexushub.co -d *.staging.nexushub.co \
   -m devs@nexus-stats.com \
   --dns-cloudflare \
   --agree-tos \
