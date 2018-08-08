@@ -7,4 +7,4 @@ RUN apk add --no-cache certbot python3 \
 COPY cli.ini /
 COPY entrypoint.sh /
 
-ENTRYPOINT [ "entrypoint.sh" ]
+CMD [ "sh", "/entrypoint.sh" ]
