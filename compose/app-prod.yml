@@ -5,6 +5,9 @@ services:
   nginx:
     image: nexusstats/nginx
     deploy:
+      placement:
+        constraints:
+          - node.role == manager
       update_config:
         order: start-first
         failure_action: rollback
@@ -13,9 +16,25 @@ services:
     ports:
       - 80:80
       - 443:443
+    volumes:
+      - nexus_certs:/certs
+
+  certbot:
+    image: nexusstats/certbot
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        order: start-first
+        failure_action: rollback
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nexus_certs:/etc/letsencrypt
     secrets:
-      - nexus-cert-public
-      - nexus-cert-private
+      - nexus-cloudflare-token
 
   bosun:
     image: nexusstats/bosun
@@ -176,9 +195,7 @@ secrets:
   nexus-dockerhub-token:
     external: true
 
-  nexus-cert-public:
-    external: true
-  nexus-cert-private:
+  nexus-cloudflare-token:
     external: true
 
   nexus-main-key:
@@ -200,3 +217,7 @@ secrets:
     external: true
   nexus-ui-secret:
     external: true
+
+
+volumes:
+  nexus_certs:

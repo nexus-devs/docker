@@ -1,4 +1,4 @@
-## Nexus-Stats Development Image
+## NexusHub Development Image
 
 ### Live editing
 In order to write code as usual, this image expects a bind mount from the
@@ -7,7 +7,7 @@ automatically take the provided path when the `--dev` flag is present and
 adjust docker-compose files accordingly.
 
 ### Configuration
-The configuration of individual nodes is done directly through the Nexus-Stats
+The configuration of individual nodes is done directly through the NexusHub
 repo's [config files](https://github.com/nexus-devs/nexus-stats/tree/development/config/cubic).
 Generally, there are no differences besides different database resolvers and
 RSA keys.

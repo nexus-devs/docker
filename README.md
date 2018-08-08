@@ -1,5 +1,5 @@
-# Nexus-Stats Docker Images
-This is a collection of Docker images for Nexus-Stats server components.
+# NexusHub Docker Images
+This is a collection of Docker images for NexusHub server components.
 There is a readme included in each folder to explain the image setup and
 configuration.
 
@@ -32,13 +32,13 @@ Check out [Docker for Mac](https://docs.docker.com/docker-for-mac/install/).
 <br>
 
 
-## Deploying the Nexus-Stats stack
+## Deploying the NexusHub stack
 With Docker installed, we can now build the required docker images and
 deploy them to [Docker Swarm](https://docs.docker.com/engine/swarm/key-concepts/).
 
 **IMPORTANT**: You probably won't need this unless you're debugging stuff, so make
 sure to follow the [Quickstart Tutorial](https://github.com/nexus-devs/nexus-stats#quickstart)
-from the Nexus-Stats repo instead.
+from the NexusHub repo instead.
 
 <br>
 
@@ -74,7 +74,7 @@ Sets up the swarm, builds images and deploys them to the swarm.
 The application will listen on :80/:443 to \*.nexus-stats.com requests. <br>
 
 Requires the manual addition of the following secrets:
-- Docker Secret: nexus-cert-public, nexus-cert-private, nexus-dockerhub-token
+- Docker Secret: nexus-dockerhub-token, nexus-cloudflare-token
 
 <br>
 

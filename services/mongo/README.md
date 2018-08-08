@@ -1,4 +1,4 @@
-### Nexus-Stats Mongodb Replica Sets
+### NexusHub Mongodb Replica Sets
 <br>
 Setup for Mongodb replica set members. The base image is mostly a default mongod
 instance with the following data structure:

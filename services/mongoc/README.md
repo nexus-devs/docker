@@ -1,4 +1,4 @@
-### Nexus-Stats MongoController
+### NexusHub MongoController
 
 #### What does this do?
 Automatically configures the mongo replica set of connected containers. From
