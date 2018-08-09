@@ -25,7 +25,7 @@ echo "ui: $ui"
 # healthcheck already times out by that point if the site isn't up at all,
 # meaning no further checks for api nodes are required.
 check_url () {
-  status_code=$(curl --silent --output /dev/stderr --write-out "%{http_code}" $1)
+  status_code=$(curl -L --silent --output /dev/stderr --write-out "%{http_code}" $1)
 
   if [[ $core == true ]]; then
     [[ $status_code -lt 400 ]] && exit 0 || exit 1
