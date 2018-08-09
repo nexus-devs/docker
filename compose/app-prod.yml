@@ -48,6 +48,9 @@ services:
       - nexus-dockerhub-token
     ports:
       - 7000:5000
+    volumes:
+      - /opt/docker/compose:/compose
+      - //var/run/docker.sock:/var/run/docker.sock
 
   # API nodes
   main_api:

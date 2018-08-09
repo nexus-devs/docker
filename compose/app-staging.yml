@@ -1,6 +1,11 @@
 version: '3.4'
 
 services:
+  bosun:
+    image: nexusstats/bosun
+    environment:
+      - DEPLOY_BRANCH=staging
+
   # API nodes
   main_api:
     image: nexusstats/nexus-stats:staging
