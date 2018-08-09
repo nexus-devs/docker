@@ -126,6 +126,7 @@ services:
       - nexus-main-secret
       - mongo-admin-pwd
       - nexus-public-key
+      - nexus-ga-key
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -193,6 +194,9 @@ secrets:
     external: true
 
   nexus-cloudflare-token:
+    external: true
+
+  nexus-ga-key:
     external: true
 
   nexus-main-key:
