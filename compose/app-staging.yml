@@ -7,18 +7,24 @@ services:
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
   auth_api:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
   ui_api:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
 
   # Core nodes
@@ -27,21 +33,29 @@ services:
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
   auth_core:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
   ui_core:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
   warframe_core:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
       - NODE_DEBUG=true
+#    volumes:
+#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
