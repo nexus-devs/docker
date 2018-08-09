@@ -6,7 +6,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -14,7 +14,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -22,7 +22,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -32,7 +32,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -40,7 +40,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -48,7 +48,7 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
 
@@ -56,6 +56,6 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
-      - NODE_DEBUG=true
+#      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
