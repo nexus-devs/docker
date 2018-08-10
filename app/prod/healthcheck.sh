@@ -16,10 +16,12 @@ contains() {
 contains "${NEXUS_TARGET_NODE}" "-core" && core=true || core=false
 contains "${NEXUS_TARGET_NODE}" "auth-" && auth=true || auth=false
 contains "${NEXUS_TARGET_NODE}" "ui-" && ui=true || ui=false
+contains "${NEXUS_TARGET_NODE}" "warframe-" && warframe=true || warframe=false
 
 echo "core: $core"
 echo "auth: $auth"
 echo "ui: $ui"
+
 
 # IMPORTANT: We only really check for core responses because we assume that the
 # healthcheck already times out by that point if the site isn't up at all,
@@ -41,6 +43,10 @@ if [[ $ui == true ]]; then
 # Same for auth node
 elif [[ $auth == true ]]; then
   check_url http://auth_api:3030
+
+# Warframe worker
+elif [[ $warframe == true ]]; then
+  check_url http://main_api:3003/warframe/v1/items/nikana%20prime
 
 # Nodes connected to main api
 else
