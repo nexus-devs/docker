@@ -20,4 +20,4 @@ USER mongodb
 
 # Entrypoint
 COPY entrypoint.sh /
-ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "sh", "/entrypoint.sh" ]
