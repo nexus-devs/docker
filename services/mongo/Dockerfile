@@ -6,11 +6,9 @@ RUN apk add --update mongodb mongodb-tools && rm /usr/bin/mongoperf \
   && pip3 install pymongo flask requests \
   && apk del build-base
 
-# Create database volume directory so we can get perms for mongodb user
-# Must be done before mounting volume, otherwise it's locked to root
+# Create database directory
 RUN mkdir -p /data/logs /data/db /data/config /data/backups
 RUN chown -R mongodb /data
-VOLUME [ "/data/db" ]
 
 # Add listener for replica set initiation
 COPY listener.py /
