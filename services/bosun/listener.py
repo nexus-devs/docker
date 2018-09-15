@@ -38,7 +38,7 @@ def ping():
     if not validate_signature(token, request.get_data(), signature):
         return 'Invalid Signature', 403
 
-    if payload['state'] == 'success' and payload['branches'][0]['name'] == branch:
+    if payload['state'] == 'success' and [x for x in payload['branches'] if x['name'] == branch]:
         print('* Received trigger for new images. Updating...')
         subprocess.call('docker stack deploy -c /compose/app.yml nexus', shell=True)
         return 'ok'
