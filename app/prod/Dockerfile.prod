@@ -33,6 +33,6 @@ CMD [ "sh", "/entrypoint.sh" ]
 # Healthchecks
 COPY healthcheck.sh /
 HEALTHCHECK --interval=10s \
-  --timeout=5s \
-  --start-period=120s \
+  --timeout=15s \
+  --start-period=180s \
   CMD sh /healthcheck.sh
