@@ -16,4 +16,5 @@ if ([ -d "node_modules" ] && [ ! -f "node_modules/.docker" ]) || [ ! -d "node_mo
 fi
 
 # Launch
+npm rebuild
 npm start
