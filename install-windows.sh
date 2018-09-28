@@ -15,4 +15,5 @@ source ~/.bashrc
 
 # Install file watchdog to workaround an issue where file changes in bind mounts
 # wouldn't propagate to the docker container.
+command -v pip || { apt-get install -y python3-pip python3 }
 pip install docker-bash-volume-watcher
