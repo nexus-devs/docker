@@ -63,7 +63,7 @@ if [[ $local == true ]] && [ ! "$(docker service ls | grep registry)" ]; then
     registry:latest
 fi
 
-# Use docker-compose with local registry when --local flag is passed
+# Use docker-compose pointing to local registry when --local flag is passed
 if [[ $local == true ]]; then
   compose_base=compose/local/app-base.yml
   compose_dev=compose/local/app-dev.yml
@@ -119,6 +119,9 @@ else
     -f $compose_prod \
     config > $compose_merged
 fi
+
+# Delete old containers (Docker sometimes just doesn't delete them)
+docker rm $(docker ps -a -q) &>/dev/null
 
 # Deploy selected stack
 docker stack deploy --prune --compose-file $compose_merged nexus
