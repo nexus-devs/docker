@@ -39,16 +39,16 @@ services:
     networks:
       - nexus_app
 
-  portainer:
-    image: portainer/portainer
-    ports:
-      - 9000:9000
-    networks:
-      - nexus_app
-    command: -H unix:///var/run/docker.sock
-    volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+  #portainer:
+  #  image: portainer/portainer
+  #  ports:
+  #    - 9000:9000
+  #  networks:
+  #    - nexus_app
+  #  command: -H unix:///var/run/docker.sock
+  #  volumes:
+  #    - //var/run/docker.sock:/var/run/docker.sock
+  #    - portainer_data:/data
 
 
 networks:
