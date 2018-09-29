@@ -43,6 +43,8 @@ services:
     image: portainer/portainer
     ports:
       - 9000:9000
+    networks:
+      - nexus_app
     command: -H unix:///var/run/docker.sock
     volumes:
       - //var/run/docker.sock:/var/run/docker.sock
