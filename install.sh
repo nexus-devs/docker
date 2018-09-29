@@ -2,15 +2,8 @@
 sudo true
 
 # Docker setup
-if [ -x "$(command -v docker)" ]; then
-  wget -O - https://bit.ly/docker-install | bash
-fi
+command -v docker-compose || { wget -O - https://bit.ly/docker-install | bash }
 
 # Build requirements
-if [ -x "$(command -v pwgen)"]; then
-  apt-get install -y pwgen
-fi
-
-if [ -x "$(command -v make)"]; then
-  apt-get install -y build-essential
-fi
+command -v pwgen || { apt-get install -y pwgen }
+command -v make || { apt-get install -y build-essential }

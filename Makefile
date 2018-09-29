@@ -7,8 +7,8 @@ dev:
 	cd app/dev; make image registry=$(registry)
 
 dev-deps:
-	cd services/mongo; make deps
-	cd app/dev; make deps
+	cd services/mongo; make -B deps
+	cd app/dev; make -B deps
 
 staging:
 	cd services/mongo; make image registry=$(registry)
@@ -29,5 +29,5 @@ prod:
 	cd app/prod; make prod registry=$(registry)
 
 prod-deps:
-	cd services/mongo; make deps
-	cd app/prod; make deps
+	cd services/mongo; make -B deps
+	cd app/prod; make -B deps
