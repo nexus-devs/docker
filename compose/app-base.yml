@@ -39,6 +39,16 @@ services:
     networks:
       - nexus_app
 
+  portainer:
+    image: portainer/portainer
+    ports:
+      - 9000:9000
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+
 networks:
   nexus_app:
     external: true
@@ -60,3 +70,4 @@ secrets:
 
 volumes:
   mongo_backup:
+  portainer_data:
