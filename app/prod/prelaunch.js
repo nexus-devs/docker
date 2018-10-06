@@ -1,5 +1,5 @@
 const prod = process.env.NODE_ENV === 'production'
-const target = process.env.NEXUS_TARGET_NODE
+const fs = require('fs')
 const group = target.split('-')[0]
 const node = target.split('-')[1]
 const configs = {
@@ -49,9 +49,9 @@ async function waitRedis() {
  * If this is a core node, ensure the credentials are stored on mongo.
  * This also ensures the replica set is ready before we launch the app.
  */
-async function verifyCredentials() {
-  const userKey = xor(config, 'userKey')
-  const userSecret = xor(config, 'userSecret')
+async function verifyCredentials(target, key, secret, scope) {
+  const userKey = key || xor(config, 'userKey')
+  const userSecret = secret || xor(config, 'userSecret')
   let mongo, db
 
   // Attempt connection until ready. Replica set is certain to be initiated
@@ -74,7 +74,7 @@ async function verifyCredentials() {
       user_key: userKey,
       user_secret: await bcrypt.hash(userSecret, 8),
       last_ip: [],
-      scope: `write_root ${target.includes('auth') ? ' write_auth' : ''}`,
+      scope: scope,
       refresh_token: null
     }
   }, {
@@ -86,5 +86,14 @@ async function verifyCredentials() {
 
 waitRedis()
 if (node === 'core') {
-  verifyCredentials()
+  const target = process.env.NEXUS_TARGET_NODE
+  const scope = `write_root ${target.includes('auth') ? ' write_auth' : ''}`
+  verifyCredentials(target, true)
+
+  // User accounts for external system clients like the OCR bot
+  if (group === 'warframe') {
+    const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
+    const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
+    verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe')
+  }
 }

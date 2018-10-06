@@ -185,6 +185,8 @@ services:
     secrets:
       - nexus-warframe-key
       - nexus-warframe-secret
+      - nexus-warframe-bot-key
+      - nexus-warframe-bot-secret
       - mongo-admin-pwd
       - nexus-public-key
     environment:
