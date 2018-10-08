@@ -19,7 +19,7 @@ done
 # Generate explicit credentials for other clients
 
 # Warframe OCR Bot/WFM order tracker
-if [ ! "$(docker secret ls | grep nexus-warframe-bot-key)" ]
+if [ ! "$(docker secret ls | grep nexus-warframe-bot-key)" ]; then
   pwgen -s 64 1 > nexus-warframe-bot-key
   pwgen -s 64 1 > nexus-warframe-bot-secret
   docker secret create nexus-warframe-bot-key nexus-warframe-bot-key
