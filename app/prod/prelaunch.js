@@ -1,7 +1,7 @@
-const prod = process.env.NODE_ENV === 'production'
+const targetNode = process.env.NEXUS_TARGET_NODE
 const fs = require('fs')
-const group = target.split('-')[0]
-const node = target.split('-')[1]
+const group = targetNode.split('-')[0]
+const node = targetNode.split('-')[1]
 const configs = {
   auth: require('./config/cubic/auth.js'),
   ui: require('./config/cubic/ui.js'),
@@ -18,7 +18,7 @@ const xor = (obj, key) => obj[key] || (obj.core ? obj.core[key] : null)
 /**
  * There's a slim chance that redis isn't up before launch (~10% occurance)
  */
-async function waitRedis() {
+async function waitRedis () {
   let resolved = false
 
   while (!resolved) {
@@ -49,7 +49,7 @@ async function waitRedis() {
  * If this is a core node, ensure the credentials are stored on mongo.
  * This also ensures the replica set is ready before we launch the app.
  */
-async function verifyCredentials(target, key, secret, scope) {
+async function verifyCredentials (target, key, secret, scope) {
   const userKey = key || xor(config, 'userKey')
   const userSecret = secret || xor(config, 'userSecret')
   let mongo, db
@@ -74,7 +74,7 @@ async function verifyCredentials(target, key, secret, scope) {
       user_key: userKey,
       user_secret: await bcrypt.hash(userSecret, 8),
       last_ip: [],
-      scope: scope,
+      scope,
       refresh_token: null
     }
   }, {
@@ -88,7 +88,7 @@ waitRedis()
 if (node === 'core') {
   const target = process.env.NEXUS_TARGET_NODE
   const scope = `write_root ${target.includes('auth') ? ' write_auth' : ''}`
-  verifyCredentials(target, true)
+  verifyCredentials(target, null, null, scope)
 
   // User accounts for external system clients like the OCR bot
   if (group === 'warframe') {
