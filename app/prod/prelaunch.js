@@ -85,7 +85,7 @@ async function verifyCredentials (target, key, secret, scope) {
 }
 
 waitRedis()
-const scope = `write_root ${node === 'core' && target.includes('auth') ? ' write_auth' : ''}`
+const scope = `write_root ${node === 'core' && group === 'auth' ? ' write_auth' : ''}`
 verifyCredentials(targetNode, null, null, scope)
 
 // User accounts for external system clients like the OCR bot
