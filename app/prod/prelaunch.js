@@ -13,7 +13,7 @@ const bcrypt = require('bcryptjs')
 const mongodb = require('mongodb').MongoClient
 const redis = require('redis')
 const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
-const xor = (obj, key) => obj[key] || (obj.core ? obj.core[key] : null)
+const xor = (obj, key, node) => obj[key] || (obj[node] ? obj[node][key] : null)
 
 /**
  * There's a slim chance that redis isn't up before launch (~10% occurance)
@@ -27,7 +27,7 @@ async function waitRedis () {
       resolve = res
       reject = rej
     })
-    let client = redis.createClient(xor(config, 'redisUrl'))
+    let client = redis.createClient(xor(config, 'redisUrl', 'core'))
     client.on('ready', () => {
       client.quit()
       resolve()
@@ -50,15 +50,15 @@ async function waitRedis () {
  * This also ensures the replica set is ready before we launch the app.
  */
 async function verifyCredentials (target, key, secret, scope) {
-  const userKey = key || xor(config, 'userKey')
-  const userSecret = secret || xor(config, 'userSecret')
+  const userKey = key || xor(config, 'userKey', node)
+  const userSecret = secret || xor(config, 'userSecret', node)
   let mongo, db
 
   // Attempt connection until ready. Replica set is certain to be initiated
   // when connection succeeds, since we'd get unauthorized errors otherwise.
   while (true) {
     try {
-      mongo = await mongodb.connect(xor(config, 'mongoUrl'))
+      mongo = await mongodb.connect(xor(config, 'mongoUrl', 'core'))
       db = mongo.db('nexus-auth')
       console.log('\n* Mongodb is up!')
       break
@@ -85,15 +85,12 @@ async function verifyCredentials (target, key, secret, scope) {
 }
 
 waitRedis()
-if (node === 'core') {
-  const target = process.env.NEXUS_TARGET_NODE
-  const scope = `write_root ${target.includes('auth') ? ' write_auth' : ''}`
-  verifyCredentials(target, null, null, scope)
+const scope = `write_root ${node === 'core' && target.includes('auth') ? ' write_auth' : ''}`
+verifyCredentials(targetNode, null, null, scope)
 
-  // User accounts for external system clients like the OCR bot
-  if (group === 'warframe') {
-    const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
-    const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
-    verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe')
-  }
+// User accounts for external system clients like the OCR bot
+if (group === 'warframe' && node === 'core') {
+  const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
+  const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
+  verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe')
 }
