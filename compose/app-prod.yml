@@ -215,6 +215,10 @@ secrets:
     external: true
   nexus-warframe-secret:
     external: true
+  nexus-warframe-bot-key:
+    external: true
+  nexus-warframe-bot-secret:
+    external: true
 
   nexus-auth-key:
     external: true
