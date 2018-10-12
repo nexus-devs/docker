@@ -58,6 +58,7 @@ services:
   main_api:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -78,6 +79,7 @@ services:
   auth_api:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -99,6 +101,7 @@ services:
   ui_api:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -121,6 +124,7 @@ services:
   main_core:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -140,6 +144,7 @@ services:
   auth_core:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -159,6 +164,7 @@ services:
   ui_core:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -177,6 +183,7 @@ services:
   warframe_core:
     image: nexusstats/nexus-stats
     deploy:
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
