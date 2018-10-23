@@ -75,7 +75,6 @@ async function verifyCredentials (target, key, secret, scope) {
       user_secret: await bcrypt.hash(userSecret, 8),
       last_ip: [],
       scope,
-      refresh_token: null
     }
   }, {
     upsert: true
