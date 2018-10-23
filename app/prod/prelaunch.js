@@ -93,6 +93,6 @@ if (node === 'core') {
   if (group === 'warframe') {
     const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
     const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
-    verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe')
+    verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe ignore_rate_limit')
   }
 }
