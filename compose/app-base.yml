@@ -5,13 +5,17 @@ services:
   mongo:
     image: nexusstats/mongo
     deploy:
-      replicas: 3
+      mode: global
+      placement:
+        constraints:
+          - engine.labels.mongo == true
     networks:
       - nexus_app
     secrets:
       - mongo-keyfile
       - mongo-admin-pwd
     volumes:
+      - mongo:/data/db
       - mongo_backup:/data/backups
 
   mongoc:
@@ -36,19 +40,11 @@ services:
     image: nexusstats/redis
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
-
-  #portainer:
-  #  image: portainer/portainer
-  #  ports:
-  #    - 9000:9000
-  #  networks:
-  #    - nexus_app
-  #  command: -H unix:///var/run/docker.sock
-  #  volumes:
-  #    - //var/run/docker.sock:/var/run/docker.sock
-  #    - portainer_data:/data
 
 
 networks:
@@ -71,5 +67,5 @@ secrets:
 
 
 volumes:
+  mongo:
   mongo_backup:
-  portainer_data:

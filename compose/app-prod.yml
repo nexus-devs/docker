@@ -8,9 +8,12 @@ services:
       placement:
         constraints:
           - node.role == manager
+          - engine.labels.mongo != true
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     ports:
@@ -25,9 +28,12 @@ services:
       placement:
         constraints:
           - node.role == manager
+          - engine.labels.mongo != true
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     volumes:
@@ -37,13 +43,18 @@ services:
 
   bosun:
     image: nexusstats/bosun
+    environment:
+      - DEPLOY_BRANCH=production
     deploy:
       placement:
         constraints:
           - node.role == manager
+          - engine.labels.mongo != true
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -58,10 +69,12 @@ services:
   main_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -79,10 +92,12 @@ services:
   auth_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -101,10 +116,12 @@ services:
   ui_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -124,10 +141,12 @@ services:
   main_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -144,10 +163,12 @@ services:
   auth_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -164,10 +185,12 @@ services:
   ui_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -183,10 +206,12 @@ services:
   warframe_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         order: start-first
         failure_action: rollback
+      constraints:
+        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:

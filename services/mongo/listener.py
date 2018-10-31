@@ -89,18 +89,11 @@ def backup():
 
 # Create admin user. This only gets triggered on the primary container in order
 # to make use of the localhost exception for creating users.
-#
-# Since we're already on the correct node, we'll also rebuild all backed up data.
-# For now this looks like the easiest 'persistent storage' solution - it might
-# get really slow with larger datasets though
 @app.route('/admin', methods=['GET'])
 def admin():
     mongo = pymongo.MongoClient()
     mongo.admin.add_user('admin', pwd, roles=[{ 'role': 'root', 'db': 'admin' }])
     mongo.close()
-
-    # Rebuild backed up data
-    os.system('/bin/sh /mongorestore.sh')
     return 'ok'
 
 app.run(host='0.0.0.0', port=27027)
