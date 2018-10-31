@@ -12,8 +12,6 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
     networks:
       - nexus_app
     ports:
@@ -32,8 +30,6 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
     networks:
       - nexus_app
     volumes:
@@ -53,8 +49,6 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -73,8 +67,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -96,8 +91,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -120,8 +116,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -145,8 +142,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -167,8 +165,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -189,8 +188,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
@@ -210,8 +210,9 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
-      constraints:
-        - engine.labels.mongo != true
+      placement:
+        constraints:
+          - engine.labels.mongo != true
     networks:
       - nexus_app
     secrets:
