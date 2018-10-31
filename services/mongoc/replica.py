@@ -39,7 +39,7 @@ def get_rs_config(hosts):
 
         # Make last member hidden so we can take backups without
         # interrupting the service.
-        if i >= len(hosts) - 1:
+        if i >= len(hosts) - 1 and len(hosts) > 1:
             member['priority'] = 0
             hidden = hosts[i]
             print('> Choosing hidden member: ' + hosts[i])
@@ -88,4 +88,5 @@ def reconfig(hosts_current, active, added):
 
 # Trigger backup on hidden node. Data will be stored in 'mongo-backup' volume.
 def backup():
-    requests.get('http://' + hidden + ':27027/backup')
+    if hidden:
+        requests.get('http://' + hidden + ':27027/backup')
