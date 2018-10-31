@@ -37,7 +37,7 @@ def get_host_names():
     host_names = []
 
     for container in containers:
-        host_names.append(service + '.' + str(container['Slot']) + '.' + container['ID'])
+        host_names.append(service + '.' + container['NodeID'] + '.' + container['ID'])
     return host_names
 
 
