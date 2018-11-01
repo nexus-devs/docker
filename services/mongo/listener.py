@@ -47,8 +47,14 @@ def initiate():
     # Connect to mongo and initiate, then add admin user
     if secret == pwd:
 
+        # Login as admin if credentials already exist
+        try:
+            mongo = pymongo.MongoClient(username='admin', password=pwd, authSource='admin')
+            existed = True
+        except:
+            mongo = pymongo.MongoClient()
+
         # Init
-        mongo = pymongo.MongoClient()
         mongo.admin.command('replSetInitiate', config)
 
         # Get primary
@@ -60,18 +66,20 @@ def initiate():
             if member['stateStr'] == 'PRIMARY':
                 primary = member['name'].split(':')[0]
 
-        # Create admin user on primary (either here or remote)
-        # > Here
-        if primary == target:
-            admin()
-        # > Remote
-        else:
-            try:
-                requests.get('http://' + primary + ':27027/admin')
-            except:
-                pass
+        # Create admin user on primary (either here or remote). Only do this if
+        # there isn't an existing admin user.
+        if not existed:
+            # > Here
+            if primary == target:
+                admin()
+            # > Remote
+            else:
+                try:
+                    requests.get('http://' + primary + ':27027/admin')
+                except:
+                    pass
 
-        return 'ok'
+            return 'ok'
 
     # Incorrect secret
     else:
