@@ -79,7 +79,7 @@ def initiate():
                 except:
                     pass
 
-            return 'ok'
+        return 'ok'
 
     # Incorrect secret
     else:
