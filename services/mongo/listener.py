@@ -24,6 +24,7 @@ app = Flask(__name__)
 # Ping to check when mongodb is up
 @app.route('/ping', methods=['GET'])
 def ping():
+    print('ping')
     up = False
     mongo = pymongo.MongoClient()
 
@@ -31,6 +32,7 @@ def ping():
         if mongo.admin.command('ping')['ok']:
             up = True
             mongo.close()
+            print('pong')
             return "pong"
         else:
             time.sleep(1)
@@ -46,16 +48,19 @@ def initiate():
 
     # Connect to mongo and initiate, then add admin user
     if secret == pwd:
+        existed = False
 
         # Login as admin if credentials already exist
         try:
             mongo = pymongo.MongoClient(username='admin', password=pwd, authSource='admin')
+            mongo.admin.command('replSetInitiate', config)
             existed = True
+            print('> Found previous setup, re-initiate replica set as admin.')
         except:
+            mongo.close()
             mongo = pymongo.MongoClient()
-
-        # Init
-        mongo.admin.command('replSetInitiate', config)
+            mongo.admin.command('replSetInitiate', config)
+            print('> First time setup, initiate replica set and create admin.')
 
         # Get primary
         time.sleep(20)

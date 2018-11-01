@@ -24,21 +24,28 @@ def ping(hosts):
 
         while not resolved:
             try:
-                requests.get('http://' + host + ':27027/ping')
+                requests.get('http://' + host + ':27027/ping', timeout=5)
                 resolved = True
-            except:
+            except Exception as err:
+                print('Error during ping: ' + str(err))
+                print('Retrying in 1s...')
                 time.sleep(1)
 
 
 
 # Get container names from docker tasks which we'll resolve to
 def get_host_names():
-    containers = docker.tasks(filters = { 'service': service })
-    host_names = []
+    while True:
+        try:
+            containers = docker.tasks(filters = { 'service': service })
+            host_names = []
 
-    for container in containers:
-        host_names.append(service + '.' + container['NodeID'] + '.' + container['ID'])
-    return host_names
+            for container in containers:
+                host_names.append(service + '.' + container['NodeID'] + '.' + container['ID'])
+            return host_names
+        except:
+            print('Could not find service ' + service + '. Retrying in 1s...')
+            time.sleep(1)
 
 
 
