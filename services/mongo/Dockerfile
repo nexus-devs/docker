@@ -1,7 +1,7 @@
-FROM alpine:latest
+FROM alpine:edge
 
 # Install mongodb
-RUN apk add --update mongodb mongodb-tools && rm /usr/bin/mongoperf \
+RUN apk add --update mongodb mongodb-tools \
   && apk add --no-cache python3 build-base \
   && pip3 install pymongo flask requests \
   && apk del build-base
