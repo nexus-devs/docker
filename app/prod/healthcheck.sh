@@ -46,7 +46,7 @@ elif [[ $auth == true ]]; then
 
 # Warframe worker
 elif [[ $warframe == true ]]; then
-  check_url http://main_api:3003/warframe/v1/items/nikana%20prime
+  check_url http://main_api:3003/warframe/foo
 
 # Nodes connected to main api
 else
