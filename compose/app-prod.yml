@@ -53,8 +53,6 @@ services:
       - nexus_app
     secrets:
       - nexus-dockerhub-token
-    ports:
-      - 7000:5000
     volumes:
       - /opt/docker/compose:/compose
       - //var/run/docker.sock:/var/run/docker.sock
@@ -77,8 +75,6 @@ services:
       - mongo-admin-pwd
       - nexus-main-key
       - nexus-main-secret
-    ports:
-      - 3003:3003
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -102,8 +98,6 @@ services:
       - nexus-auth-key
       - nexus-auth-secret
       - mongo-admin-pwd
-    ports:
-      - 3030:3030
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -126,8 +120,6 @@ services:
       - mongo-admin-pwd
       - nexus-ui-key
       - nexus-ui-secret
-    ports:
-      - 3000:3000
     environment:
       - DOCKER=true
       - NODE_ENV=production
