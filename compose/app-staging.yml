@@ -1,12 +1,23 @@
 version: '3.4'
 
 services:
+  traefik:
+    image: traefik:alpine
+    deploy:
+      labels:
+        - traefik.frontend.rule=Host:status.staging.nexushub.co
+
   bosun:
     image: nexusstats/bosun
     environment:
       - DEPLOY_BRANCH=staging
+    deploy:
+      labels:
+        - traefik.frontend.rule=Host:cd.staging.nexushub.co
 
+  #
   # API nodes
+  #
   main_api:
     image: nexusstats/nexus-stats:staging
     environment:
@@ -14,6 +25,9 @@ services:
 #      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+    deploy:
+      labels:
+        - traefik.frontend.rule=Host:api.staging.nexushub.co
 
   auth_api:
     image: nexusstats/nexus-stats:staging
@@ -22,6 +36,9 @@ services:
 #      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+    deploy:
+      labels:
+        - traefik.frontend.rule=Host:auth.staging.nexushub.co
 
   ui_api:
     image: nexusstats/nexus-stats:staging
@@ -30,9 +47,13 @@ services:
 #      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+    deploy:
+      labels:
+        - traefik.frontend.rule=Host:staging.nexushub.co
 
-
+  #
   # Core nodes
+  #
   main_core:
     image: nexusstats/nexus-stats:staging
     environment:

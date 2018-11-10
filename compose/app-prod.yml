@@ -2,8 +2,9 @@ version: '3.4'
 
 
 services:
-  nginx:
-    image: nexusstats/nginx
+  traefik:
+    image: traefik:alpine
+    command: --logLevel=DEBUG
     deploy:
       placement:
         constraints:
@@ -12,13 +13,22 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
+      labels:
+        - traefik.port=8080
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:status.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=traefik
     networks:
       - nexus_app
     ports:
       - 80:80
       - 443:443
+      - 8080:8080
     volumes:
       - nexus_certs:/certs
+      - //var/run/docker.sock:/var/run/docker.sock
+      - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
 
   certbot:
     image: nexusstats/certbot
@@ -49,6 +59,12 @@ services:
       update_config:
         order: start-first
         failure_action: rollback
+      labels:
+        - traefik.port=5000
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:cd.nexushub.co;Path:/deploy
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=bosun
     networks:
       - nexus_app
     secrets:
@@ -57,17 +73,25 @@ services:
       - /opt/docker/compose:/compose
       - //var/run/docker.sock:/var/run/docker.sock
 
+  #
   # API nodes
+  #
   main_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
+      labels:
+        - traefik.port=3003
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:api.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=api
     networks:
       - nexus_app
     secrets:
@@ -83,13 +107,19 @@ services:
   auth_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
+      labels:
+        - traefik.port=3030
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:auth.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=auth
     networks:
       - nexus_app
     secrets:
@@ -106,13 +136,19 @@ services:
   ui_api:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
+      labels:
+        - traefik.port=3000
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=ui
     networks:
       - nexus_app
     secrets:
@@ -125,12 +161,13 @@ services:
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=ui-api
 
-
+  #
   # Core nodes
+  #
   main_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -153,7 +190,7 @@ services:
   auth_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -176,7 +213,7 @@ services:
   ui_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
@@ -198,7 +235,7 @@ services:
   warframe_core:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 1
+      replicas: 2
       update_config:
         order: start-first
         failure_action: rollback
