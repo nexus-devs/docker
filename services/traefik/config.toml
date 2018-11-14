@@ -28,6 +28,7 @@ entryPoint = "https"
 # This is the only entrypoint being effectively used
 [entryPoints.https]
 address = ":443"
+compress = true
 
 # Use certs in nexus_certs volume
 [entryPoints.https.tls]
