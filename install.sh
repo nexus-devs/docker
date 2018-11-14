@@ -2,8 +2,14 @@
 sudo true
 
 # Docker setup
-command -v docker-compose || { wget -O - https://bit.ly/docker-install | bash }
+if ! type "docker-compose" > /dev/null; then
+  wget -O - https://bit.ly/docker-install | bash
+fi
 
 # Build requirements
-command -v pwgen || { apt-get install -y pwgen }
-command -v make || { apt-get install -y build-essential }
+if ! type "pwgen" > /dev/null; then
+  apt-get install -y pwgen
+fi
+if ! type "make" > /dev/null; then
+  apt-get install -y build-essential
+fi
