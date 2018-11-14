@@ -22,33 +22,25 @@ echo "core: $core"
 echo "auth: $auth"
 echo "ui: $ui"
 
-
-# IMPORTANT: We only really check for core responses because we assume that the
-# healthcheck already times out by that point if the site isn't up at all,
-# meaning no further checks for api nodes are required.
-check_url () {
-  status_code=$(curl -L --silent --output /dev/stderr --write-out "%{http_code}" $1)
-
-  if [[ $core == true ]]; then
-    [[ $status_code -lt 400 ]] && exit 0 || exit 1
-  else
+# Core node healthchecks
+if [[ $core == true ]]; then
+  if grep -Fxq "1" /app/nexus-stats/.health; then
     exit 0
+  else
+    exit 1
   fi
-}
 
-# UI and Auth nodes connect to their own API
-if [[ $ui == true ]]; then
-  check_url http://ui_api:3000
-
-# Same for auth node
-elif [[ $auth == true ]]; then
-  check_url http://auth_api:3030
-
-# Warframe worker
-elif [[ $warframe == true ]]; then
-  check_url http://main_api:3003/warframe/foo
-
-# Nodes connected to main api
+# API node healtchecks
 else
-  check_url http://main_api:3003
+  check_url () {
+    status_code=$(curl -L --silent --output /dev/stderr --write-out "%{http_code}" $1)
+    exit 0
+  }
+  if [[ $ui == true ]]; then
+    check_url http://localhost:3000/healthcheck
+  elif [[ $auth == true ]]; then
+    check_url http://localhost:3030/healthcheck
+  else
+    check_url http://localhost:3003/healthcheck
+  fi
 fi
