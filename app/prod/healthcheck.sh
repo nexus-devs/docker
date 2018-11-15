@@ -24,6 +24,10 @@ echo "ui: $ui"
 
 # Core node healthchecks
 if [[ $core == true ]]; then
+  # Wait for health file to be created
+  while [ ! -f /app/nexus-stats/.health ]; do
+    sleep 1
+  done
   if grep -Fxq "1" /app/nexus-stats/.health; then
     exit 0
   else
