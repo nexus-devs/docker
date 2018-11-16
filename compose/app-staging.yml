@@ -24,7 +24,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
     deploy:
       labels:
         - traefik.frontend.rule=Host:api.staging.nexushub.co
@@ -35,7 +35,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
     deploy:
       labels:
         - traefik.frontend.rule=Host:auth.staging.nexushub.co
@@ -46,7 +46,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
     deploy:
       labels:
         - traefik.frontend.rule=Host:staging.nexushub.co
@@ -60,7 +60,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
 
   auth_core:
     image: nexusstats/nexus-stats:staging
@@ -68,7 +68,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
 
   ui_core:
     image: nexusstats/nexus-stats:staging
@@ -76,7 +76,7 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
 
   warframe_core:
     image: nexusstats/nexus-stats:staging
@@ -84,4 +84,4 @@ services:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
-#      - /opt/debug/node_modules:/app/nexus-stats/node_modules
+#      - /opt/debug:/app/nexus-stats
