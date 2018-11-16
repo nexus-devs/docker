@@ -121,7 +121,7 @@ else
 fi
 
 # Delete old containers (Docker sometimes just doesn't delete them)
-docker system prune -y
+docker system prune --force
 
 # Deploy selected stack
 docker stack deploy --prune --compose-file $compose_merged nexus
