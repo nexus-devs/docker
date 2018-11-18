@@ -12,7 +12,7 @@ services:
           - engine.labels.mongo != true
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       labels:
         - traefik.port=8080
         - traefik.backend.loadbalancer.method=drr
@@ -39,7 +39,7 @@ services:
           - engine.labels.mongo != true
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
     networks:
       - nexus_app
     volumes:
@@ -58,7 +58,7 @@ services:
           - engine.labels.mongo != true
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       labels:
         - traefik.port=5000
         - traefik.backend.loadbalancer.method=drr
@@ -82,7 +82,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -110,7 +110,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -139,7 +139,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -170,7 +170,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -193,7 +193,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -216,7 +216,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -238,7 +238,7 @@ services:
       replicas: 2
       update_config:
         order: start-first
-        failure_action: rollback
+        delay: 10s
       placement:
         constraints:
           - engine.labels.mongo != true
