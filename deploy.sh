@@ -48,12 +48,6 @@ done
 # Init swarm
 docker swarm init
 
-# Create overlay networks
-if [ ! "$(docker network ls | grep nexus_app)" ]; then
-  docker network create --driver overlay nexus_app
-fi
-
-
 # Create private image registry on our swarm
 if [[ $local == true ]] && [ ! "$(docker service ls | grep registry)" ]; then
   docker service create -d \
@@ -122,6 +116,11 @@ fi
 
 # Delete old containers (Docker sometimes just doesn't delete them)
 docker system prune --force
+
+# Create overlay networks
+if [ ! "$(docker network ls | grep nexus_app)" ]; then
+  docker network create --driver overlay nexus_app
+fi
 
 # Deploy selected stack
 docker stack deploy --prune --compose-file $compose_merged nexus
