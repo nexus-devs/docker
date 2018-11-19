@@ -58,7 +58,7 @@ async function verifyCredentials (target, key, secret, scope) {
   // when connection succeeds, since we'd get unauthorized errors otherwise.
   while (true) {
     try {
-      mongo = await mongodb.connect(xor(config, 'mongoUrl'))
+      mongo = await mongodb.connect(xor(config, 'mongoUrl'), { useNewUrlParser: true })
       db = mongo.db('nexus-auth')
       console.log('\n* Mongodb is up!')
       break

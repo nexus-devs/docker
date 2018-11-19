@@ -50,7 +50,7 @@ async function waitMongo() {
   // when connection succeeds, since we'd get unauthorized errors otherwise.
   while (true) {
     try {
-      mongo = await mongodb.connect(xor(config, 'mongoUrl'))
+      mongo = await mongodb.connect(xor(config, 'mongoUrl'), { useNewUrlParser: true })
       db = mongo.db('nexus-auth')
       console.log('* Mongodb is up!')
       mongo.close()
