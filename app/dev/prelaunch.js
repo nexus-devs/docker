@@ -5,7 +5,6 @@ const config = require('/app/nexus-stats/config/cubic/auth.js')
 const mongodb = require('mongodb').MongoClient
 const redis = require('redis')
 const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
-const xor = (obj, key) => obj[key] || (obj.core ? obj.core[key] : null)
 
 /**
  * There's a slim chance that redis isn't up before launch (~10% occurance)
@@ -20,7 +19,7 @@ async function waitRedis() {
       resolve = res
       reject = rej
     })
-    let client = redis.createClient(xor(config, 'redisUrl'))
+    let client = redis.createClient(config.api.redisUrl)
     client.on('ready', () => {
       client.quit()
       resolve()
@@ -50,7 +49,7 @@ async function waitMongo() {
   // when connection succeeds, since we'd get unauthorized errors otherwise.
   while (true) {
     try {
-      mongo = await mongodb.connect(xor(config, 'mongoUrl'), { useNewUrlParser: true })
+      mongo = await mongodb.connect(config.api.mongoUrl, { useNewUrlParser: true })
       db = mongo.db('nexus-auth')
       console.log('* Mongodb is up!')
       mongo.close()

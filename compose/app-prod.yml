@@ -73,7 +73,7 @@ services:
   #
   # API nodes
   #
-  main_api:
+  main:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -93,14 +93,12 @@ services:
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
-      - nexus-main-key
-      - nexus-main-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=main-api
+      - NEXUS_TARGET_NODE=main
 
-  auth_api:
+  auth:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -120,15 +118,13 @@ services:
     secrets:
       - nexus-public-key
       - nexus-private-key
-      - nexus-auth-key
-      - nexus-auth-secret
       - mongo-admin-pwd
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=auth-api
+      - NEXUS_TARGET_NODE=auth
 
-  ui_api:
+  ui:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -148,17 +144,14 @@ services:
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
-      - nexus-ui-key
-      - nexus-ui-secret
+      - nexus-cubic-key
+      - nexus-cubic-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=ui-api
+      - NEXUS_TARGET_NODE=ui
 
-  #
-  # Core nodes
-  #
-  main_core:
+  warframe:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -167,87 +160,25 @@ services:
       placement:
         constraints:
           - engine.labels.mongo != true
+      labels:
+        - traefik.port=3003
+        - traefik.backend.loadbalancer.method=drr
+        - "traefik.frontend.rule=Host:api.nexushub.co;Path:/warframe/v1/"
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=api
     networks:
       - nexus_app
     secrets:
-      - nexus-main-key
-      - nexus-main-secret
-      - mongo-admin-pwd
       - nexus-public-key
-      - nexus-ga-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=main-core
-
-  auth_core:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 10s
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-auth-key
-      - nexus-auth-secret
       - mongo-admin-pwd
-      - nexus-private-key
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=auth-core
-
-  ui_core:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 10s
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-ui-key
-      - nexus-ui-secret
-      - mongo-admin-pwd
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=ui-core
-
-  warframe_core:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 10s
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-warframe-key
-      - nexus-warframe-secret
       - nexus-warframe-bot-key
       - nexus-warframe-bot-secret
-      - mongo-admin-pwd
-      - nexus-public-key
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=warframe-core
+      - NEXUS_TARGET_NODE=warframe
 
 
-# Core credentials
 secrets:
   nexus-dockerhub-token:
     external: true
@@ -258,28 +189,14 @@ secrets:
   nexus-ga-key:
     external: true
 
-  nexus-main-key:
+  nexus-cubic-key:
     external: true
-  nexus-main-secret:
+  nexus-cubic-secret:
     external: true
 
-  nexus-warframe-key:
-    external: true
-  nexus-warframe-secret:
-    external: true
   nexus-warframe-bot-key:
     external: true
   nexus-warframe-bot-secret:
-    external: true
-
-  nexus-auth-key:
-    external: true
-  nexus-auth-secret:
-    external: true
-
-  nexus-ui-key:
-    external: true
-  nexus-ui-secret:
     external: true
 
 

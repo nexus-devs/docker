@@ -1,22 +1,12 @@
 #!/bin/bash
-# Generate user credentials for cubic nodes
-for image in "$@"
-  do
-    if [ ! "$(docker secret ls | grep nexus-$image-key)" ]; then
-    echo ""
-    echo "* Generating user credentials for $image."
-    pwgen -s 64 1 > nexus-$image-key
-    pwgen -s 64 1 > nexus-$image-secret
-  	docker secret create nexus-$image-key nexus-$image-key
-    docker secret create nexus-$image-secret nexus-$image-secret
-  	rm nexus-$image-key nexus-$image-secret
-    echo "* Credentials generated as docker secret 'nexus-$image-key' and 'nexus-$image-secret'."
-    echo ""
-  fi
-done
-
-
-# Generate explicit credentials for other clients
+# Cubic UI
+if [ ! "$(docker secret ls | grep nexus-cubic-key)" ]; then
+  pwgen -s 64 1 > nexus-cubic-key
+  pwgen -s 64 1 > nexus-cubic-secret
+  docker secret create nexus-cubic-key nexus-cubic-key
+  docker secret create nexus-cubic-secret nexus-cubic-secret
+  echo "* Generated cubic client credentials."
+fi
 
 # Warframe OCR Bot/WFM order tracker
 if [ ! "$(docker secret ls | grep nexus-warframe-bot-key)" ]; then
