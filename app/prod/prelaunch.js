@@ -24,7 +24,7 @@ async function pre () {
     // when connection succeeds, since we'd get unauthorized errors otherwise.
     while (true) {
       try {
-        mongo = await mongodb.connect(xor(config, 'mongoUrl'), { useNewUrlParser: true })
+        mongo = await mongodb.connect(config.api.mongoUrl, { useNewUrlParser: true })
         db = mongo.db('nexus-auth')
         console.log('\n* Mongodb is up!')
         break
