@@ -63,5 +63,6 @@ async function waitMongo() {
 async function wait() {
   await waitRedis()
   await waitMongo()
+  process.exit()
 }
 wait()
