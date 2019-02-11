@@ -26,6 +26,7 @@ services:
 #    volumes:
 #      - /opt/debug:/app/nexus-stats
     deploy:
+      replicas: 1
       labels:
         - traefik.frontend.rule=Host:api.staging.nexushub.co
 
@@ -37,6 +38,7 @@ services:
 #    volumes:
 #      - /opt/debug:/app/nexus-stats
     deploy:
+      replicas: 1
       labels:
         - traefik.frontend.rule=Host:auth.staging.nexushub.co
 
@@ -48,6 +50,7 @@ services:
 #    volumes:
 #      - /opt/debug:/app/nexus-stats
     deploy:
+      replicas: 1
       labels:
         - traefik.frontend.rule=Host:staging.nexushub.co
 
@@ -59,5 +62,6 @@ services:
 #    volumes:
 #      - /opt/debug:/app/nexus-stats
     deploy:
+      replicas: 1
       labels:
         - "traefik.frontend.rule=Host:api.nexushub.co;Path:/warframe/v1/"
