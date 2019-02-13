@@ -73,7 +73,7 @@ services:
   #
   # API nodes
   #
-  main:
+  api:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -93,10 +93,12 @@ services:
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
+      - nexus-warframe-bot-key
+      - nexus-warframe-bot-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=main
+      - NEXUS_TARGET_NODE=api
 
   auth:
     image: nexusstats/nexus-stats
@@ -150,33 +152,6 @@ services:
       - DOCKER=true
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=ui
-
-  warframe:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 10s
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-      labels:
-        - traefik.port=3003
-        - traefik.backend.loadbalancer.method=drr
-        - "traefik.frontend.rule=Host:api.nexushub.co;Path:/warframe/v1/"
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-public-key
-      - mongo-admin-pwd
-      - nexus-warframe-bot-key
-      - nexus-warframe-bot-secret
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=warframe
 
 
 secrets:
