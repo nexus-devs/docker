@@ -118,6 +118,7 @@ fi
 docker system prune --force
 
 # Create overlay networks
+sleep 3
 if [ ! "$(docker network ls | grep nexus_app)" ]; then
   docker network create --driver overlay nexus_app
 fi
