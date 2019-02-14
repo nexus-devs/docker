@@ -3,8 +3,7 @@ const fs = require('fs')
 const configs = {
   auth: require('./config/cubic/auth.js'),
   ui: require('./config/cubic/ui.js'),
-  main: require('./config/cubic/main.js'),
-  warframe: require('./config/cubic/warframe.js')
+  api: require('./config/cubic/api.js')
 }
 const config = configs[node]
 const bcrypt = require('bcryptjs')
@@ -81,7 +80,7 @@ async function pre () {
    * Check user credentials for given node
    */
   if (node === 'ui') {
-    await verifyCredentials('cubic-ui', config.client.user_key, config.client.user_secret, 'write_root')
+    await verifyCredentials('cubic-ui', config.server.user_key, config.server.user_secret, 'write_root')
   }
   if (node === 'warframe') {
     const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
