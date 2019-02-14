@@ -2,198 +2,178 @@ version: '3.4'
 
 
 services:
-  nginx:
-    image: 127.0.0.1:5000/nginx
+  traefik:
+    image: traefik:alpine
+    command: --logLevel=DEBUG
     deploy:
+      placement:
+        constraints:
+          - node.role == manager
+          - engine.labels.mongo != true
       update_config:
-        order: start-first
-        failure_action: rollback
+        delay: 10s
+      labels:
+        - traefik.port=8080
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:status.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=traefik
     networks:
       - nexus_app
     ports:
       - 80:80
       - 443:443
+      - 8080:8080
+    volumes:
+      - nexus_certs:/certs
+      - //var/run/docker.sock:/var/run/docker.sock
+      - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
+
+  certbot:
+    image: 127.0.0.1:5000/certbot
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+          - engine.labels.mongo != true
+      update_config:
+        delay: 10s
+    networks:
+      - nexus_app
+    volumes:
+      - nexus_certs:/etc/letsencrypt
     secrets:
-      - nexus-cert-public
-      - nexus-cert-private
+      - nexus-cloudflare-token
 
   bosun:
     image: 127.0.0.1:5000/bosun
+    environment:
+      - DEPLOY_BRANCH=production
     deploy:
+      placement:
+        constraints:
+          - node.role == manager
+          - engine.labels.mongo != true
       update_config:
-        order: start-first
-        failure_action: rollback
+        delay: 10s
+      labels:
+        - traefik.port=5000
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:cd.nexushub.co;Path:/deploy
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=bosun
     networks:
       - nexus_app
     secrets:
       - nexus-dockerhub-token
-    ports:
-      - 7000:5000
+    volumes:
+      - /opt/docker/compose:/compose
+      - //var/run/docker.sock:/var/run/docker.sock
 
+  #
   # API nodes
-  main_api:
+  #
+  api:
     image: 127.0.0.1:5000/nexus-stats
     deploy:
+      replicas: 2
       update_config:
-        order: start-first
-        failure_action: rollback
+        delay: 10s
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+      labels:
+        - traefik.port=3003
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:api.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=api
     networks:
       - nexus_app
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
-      - nexus-main-key
-      - nexus-main-secret
-    ports:
-      - 3003:3003
+      - nexus-warframe-bot-key
+      - nexus-warframe-bot-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=main-api
+      - NEXUS_TARGET_NODE=api
 
-  auth_api:
+  auth:
     image: 127.0.0.1:5000/nexus-stats
     deploy:
+      replicas: 2
       update_config:
-        order: start-first
-        failure_action: rollback
+        delay: 10s
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+      labels:
+        - traefik.port=3030
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:auth.nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=auth
     networks:
       - nexus_app
     secrets:
       - nexus-public-key
       - nexus-private-key
-      - nexus-auth-key
-      - nexus-auth-secret
       - mongo-admin-pwd
-    ports:
-      - 3030:3030
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=auth-api
+      - NEXUS_TARGET_NODE=auth
 
-  ui_api:
+  ui:
     image: 127.0.0.1:5000/nexus-stats
     deploy:
+      replicas: 2
       update_config:
-        order: start-first
-        failure_action: rollback
+        delay: 10s
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+      labels:
+        - traefik.port=3000
+        - traefik.backend.loadbalancer.method=drr
+        - traefik.frontend.rule=Host:nexushub.co
+        - traefik.frontend.entryPoints=http,https
+        - traefik.backend=ui
     networks:
       - nexus_app
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
-      - nexus-ui-key
-      - nexus-ui-secret
-    ports:
-      - 3000:3000
+      - nexus-cubic-key
+      - nexus-cubic-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=ui-api
+      - NEXUS_TARGET_NODE=ui
 
 
-  # Core nodes
-  main_core:
-    image: 127.0.0.1:5000/nexus-stats
-    deploy:
-      update_config:
-        order: start-first
-        failure_action: rollback
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-main-key
-      - nexus-main-secret
-      - mongo-admin-pwd
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=main-core
-
-  auth_core:
-    image: 127.0.0.1:5000/nexus-stats
-    deploy:
-      update_config:
-        order: start-first
-        failure_action: rollback
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-auth-key
-      - nexus-auth-secret
-      - mongo-admin-pwd
-      - nexus-private-key
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=auth-core
-
-  ui_core:
-    image: 127.0.0.1:5000/nexus-stats
-    deploy:
-      update_config:
-        order: start-first
-        failure_action: rollback
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-ui-key
-      - nexus-ui-secret
-      - mongo-admin-pwd
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=ui-core
-
-  warframe_core:
-    image: 127.0.0.1:5000/nexus-stats
-    deploy:
-      update_config:
-        order: start-first
-        failure_action: rollback
-    networks:
-      - nexus_app
-    secrets:
-      - nexus-warframe-key
-      - nexus-warframe-secret
-      - mongo-admin-pwd
-      - nexus-public-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=warframe-core
-
-
-# Core credentials
 secrets:
   nexus-dockerhub-token:
     external: true
 
-  nexus-cert-public:
-    external: true
-  nexus-cert-private:
+  nexus-cloudflare-token:
     external: true
 
-  nexus-main-key:
-    external: true
-  nexus-main-secret:
+  nexus-ga-key:
     external: true
 
-  nexus-warframe-key:
+  nexus-cubic-key:
     external: true
-  nexus-warframe-secret:
-    external: true
-
-  nexus-auth-key:
-    external: true
-  nexus-auth-secret:
+  nexus-cubic-secret:
     external: true
 
-  nexus-ui-key:
+  nexus-warframe-bot-key:
     external: true
-  nexus-ui-secret:
+  nexus-warframe-bot-secret:
     external: true
+
+
+volumes:
+  nexus_certs:

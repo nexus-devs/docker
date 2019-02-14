@@ -14,7 +14,8 @@ RUN mkdir -p /app/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
   && rm -rf package-lock.json \
-  && npm install
+  && npm install \
+  && chown -R nexus .
 
 # Clean up unnecessary dependencies
 RUN apk del git openssh make gcc g++ python \

@@ -18,7 +18,7 @@ services:
   #
   # API nodes
   #
-  main:
+  api:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
@@ -53,15 +53,3 @@ services:
       replicas: 1
       labels:
         - traefik.frontend.rule=Host:staging.nexushub.co
-
-  warframe:
-    image: nexusstats/nexus-stats:staging
-    environment:
-      - NEXUS_STAGING=true
-#      - NODE_DEBUG=true
-#    volumes:
-#      - /opt/debug:/app/nexus-stats
-    deploy:
-      replicas: 1
-      labels:
-        - "traefik.frontend.rule=Host:api.nexushub.co;Path:/warframe/v1/"
