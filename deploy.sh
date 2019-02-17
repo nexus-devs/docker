@@ -118,10 +118,11 @@ fi
 docker system prune --force
 
 # Create overlay networks
-sleep 3
+sleep 2
 if [ ! "$(docker network ls | grep nexus_app)" ]; then
   docker network create --driver overlay nexus_app
 fi
+sleep 2
 
 # Deploy selected stack
 docker stack deploy --prune --compose-file $compose_merged nexus
