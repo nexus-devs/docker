@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:10-alpine
 
 # Add nexus user to which we'll switch in custom images
 RUN adduser -D nexus
