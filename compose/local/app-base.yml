@@ -7,7 +7,7 @@ services:
     deploy:
       replicas: 3
     networks:
-      - nexus_app
+      - app
     secrets:
       - mongo-keyfile
       - mongo-admin-pwd
@@ -26,7 +26,7 @@ services:
     environment:
       - SERVICE_NAME=nexus_mongo
     networks:
-      - nexus_app
+      - app
     secrets:
       - mongo-admin-pwd
     volumes:
@@ -37,11 +37,10 @@ services:
     deploy:
       replicas: 1
     networks:
-      - nexus_app
+      - app
 
 networks:
-  nexus_app:
-    external: true
+  app:
 
 
 secrets:

@@ -117,16 +117,8 @@ fi
 # Delete old containers (Docker sometimes just doesn't delete them)
 docker system prune --force
 
-# Create overlay networks
-sleep 2
-if [ ! "$(docker network ls | grep nexus_app)" ]; then
-  docker network create --driver overlay nexus_app
-fi
-sleep 2
-
 # Deploy selected stack
 docker stack deploy --prune --compose-file $compose_merged nexus
-
 
 # Automatically log dev container
 if [[ $dev == true ]]; then

@@ -17,7 +17,7 @@ services:
     deploy:
       replicas: 1
     networks:
-      - nexus_app
+      - app
     secrets:
       - mongo-admin-pwd
       - nexus-private-key

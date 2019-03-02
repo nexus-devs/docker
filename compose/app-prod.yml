@@ -19,7 +19,7 @@ services:
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=traefik
     networks:
-      - nexus_app
+      - app
     ports:
       - 80:80
       - 443:443
@@ -39,7 +39,7 @@ services:
       update_config:
         delay: 10s
     networks:
-      - nexus_app
+      - app
     volumes:
       - nexus_certs:/etc/letsencrypt
     secrets:
@@ -63,7 +63,7 @@ services:
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=bosun
     networks:
-      - nexus_app
+      - app
     secrets:
       - nexus-dockerhub-token
     volumes:
@@ -89,7 +89,7 @@ services:
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=api
     networks:
-      - nexus_app
+      - app
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
@@ -116,7 +116,7 @@ services:
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=auth
     networks:
-      - nexus_app
+      - app
     secrets:
       - nexus-public-key
       - nexus-private-key
@@ -142,7 +142,7 @@ services:
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=ui
     networks:
-      - nexus_app
+      - app
     secrets:
       - nexus-public-key
       - mongo-admin-pwd
