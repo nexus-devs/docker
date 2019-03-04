@@ -82,6 +82,7 @@ async function pre () {
   if (node === 'ui') {
     await verifyCredentials('cubic-ui', config.server.user_key, config.server.user_secret, 'write_root')
   }
+  // TODO: Refactor this into own service container
   if (node === 'warframe') {
     const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
     const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
