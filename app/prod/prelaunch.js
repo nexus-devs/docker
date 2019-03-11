@@ -11,7 +11,7 @@ const mongodb = require('mongodb').MongoClient
 const redis = require('redis')
 const sleep = (ms) => new Promise(resolve => setTimeout(() => resolve(), ms))
 
-async function pre () {
+async function pre() {
   let mongo, db, done
 
   /**
@@ -20,7 +20,8 @@ async function pre () {
    */
   while (!done) {
     try {
-      mongo = await mongodb.connect(confiag.api.mongoUrl, { useNewUrlParser: true })
+      const mongoUrl = node === 'api' ? config.mongoUrl : config.api.mongoUrl
+      mongo = await mongodb.connect(mongoUrl, { useNewUrlParser: true })
       db = mongo.db('nexus-auth')
       db.command({ "replSetGetStatus": 1 }, err => {
         if (!err) {
@@ -31,6 +32,7 @@ async function pre () {
       break
     } catch (err) {
       console.log(err)
+      console.log('Retrying in 500ms...')
       await sleep(500)
     }
   }
@@ -39,20 +41,20 @@ async function pre () {
    * Ensure credentials are stored on mongo.
    * This also ensures the replica set is ready before we launch the app.
    */
-  async function verifyCredentials (target, userKey, userSecret, scope) {
+  async function verifyCredentials(target, userKey, userSecret, scope) {
     await db.collection('users').updateOne({
       user_key: userKey
     }, {
-      $set: {
-        user_id: target,
-        user_key: userKey,
-        user_secret: await bcrypt.hash(userSecret, 8),
-        last_ip: [],
-        scope,
-      }
-    }, {
-      upsert: true
-    })
+        $set: {
+          user_id: target,
+          user_key: userKey,
+          user_secret: await bcrypt.hash(userSecret, 8),
+          last_ip: [],
+          scope,
+        }
+      }, {
+        upsert: true
+      })
     console.log('* User verification successful!')
     mongo.close()
   }
@@ -68,7 +70,8 @@ async function pre () {
       resolve = res
       reject = rej
     })
-    let client = redis.createClient(config.api.redisUrl)
+    const redisUrl = node === 'api' ? config.redisUrl : config.api.redisUrl
+    let client = redis.createClient(redisUrl)
     client.on('ready', () => {
       client.quit()
       resolve()
