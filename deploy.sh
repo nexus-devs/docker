@@ -95,6 +95,7 @@ elif [[ $staging == true ]]; then
   else
     make prod-deps
   fi
+  cp ./app/prod/prelaunch.js /opt/debug/prelaunch.js
   docker-compose \
     -f $compose_base \
     -f $compose_prod \
