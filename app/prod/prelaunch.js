@@ -84,6 +84,8 @@ async function pre() {
       resolved = true
       console.log('\n* Redis is up!')
     } catch (err) {
+      console.log(err)
+      console.log('Retrying in 500ms...')
       await sleep(500)
     }
   }

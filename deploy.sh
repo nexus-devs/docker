@@ -118,7 +118,15 @@ fi
 docker system prune --force
 
 # Deploy selected stack
-docker stack deploy --prune --compose-file $compose_merged nexus
+# For some reason docker deletes networks quite unreliably, so we'll
+# manually ensure it exists if the first try fails.
+{
+  docker stack deploy --prune --compose-file $compose_merged nexus
+} || {
+  docker network create --driver overlay nexus_app
+  docker stack deploy --prune --compose-file $compose_merged nexus
+}
+
 
 # Automatically log dev container
 if [[ $dev == true ]]; then
