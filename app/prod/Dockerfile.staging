@@ -13,7 +13,6 @@ RUN mkdir -p /app/nexus-stats \
   && git clone -b staging https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
-  && rm -rf package-lock.json \
   && npm install \
   && chown -R nexus .
 
