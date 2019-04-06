@@ -1,11 +1,4 @@
-FROM node:10-alpine
-
-# Add nexus user to which we'll switch in custom images
-RUN adduser -D nexus
-
-# Build dependencies
-RUN apk add --update --no-cache git openssh make gcc g++ python curl libpng-dev bash \
-  && npm install node-gyp -g
+FROM node:10
 
 # Clone the nexus-stats repo and build node_modules
 RUN mkdir -p /app/nexus-stats \
@@ -13,15 +6,8 @@ RUN mkdir -p /app/nexus-stats \
   && git clone -b production https://github.com/nexus-devs/nexus-stats \
   && chown -R nexus nexus-stats \
   && cd nexus-stats \
-  && npm install --production \
+  && npm install \
   && chown -R nexus .
-
-# Clean up unnecessary dependencies
-RUN apk del git openssh make gcc g++ python \
-  && npm remove node-gyp -g
-
-# Drop root perms
-USER nexus
 
 # Add script which adds node's credentials to mongo
 COPY prelaunch.js /app/nexus-stats/prelaunch.js
