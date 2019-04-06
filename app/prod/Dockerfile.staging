@@ -1,16 +1,13 @@
 FROM node:10
 
-# Clone the nexus-stats repo and build node_modules
-RUN mkdir -p /app/nexus-stats \
-  && cd app \
-  && git clone -b staging https://github.com/nexus-devs/nexus-stats \
-  && chown -R nexus nexus-stats \
-  && cd nexus-stats \
+# Clone the NexusHub repo and build node_modules
+RUN cd /app \
+  && git clone -b staging https://github.com/nexus-devs/NexusHub nexushub \
+  && cd nexushub \
   && npm install \
-  && chown -R nexus .
 
 # Add script which adds node's credentials to mongo
-COPY prelaunch.js /app/nexus-stats/prelaunch.js
+COPY prelaunch.js /app/nexushub/prelaunch.js
 
 # Entry point for starting the app
 COPY entrypoint.sh /

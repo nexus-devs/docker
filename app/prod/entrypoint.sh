@@ -1,6 +1,6 @@
 #!/bin/sh
 # cd to repo so process.cwd() works correctly
-cd app/nexus-stats
+cd app/nexushub
 
 # Run script for adding node credentials to mongo
 node prelaunch.js
