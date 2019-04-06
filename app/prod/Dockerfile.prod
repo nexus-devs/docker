@@ -2,7 +2,7 @@ FROM node:10
 
 # Clone the NexusHub repo and build node_modules
 RUN cd /app \
-  && git clone -b staging https://github.com/nexus-devs/NexusHub nexushub \
+  && git clone -b production https://github.com/nexus-devs/NexusHub nexushub \
   && cd nexushub \
   && npm install \
 
