@@ -5,7 +5,7 @@ RUN mkdir -p /app/nexushub \
   && cd /app \
   && git clone -b staging https://github.com/nexus-devs/NexusHub nexushub \
   && cd nexushub \
-  && npm install
+  && npm install --production
 
 # Add script which adds node's credentials to mongo
 COPY prelaunch.js /app/nexushub/prelaunch.js
