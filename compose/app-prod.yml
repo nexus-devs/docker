@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.7'
 
 
 services:
@@ -10,8 +10,6 @@ services:
         constraints:
           - node.role == manager
           - engine.labels.mongo != true
-      update_config:
-        delay: 10s
       labels:
         - traefik.port=8080
         - traefik.backend.loadbalancer.method=drr
@@ -36,8 +34,6 @@ services:
         constraints:
           - node.role == manager
           - engine.labels.mongo != true
-      update_config:
-        delay: 10s
     networks:
       - app
     volumes:
@@ -54,8 +50,6 @@ services:
         constraints:
           - node.role == manager
           - engine.labels.mongo != true
-      update_config:
-        delay: 10s
       labels:
         - traefik.port=5000
         - traefik.backend.loadbalancer.method=drr
@@ -78,7 +72,9 @@ services:
     deploy:
       replicas: 2
       update_config:
-        delay: 10s
+        delay: 60s
+        order: start-first
+        failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -105,7 +101,9 @@ services:
     deploy:
       replicas: 2
       update_config:
-        delay: 10s
+        delay: 60s
+        order: start-first
+        failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
@@ -131,7 +129,9 @@ services:
     deploy:
       replicas: 2
       update_config:
-        delay: 10s
+        delay: 60s
+        order: start-first
+        failure_action: rollback
       placement:
         constraints:
           - engine.labels.mongo != true
