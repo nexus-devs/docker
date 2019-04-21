@@ -39,9 +39,13 @@ def ping():
         return 'Invalid Signature', 403
 
     if payload['state'] == 'success' and [x for x in payload['branches'] if x['name'] == branch]:
-        print('* Received trigger for new images. Updating...')
-        subprocess.call('docker stack deploy -c /compose/app.yml nexus', shell=True)
-        subprocess.call('docker system prune --force', shell=True)
+        subprocess.call('cd /docker && git reset --hard origin', shell=True)
+
+        if branch is not 'staging':
+          subprocess.call('cd /docker && sh deploy.sh', shell=True)
+        else:
+          subprocess.call('cd /docker && sh deploy.sh --staging', shell=True)
+
         return 'ok'
     else:
         return 'wrong branch, but ok.'
