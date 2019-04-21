@@ -40,8 +40,6 @@ def ping():
 
     if payload['state'] == 'success' and [x for x in payload['branches'] if x['name'] == branch]:
         print('* Received trigger for new images. Updating...')
-        subprocess.call('git fetch', shell=True)
-        subprocess.call('git reset --hard origin', shell=True)
         subprocess.call('docker stack deploy -c /compose/app.yml nexus', shell=True)
         subprocess.call('docker system prune --force', shell=True)
         return 'ok'

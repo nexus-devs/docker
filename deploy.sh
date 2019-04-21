@@ -115,16 +115,9 @@ else
     config > $compose_merged
 fi
 
-# Delete old containers (Docker sometimes just doesn't delete them)
-docker system prune --force
-
-# Deploy selected stack.
-# For some reason docker deletes networks quite unreliably, so we'll
-# manually ensure it doesn't exist before launching a new stack.
-while [ "$(docker network ls | grep nexus_app)" ]; do
-  sleep 1
-done
+# Deploy new Stack and remove old containers
 docker stack deploy --prune --compose-file $compose_merged nexus
+docker system prune --force
 
 # Automatically log dev container
 if [[ $dev == true ]]; then
