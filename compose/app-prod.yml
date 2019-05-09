@@ -2,6 +2,9 @@ version: '3.4'
 
 
 services:
+  #
+  # Helper services
+  #
   # Traefik for routing requests to API nodes
   traefik:
     image: traefik:alpine
@@ -159,6 +162,39 @@ services:
   #
   # Background Services
   #
+  # Updates Orders Per Minute values
+  warframe_opm:
+    image: nexusstats/nexus-stats
+    deploy:
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret 
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/opm.js"
+
+  # Clears/Modifies outdated orders
+  warframe_clear:
+    image: nexusstats/nexus-stats
+    deploy:
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret 
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/clear.js"
   
 
 
