@@ -1,4 +1,10 @@
 #!/bin/sh
+# No target node? We're probably inside a service
+# which doesn't require healthchecks.
+if [[ -z "${NEXUS_TARGET_NODE}" ]]; then
+  exit
+fi
+
 # Helper function for wildcard match
 contains() {
   string="$1"

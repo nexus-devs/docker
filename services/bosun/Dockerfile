@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Install dependencies
-RUN apk add --no-cache python3 docker git make pwgen \
+RUN apk add --no-cache python3 docker \
   && pip3 install flask
 
 # Add controller scripts

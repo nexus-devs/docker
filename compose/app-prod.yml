@@ -2,6 +2,7 @@ version: '3.4'
 
 
 services:
+  # Traefik for routing requests to API nodes
   traefik:
     image: traefik:alpine
     command: --logLevel=DEBUG
@@ -27,6 +28,7 @@ services:
       - //var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
 
+  # Certbot for autogenerating let's encrypt certs and pushing them to cloudflare
   certbot:
     image: nexusstats/certbot
     deploy:
@@ -41,6 +43,7 @@ services:
     secrets:
       - nexus-cloudflare-token
 
+  # Bosun for automatically deploying new builds
   bosun:
     image: nexusstats/bosun
     environment:
@@ -152,6 +155,11 @@ services:
       - DOCKER=true
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=ui
+
+  #
+  # Background Services
+  #
+  
 
 
 secrets:
