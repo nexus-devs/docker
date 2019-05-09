@@ -67,7 +67,7 @@ services:
     secrets:
       - nexus-dockerhub-token
     volumes:
-      - /opt/docker:/docker
+      - /opt/docker/compose:/compose
       - //var/run/docker.sock:/var/run/docker.sock
 
   #
