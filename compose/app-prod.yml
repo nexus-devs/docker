@@ -175,7 +175,7 @@ services:
       - app
     secrets:
       - nexus-cubic-key
-      - nexus-cubic-secret 
+      - nexus-cubic-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -192,12 +192,29 @@ services:
       - app
     secrets:
       - nexus-cubic-key
-      - nexus-cubic-secret 
+      - nexus-cubic-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/clear.js"
-  
+
+  # Adds Warframe Market orders
+  warframe_wfm:
+    image: nexusstats/nexus-stats
+    deploy:
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/wfm.js"
+
 
 
 secrets:
