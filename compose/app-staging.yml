@@ -54,3 +54,15 @@ services:
       replicas: 1
       labels:
         - traefik.frontend.rule=Host:staging.nexushub.co
+
+  #
+  # Services
+  #
+  warframe_clear:
+    image: nexusstats/nexus-stats:staging
+
+  warframe_opm:
+    image: nexusstats/nexus-stats:staging
+
+  warframe_wfm:
+    image: nexusstats/nexus-stats:staging
