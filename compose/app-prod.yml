@@ -30,6 +30,10 @@ services:
       - nexus_certs:/certs
       - //var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   # Certbot for autogenerating let's encrypt certs and pushing them to cloudflare
   certbot:
@@ -45,6 +49,10 @@ services:
       - nexus_certs:/etc/letsencrypt
     secrets:
       - nexus-cloudflare-token
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   # Bosun for automatically deploying new builds
   bosun:
@@ -69,6 +77,10 @@ services:
     volumes:
       - /opt/docker/compose:/compose
       - //var/run/docker.sock:/var/run/docker.sock
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   #
   # API nodes
@@ -103,6 +115,10 @@ services:
       - DOCKER=true
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=api
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   auth:
     image: nexusstats/nexus-stats
@@ -131,6 +147,10 @@ services:
       - DOCKER=true
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=auth
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   ui:
     image: nexusstats/nexus-stats
@@ -160,6 +180,10 @@ services:
       - DOCKER=true
       - NODE_ENV=production
       - NEXUS_TARGET_NODE=ui
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
 
   #
   # Background Services
@@ -179,6 +203,10 @@ services:
     environment:
       - DOCKER=true
       - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/opm.js"
 
   # Clears/Modifies outdated orders
@@ -196,6 +224,10 @@ services:
     environment:
       - DOCKER=true
       - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/clear.js"
 
   # Adds Warframe Market orders
@@ -213,6 +245,10 @@ services:
     environment:
       - DOCKER=true
       - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/wfm.js"
 
 
