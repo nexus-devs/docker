@@ -25,7 +25,7 @@ echo "auth: $auth"
 echo "ui: $ui"
 
 check_url () {
-  status_code=$(curl -L --silent --output /dev/stderr --write-out "%{http_code}" $1)
+  status_code=$(curl -L --max-time 30 --silent --output /dev/stderr --write-out "%{http_code}" $1)
   exit 0
 }
 if [[ $ui == true ]]; then
