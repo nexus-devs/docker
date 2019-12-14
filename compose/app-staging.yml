@@ -21,6 +21,8 @@ services:
   #
   api:
     image: nexusstats/nexus-stats:staging
+    secrets:
+      - tsm-api-key
     environment:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
@@ -69,3 +71,10 @@ services:
 
   wowclassic_scans:
     image: nexusstats/nexus-stats:staging
+    secrets:
+      tsm-api-key
+
+
+secrets:
+  tsm-api-key:
+    external: true
