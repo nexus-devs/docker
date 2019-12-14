@@ -260,7 +260,7 @@ services:
       replicas: 0
       placement:
         constraints:
-          -engine.labels.mongo != true
+          - engine.labels.mongo != true
     networks:
       - app
     secrets:
