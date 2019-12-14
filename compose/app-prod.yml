@@ -257,7 +257,6 @@ services:
   wowclassic_scans:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 0
       placement:
         constraints:
           - engine.labels.mongo != true
