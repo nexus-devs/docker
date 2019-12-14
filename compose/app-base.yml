@@ -76,6 +76,9 @@ secrets:
   nexus-public-key:
     external: true
 
+  tsm-api-key:
+    external: true
+
 
 volumes:
   mongo:

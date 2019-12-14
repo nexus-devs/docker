@@ -111,6 +111,7 @@ services:
       - nexus-cubic-secret
       - nexus-warframe-bot-key
       - nexus-warframe-bot-secret
+      - tsm-api-key
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -252,6 +253,29 @@ services:
         max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/warframe/wfm.js"
 
+  # Add new TSM scans
+  wowclassic_scans:
+    image: nexusstats/nexus-stats
+    deploy:
+      replicas: 0
+      placement:
+        constraints:
+          -engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret
+      - tsm-api-key
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/wow-classic/scans.js"
+
 
 
 secrets:
@@ -272,6 +296,9 @@ secrets:
   nexus-warframe-bot-key:
     external: true
   nexus-warframe-bot-secret:
+    external: true
+
+  tsm-api-key:
     external: true
 
 

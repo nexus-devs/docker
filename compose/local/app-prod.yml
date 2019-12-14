@@ -95,6 +95,7 @@ services:
       - mongo-admin-pwd
       - nexus-warframe-bot-key
       - nexus-warframe-bot-secret
+      - tsm-api-key
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -172,6 +173,9 @@ secrets:
   nexus-warframe-bot-key:
     external: true
   nexus-warframe-bot-secret:
+    external: true
+
+  tsm-api-key:
     external: true
 
 

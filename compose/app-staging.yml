@@ -66,3 +66,6 @@ services:
 
   warframe_wfm:
     image: nexusstats/nexus-stats:staging
+
+  wowclassic_scans:
+    image: nexusstats/nexus-stats:staging
