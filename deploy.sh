@@ -115,6 +115,13 @@ else
     config > $compose_merged
 fi
 
+# Create overlay networks
+sleep 2
+if [ ! "$(docker network ls | grep nexus_app)" ]; then
+  docker network create --driver overlay nexus_app
+fi
+sleep 2
+
 # Deploy new Stack and remove old containers
 docker stack deploy --prune --compose-file $compose_merged nexus
 docker system prune --force
