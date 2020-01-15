@@ -1,4 +1,8 @@
-[api]
+[api-warframe]
+entryPoint = "traefik"
+dashboard = true
+
+[api-wow-classic]
 entryPoint = "traefik"
 dashboard = true
 

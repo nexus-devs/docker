@@ -19,13 +19,21 @@ services:
   #
   # API nodes
   #
-  api:
+  api-warframe:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
 #      - NODE_DEBUG=true
 #    volumes:
 #      - /opt/debug:/app/nexushub
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.frontend.rule=Host:api.staging.nexushub.co
+  api-wow-classic:
+    image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
     deploy:
       replicas: 1
       labels:
