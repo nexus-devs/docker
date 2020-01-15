@@ -101,7 +101,7 @@ services:
         - traefik.backend.loadbalancer.method=drr
         - traefik.frontend.rule=Host:api.nexushub.co
         - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api
+        - traefik.backend=api-warframe
     networks:
       - app
     secrets:
@@ -136,7 +136,7 @@ services:
         - traefik.backend.loadbalancer.method=drr
         - traefik.frontend.rule=Host:api.nexushub.co
         - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api
+        - traefik.backend=api-wow-classic
     networks:
       - app
     secrets:

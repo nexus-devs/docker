@@ -20,7 +20,7 @@ async function pre() {
    */
   while (!done) {
     try {
-      const mongoUrl = node === 'api' ? config.mongoUrl : config.api.mongoUrl
+      const mongoUrl = node.slice(0, 3) === 'api' ? config.mongoUrl : config.api.mongoUrl
       mongo = await mongodb.connect(mongoUrl, { useNewUrlParser: true })
       db = mongo.db('nexus-auth')
       db.command({ "replSetGetStatus": 1 }, err => {
@@ -70,7 +70,7 @@ async function pre() {
       resolve = res
       reject = rej
     })
-    const redisUrl = node === 'api' ? config.redisUrl : config.api.redisUrl
+    const redisUrl = node.slice(0, 3) === 'api' ? config.redisUrl : config.api.redisUrl
     let client = redis.createClient(redisUrl)
     client.on('ready', () => {
       client.quit()
@@ -96,7 +96,7 @@ async function pre() {
   if (node === 'ui') {
     await verifyCredentials('cubic-ui', config.server.user_key, config.server.user_secret, 'write_root')
   }
-  if (node === 'api') {
+  if (node.slice(0, 3) === 'api') {
     const key = fs.readFileSync('/run/secrets/nexus-warframe-bot-key', 'utf-8').trim()
     const secret = fs.readFileSync('/run/secrets/nexus-warframe-bot-secret', 'utf-8').trim()
     await verifyCredentials('nexus-warframe-bot', key, secret, 'write_orders_warframe ignore_rate_limit')
