@@ -73,7 +73,7 @@ services:
   #
   # API nodes
   #
-  api:
+  api_warframe:
     image: 127.0.0.1:5000/nexus-stats
     deploy:
       replicas: 2
@@ -87,7 +87,7 @@ services:
         - traefik.backend.loadbalancer.method=drr
         - traefik.frontend.rule=Host:api.nexushub.co
         - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api
+        - traefik.backend=api-warframe
     networks:
       - app
     secrets:
@@ -99,7 +99,7 @@ services:
     environment:
       - DOCKER=true
       - NODE_ENV=production
-      - NEXUS_TARGET_NODE=api
+      - NEXUS_TARGET_NODE=api-warframe
 
   auth:
     image: 127.0.0.1:5000/nexus-stats
