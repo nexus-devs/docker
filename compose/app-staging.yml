@@ -19,7 +19,7 @@ services:
   #
   # API nodes
   #
-  api:
+  api_warframe:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
