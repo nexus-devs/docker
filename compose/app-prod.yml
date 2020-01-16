@@ -85,7 +85,7 @@ services:
   #
   # API nodes
   #
-  api-warframe:
+  api_warframe:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
