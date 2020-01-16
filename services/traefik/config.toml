@@ -1,4 +1,4 @@
-[api-warframe]
+[api]
 entryPoint = "traefik"
 dashboard = true
 
