@@ -3,9 +3,9 @@ const fs = require('fs')
 const configs = {
   auth: require('./config/cubic/auth.js'),
   ui: require('./config/cubic/ui.js'),
-  'api-warframe': require('./config/cubic/api.js')
+  api: require('./config/cubic/api.js')
 }
-const config = configs[node]
+const config = configs[node.slice(0, 3) === 'api' ? 'api' : node]
 const bcrypt = require('bcryptjs')
 const mongodb = require('mongodb').MongoClient
 const redis = require('redis')
