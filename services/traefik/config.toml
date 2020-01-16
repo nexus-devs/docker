@@ -2,10 +2,6 @@
 entryPoint = "traefik"
 dashboard = true
 
-[api-wow-classic]
-entryPoint = "traefik"
-dashboard = true
-
 [docker]
 endpoint = "unix://var/run/docker.sock"
 watch = true

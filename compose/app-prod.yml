@@ -120,41 +120,6 @@ services:
       options:
         max-file: 5
         max-size: 10m
-  api-wow-classic:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 60s
-        order: start-first
-        failure_action: rollback
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-      labels:
-        - traefik.port=3004
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-wow-classic
-    networks:
-      - app
-    secrets:
-      - nexus-public-key
-      - mongo-admin-pwd
-      - nexus-cubic-key
-      - nexus-cubic-secret
-      - nexus-warframe-bot-key
-      - nexus-warframe-bot-secret
-      - tsm-api-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=api-wow-classic
-    logging:
-      options:
-        max-file: 5
-        max-size: 10m
 
   auth:
     image: nexusstats/nexus-stats

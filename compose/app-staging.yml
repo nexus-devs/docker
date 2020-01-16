@@ -30,14 +30,6 @@ services:
       replicas: 1
       labels:
         - traefik.frontend.rule=Host:api.staging.nexushub.co
-  api-wow-classic:
-    image: nexusstats/nexus-stats:staging
-    environment:
-      - NEXUS_STAGING=true
-    deploy:
-      replicas: 1
-      labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co
 
   auth:
     image: nexusstats/nexus-stats:staging
