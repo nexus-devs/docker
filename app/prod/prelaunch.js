@@ -3,7 +3,7 @@ const fs = require('fs')
 const configs = {
   auth: require('./config/cubic/auth.js'),
   ui: require('./config/cubic/ui.js'),
-  api: require('./config/cubic/api.js')
+  'api-warframe': require('./config/cubic/api.js')
 }
 const config = configs[node]
 const bcrypt = require('bcryptjs')
