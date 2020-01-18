@@ -134,7 +134,7 @@ services:
       labels:
         - traefik.port=3004
         - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co
+        - traefik.frontend.rule=Host:api.nexushub.co;PathPrefix=/wow-classic
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=api-wowclassic
     networks:

@@ -40,7 +40,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co
+        - traefik.frontend.rule=Host:api.staging.nexushub.co;PathPrefix=/wow-classic
 
   auth:
     image: nexusstats/nexus-stats:staging
