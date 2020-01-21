@@ -19,6 +19,7 @@ services:
         - traefik.http.routers.traefik_api.rule=Host(`status.nexushub.co`)
         - traefik.http.routers.traefik_api.entrypoints=https
         - traefik.http.routers.traefik_api.service=api@internal
+        - traefik.http.routers.traefik_api.tls=true
         # HTTP to HTTPS redirection
         - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
         - traefik.http.routers.http_catchall.entrypoints=http
@@ -74,6 +75,7 @@ services:
         - traefik.http.services.bosun.loadbalancer.server.port=5000
         - traefik.http.routers.bosun.rule=Host(`cd.nexushub.co`) && Path(`/deploy`)
         - traefik.http.routers.bosun.entrypoints=https
+        - traefik.http.routers.bosun.tls=true
     networks:
       - app
     secrets:
@@ -105,6 +107,7 @@ services:
         - traefik.http.services.api-warframe.loadbalancer.server.port=3003
         - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
         - traefik.http.routers.api-warframe.entrypoints=https
+        - traefik.http.routers.api-warframe.tls=true
     networks:
       - app
     secrets:
@@ -139,6 +142,7 @@ services:
         - traefik.http.services.api-wowclassic.loadbalancer.server.port=3004
         - traefik.http.routers.api-wowclassic.rule=Host(`api.nexushub.co`) && PathPrefix(`/wow-classic`)
         - traefik.http.routers.api-wowclassic.entrypoints=https
+        - traefik.http.routers.api-wowclassic.tls=true
     networks:
       - app
     secrets:
@@ -174,6 +178,7 @@ services:
         - traefik.http.services.auth.loadbalancer.server.port=3030
         - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
         - traefik.http.routers.auth.entrypoints=https
+        - traefik.http.routers.auth.tls=true
     networks:
       - app
     secrets:
@@ -205,6 +210,7 @@ services:
         - traefik.http.services.ui.loadbalancer.server.port=3000
         - traefik.http.routers.ui.rule=Host(`nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
+        - traefik.http.routers.ui.tls=true
     networks:
       - app
     secrets:
