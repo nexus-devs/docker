@@ -1,0 +1,4 @@
+# TLS config
+[[tls.certificates]]
+certFile = "/certs/live/nexushub.co/fullchain.pem"
+keyFile = "/certs/live/nexushub.co/privkey.pem"

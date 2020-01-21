@@ -36,6 +36,7 @@ services:
       - nexus_certs:/certs
       - //var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
+      - /opt/docker/services/traefik/dynamic.toml:/etc/traefik/dynamic.toml
     logging:
       options:
         max-file: 5

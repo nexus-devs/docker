@@ -7,17 +7,16 @@ dashboard = true
 endpoint = "unix://var/run/docker.sock"
 swarmMode = true
 
+# Dynamic config file provider
+[providers.file]
+filename = "/etc/traefik/dynamic.toml"
+
 # EntryPoints
 [entryPoints]
 [entryPoints.http]
 address = ":80"
 [entryPoints.https]
 address = ":443"
-
-# TLS config
-[[tls.certificates]]
-certFile = "/certs/live/nexushub.co/fullchain.pem"
-keyFile = "/certs/live/nexushub.co/privkey.pem"
 
 # Enable debug logs
 [log]
