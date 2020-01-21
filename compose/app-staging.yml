@@ -3,10 +3,10 @@ version: '3.4'
 
 services:
   traefik:
-    image: traefik:alpine
+    image: traefik:v2.1.2
     deploy:
       labels:
-        - traefik.frontend.rule=Host:status.staging.nexushub.co
+        - traefik.http.routers.traefik_api.rule=Host(`status.staging.nexushub.co`)
 
   bosun:
     image: nexusstats/bosun
@@ -14,7 +14,7 @@ services:
       - DEPLOY_BRANCH=staging
     deploy:
       labels:
-        - traefik.frontend.rule=Host:cd.staging.nexushub.co
+        - traefik.http.routers.bosun.rule=Host(`cd.staging.nexushub.co`) && Path(`/deploy`)
 
   #
   # API nodes
@@ -29,7 +29,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co
+        - traefik.http.routers.api-warframe.rule=Host(`api.staging.nexushub.co`)
   api_wowclassic:
     image: nexusstats/nexus-stats:staging
     environment:
@@ -40,7 +40,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co;PathPrefix=/wow-classic
+        - traefik.http.routers.api-wowclassic.rule=Host(`api.staging.nexushub.co`) && PathPrefix(`/wow-classic`)
 
   auth:
     image: nexusstats/nexus-stats:staging
@@ -52,7 +52,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:auth.staging.nexushub.co
+        - traefik.http.routers.auth.rule=Host(`auth.staging.nexushub.co`)
 
   ui:
     image: nexusstats/nexus-stats:staging
@@ -64,7 +64,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:staging.nexushub.co
+        - traefik.http.routers.ui.rule=Host(`staging.nexushub.co`)
 
   #
   # Services

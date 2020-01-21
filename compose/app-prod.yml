@@ -7,19 +7,24 @@ services:
   #
   # Traefik for routing requests to API nodes
   traefik:
-    image: traefik:alpine
-    command: --logLevel=DEBUG
+    image: traefik:v2.1.2
     deploy:
       placement:
         constraints:
           - node.role == manager
           - engine.labels.mongo != true
       labels:
-        - traefik.port=8080
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:status.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=traefik
+        - traefik.service=traefik
+        - traefik.http.services.traefik.loadbalancer.server.port=8080
+        - traefik.http.routers.traefik_api.rule=Host(`status.nexushub.co`)
+        - traefik.http.routers.traefik_api.entrypoints=https
+        - traefik.http.routers.traefik_api.service=api@internal
+        # HTTP to HTTPS redirection
+        - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
+        - traefik.http.routers.http_catchall.entrypoints=http
+        - traefik.http.routers.http_catchall.middlewares=https_redirect
+        - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
     networks:
       - app
     ports:
@@ -65,11 +70,10 @@ services:
           - node.role == manager
           - engine.labels.mongo != true
       labels:
-        - traefik.port=5000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:cd.nexushub.co;Path:/deploy
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=bosun
+        - traefik.service=bosun
+        - traefik.http.services.bosun.loadbalancer.server.port=5000
+        - traefik.http.routers.bosun.rule=Host(`cd.nexushub.co`) && Path(`/deploy`)
+        - traefik.http.routers.bosun.entrypoints=https
     networks:
       - app
     secrets:
@@ -97,11 +101,10 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3003
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-warframe
+        - traefik.service=api-warframe
+        - traefik.http.services.api-warframe.loadbalancer.server.port=3003
+        - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
+        - traefik.http.routers.api-warfram.entrypoints=https
     networks:
       - app
     secrets:
@@ -132,11 +135,10 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3004
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co;PathPrefix=/wow-classic
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-wowclassic
+        - traefik.service=api-wowclassic
+        - traefik.http.services.api-wowclassic.loadbalancer.server.port=3004
+        - traefik.http.routers.api-wowclassic.rule=Host(`api.nexushub.co`) && PathPrefix(`/wow-classic`)
+        - traefik.http.routers.api-wowclassic.entrypoints=https
     networks:
       - app
     secrets:
@@ -168,11 +170,10 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3030
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:auth.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=auth
+        - traefik.service=auth
+        - traefik.http.services.auth.loadbalancer.server.port=3030
+        - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
+        - traefik.http.routers.auth.entrypoints=https
     networks:
       - app
     secrets:
@@ -200,11 +201,10 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=ui
+        - traefik.service=ui
+        - traefik.http.services.ui.loadbalancer.server.port=3000
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`)
+        - traefik.http.routers.ui.entrypoints=https
     networks:
       - app
     secrets:

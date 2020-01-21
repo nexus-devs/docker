@@ -1,37 +1,24 @@
+# Enable API
 [api]
-entryPoint = "traefik"
 dashboard = true
 
-[docker]
+# Enable docker provider
+[providers.docker]
 endpoint = "unix://var/run/docker.sock"
-watch = true
-swarmmode = true
+swarmMode = true
 
-[retry]
-attempts = 5
-
-#
-# This will simply redirect http to https and use our custom certs from the
-# cerbot.
-#
-defaultEntryPoints = ["https", "http"]
-
+# EntryPoints
 [entryPoints]
-
-# Redirect to https
 [entryPoints.http]
 address = ":80"
-
-[entryPoints.http.redirect]
-entryPoint = "https"
-
-# This is the only entrypoint being effectively used
 [entryPoints.https]
 address = ":443"
-compress = true
 
-# Use certs in nexus_certs volume
-[entryPoints.https.tls]
-[[entryPoints.https.tls.certificates]]
+# TLS config
+[[tls.certificates]]
 certFile = "/certs/live/nexushub.co/fullchain.pem"
 keyFile = "/certs/live/nexushub.co/privkey.pem"
+
+# Enable debug logs
+[log]
+level = "DEBUG"
