@@ -64,7 +64,9 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:staging.nexushub.co
+        - traefik.frontend.rule=Host:staging.nexushub.co,wow-classic.staging.nexushub.co
+        - traefik.frontend.redirect.regex=^https?://wow-classic.staging.nexushub.co/(.*)
+        - traefik.frontend.redirect.replacement=https://staging.nexushub.co/wow-classic/$${1}
 
   #
   # Services

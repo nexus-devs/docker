@@ -202,7 +202,9 @@ services:
       labels:
         - traefik.port=3000
         - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:nexushub.co
+        - traefik.frontend.rule=Host:nexushub.co,wow-classic.nexushub.co
+        - traefik.frontend.redirect.regex=^https?://wow-classic.nexushub.co/(.*)
+        - traefik.frontend.redirect.replacement=https://nexushub.co/wow-classic/$${1}
         - traefik.frontend.entryPoints=http,https
         - traefik.backend=ui
     networks:
