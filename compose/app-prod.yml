@@ -212,6 +212,7 @@ services:
         - traefik.http.routers.ui.rule=Host(`nexushub.co`) || Host(`www.nexushub.co`) || Host(`warframe.nexushub.co`) || Host(`wow-classic.nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
         - traefik.http.routers.ui.tls=true
+        - traefik.http.routers.ui.middlewares=redirect-www,redirect-warframe,redirect-wowclassic
         - traefik.http.middlewares.redirect-www.redirectregex.regex=^https://www.nexushub.co/(.*)
         - traefik.http.middlewares.redirect-www.redirectregex.replacement=https://nexushub.co/$${1}
         - traefik.http.middlewares.redirect-warframe.redirectregex.regex=^https://(?:www.)?warframe.nexushub.co/(.*)
