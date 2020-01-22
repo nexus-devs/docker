@@ -23,10 +23,17 @@ services:
         - traefik.http.routers.traefik_api.tls=true
         - traefik.http.routers.traefik_api.middlewares=global@file
         # HTTP to HTTPS redirection
-        - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
+        - traefik.http.routers.http_catchall.rule=HostRegexp(`{host:(www\\.)?.+}`)
         - traefik.http.routers.http_catchall.entrypoints=http
         - traefik.http.routers.http_catchall.middlewares=https_redirect,global@file
-        - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
+        # HTTPS (www.) to HTTPS redirection
+        - traefik.http.routers.https_catchall.rule=HostRegexp(`{host:(www\\.)?.+}`)
+        - traefik.http.routers.https_catchall.entrypoints=https
+        - traefik.http.routers.https_catchall.middlewares=https_redirect,global@file
+        - traefik.http.routers.https_catchall.tls=true
+        # Redirection middleware
+        - traefik.http.middlewares.https_redirect.redirectregex.regex=^https?://(?:www\\.)?(.+)
+        - traefik.http.middlewares.https_redirect.redirectregex.replacement=https://$${1}
         - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
     networks:
       - app
