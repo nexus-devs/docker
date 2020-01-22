@@ -209,9 +209,15 @@ services:
       labels:
         - traefik.service=ui
         - traefik.http.services.ui.loadbalancer.server.port=3000
-        - traefik.http.routers.ui.rule=Host(`nexushub.co`)
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`) || Host(`www.nexushub.co`) || Host(`warframe.nexushub.co`) || Host(`wow-classic.nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
         - traefik.http.routers.ui.tls=true
+        - traefik.http.middlewares.redirect-www.redirectregex.regex=^https://www.nexushub.co/(.*)
+        - traefik.http.middlewares.redirect-www.redirectregex.replacement=https://nexushub.co/$${1}
+        - traefik.http.middlewares.redirect-warframe.redirectregex.regex=^https://(?:www.)?warframe.nexushub.co/(.*)
+        - traefik.http.middlewares.redirect-warframe.redirectregex.replacement=https://nexushub.co/warframe/$${1}
+        - traefik.http.middlewares.redirect-wowclassic.redirectregex.regex=^https://(?:www.)?wow-classic.nexushub.co/(.*)
+        - traefik.http.middlewares.redirect-wowclassic.redirectregex.replacement=https://nexushub.co/wow-classic/$${1}
     networks:
       - app
     secrets:
