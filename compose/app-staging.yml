@@ -30,17 +30,17 @@ services:
       replicas: 1
       labels:
         - traefik.http.routers.api-warframe.rule=Host(`api.staging.nexushub.co`)
-  "api_wowclassic:
-    image: nexusstats/nexus-stats:staging
-    environment:
-      - NEXUS_STAGING=true
-    #      - NODE_DEBUG=true
-    #    volumes:
-    #      - /opt/debug:/app/nexushub
-    deploy:
-      replicas: 1
-      labels:
-        - traefik.http.routers.api-wowclassic.rule=Host(`api.staging.nexushub.co`) && PathPrefix(`/wow-classic`)"
+#  api_wowclassic:
+#    image: nexusstats/nexus-stats:staging
+#    environment:
+#      - NEXUS_STAGING=true
+#    #      - NODE_DEBUG=true
+#    #    volumes:
+#    #      - /opt/debug:/app/nexushub
+#    deploy:
+#      replicas: 1
+#      labels:
+#        - traefik.http.routers.api-wowclassic.rule=Host(`api.staging.nexushub.co`) && PathPrefix(`/wow-classic`)
 
   auth:
     image: nexusstats/nexus-stats:staging

@@ -133,42 +133,42 @@ services:
       options:
         max-file: 5
         max-size: 10m
-  "api_wowclassic:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 60s
-        order: start-first
-        failure_action: rollback
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-      labels:
-        - traefik.enable=true
-        - traefik.service=api-wowclassic
-        - traefik.http.services.api-wowclassic.loadbalancer.server.port=3004
-        - traefik.http.routers.api-wowclassic.rule=Host(`api.nexushub.co`) && PathPrefix(`/wow-classic`)
-        - traefik.http.routers.api-wowclassic.entrypoints=https
-        - traefik.http.routers.api-wowclassic.tls=true
-    networks:
-      - app
-    secrets:
-      - nexus-public-key
-      - mongo-admin-pwd
-      - nexus-cubic-key
-      - nexus-cubic-secret
-      - nexus-warframe-bot-key
-      - nexus-warframe-bot-secret
-      - tsm-api-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=api-wowclassic
-    logging:
-      options:
-        max-file: 5
-        max-size: 10m"
+#  api_wowclassic:
+#    image: nexusstats/nexus-stats
+#    deploy:
+#      replicas: 2
+#      update_config:
+#        delay: 60s
+#        order: start-first
+#        failure_action: rollback
+#      placement:
+#        constraints:
+#          - engine.labels.mongo != true
+#      labels:
+#        - traefik.enable=true
+#        - traefik.service=api-wowclassic
+#        - traefik.http.services.api-wowclassic.loadbalancer.server.port=3004
+#        - traefik.http.routers.api-wowclassic.rule=Host(`api.nexushub.co`) && PathPrefix(`/wow-classic`)
+#        - traefik.http.routers.api-wowclassic.entrypoints=https
+#        - traefik.http.routers.api-wowclassic.tls=true
+#    networks:
+#      - app
+#    secrets:
+#      - nexus-public-key
+#      - mongo-admin-pwd
+#      - nexus-cubic-key
+#      - nexus-cubic-secret
+#      - nexus-warframe-bot-key
+#      - nexus-warframe-bot-secret
+#      - tsm-api-key
+#    environment:
+#      - DOCKER=true
+#      - NODE_ENV=production
+#      - NEXUS_TARGET_NODE=api-wowclassic
+#    logging:
+#      options:
+#        max-file: 5
+#        max-size: 10m
 
   auth:
     image: nexusstats/nexus-stats

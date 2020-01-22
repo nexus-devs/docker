@@ -6,7 +6,7 @@ dashboard = true
 [providers.docker]
 endpoint = "unix://var/run/docker.sock"
 swarmMode = true
-exposedByDefault = false
+exposedByDefault = false # So the other unrelated services don't get discovered
 
 # Dynamic config file provider
 [providers.file]
