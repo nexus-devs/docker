@@ -2,3 +2,11 @@
 [[tls.certificates]]
 certFile = "/certs/live/nexushub.co/fullchain.pem"
 keyFile = "/certs/live/nexushub.co/privkey.pem"
+
+# Global middleware
+[http.middlewares]
+[http.middlewares.global.chain]
+middlewares = ["compress", "retry"]
+[http.middlewares.global-retry.retry]
+attempts = 5
+[http.middlewares.global-compress.compress]

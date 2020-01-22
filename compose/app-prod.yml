@@ -21,10 +21,11 @@ services:
         - traefik.http.routers.traefik_api.entrypoints=https
         - traefik.http.routers.traefik_api.service=api@internal
         - traefik.http.routers.traefik_api.tls=true
+        - traefik.http.routers.traefik_api.middlewares=global@file
         # HTTP to HTTPS redirection
         - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
         - traefik.http.routers.http_catchall.entrypoints=http
-        - traefik.http.routers.http_catchall.middlewares=https_redirect
+        - traefik.http.routers.http_catchall.middlewares=https_redirect,global@file
         - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
         - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
     networks:
@@ -79,6 +80,7 @@ services:
         - traefik.http.routers.bosun.rule=Host(`cd.nexushub.co`) && Path(`/deploy`)
         - traefik.http.routers.bosun.entrypoints=https
         - traefik.http.routers.bosun.tls=true
+        - traefik.http.routers.bosun.middlewares=global@file
     networks:
       - app
     secrets:
@@ -112,6 +114,7 @@ services:
         - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
         - traefik.http.routers.api-warframe.entrypoints=https
         - traefik.http.routers.api-warframe.tls=true
+        - traefik.http.routers.api-warframe.middlewares=global@file
     networks:
       - app
     secrets:
@@ -130,7 +133,7 @@ services:
       options:
         max-file: 5
         max-size: 10m
-  api_wowclassic:
+  "api_wowclassic:
     image: nexusstats/nexus-stats
     deploy:
       replicas: 2
@@ -165,7 +168,7 @@ services:
     logging:
       options:
         max-file: 5
-        max-size: 10m
+        max-size: 10m"
 
   auth:
     image: nexusstats/nexus-stats
@@ -185,6 +188,7 @@ services:
         - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
         - traefik.http.routers.auth.entrypoints=https
         - traefik.http.routers.auth.tls=true
+        - traefik.http.routers.auth.middlewares=global@file
     networks:
       - app
     secrets:
@@ -218,6 +222,7 @@ services:
         - traefik.http.routers.ui.rule=Host(`nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
         - traefik.http.routers.ui.tls=true
+        - traefik.http.routers.ui.middlewares=global@file
     networks:
       - app
     secrets:
