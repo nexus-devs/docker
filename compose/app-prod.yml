@@ -219,10 +219,13 @@ services:
         - traefik.enable=true
         - traefik.service=ui
         - traefik.http.services.ui.loadbalancer.server.port=3000
-        - traefik.http.routers.ui.rule=Host(`nexushub.co`)
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
         - traefik.http.routers.ui.tls=true
-        - traefik.http.routers.ui.middlewares=global@file
+        - traefik.http.routers.ui.middlewares=global@file,wowclassic-redirect@docker
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https://wow-classic\.nexushub\.co/(.*)
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://nexushub.co/wow-classic/$${1}
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.permanent=true
     networks:
       - app
     secrets:
