@@ -219,19 +219,18 @@ services:
         - traefik.enable=true
         - traefik.service=ui
         - traefik.http.services.ui.loadbalancer.server.port=3000
-        # WoW Classic redirection
-        - traefik.http.routers.ui-wowclassic-redirect.rule=Host(`wow-classic.nexushub.co`)
-        - traefik.http.routers.ui-wowclassic-redirect.entrypoints=https
-        - traefik.http.routers.ui-wowclassic-redirect.tls=true
-        - traefik.http.routers.ui-wowclassic-redirect.middlewares=wowclassic-redirect@docker
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`)
+        - traefik.http.routers.ui.entrypoints=https
+        - traefik.http.routers.ui.tls=true
+        - traefik.http.routers.ui.middlewares=global@file,wowclassic-redirect@docker,warframe-redirect@docker
+        # WoW Classic redirect
         - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https://wow-classic\.nexushub\.co/(.*)
         - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://nexushub.co/wow-classic/$${1}
         - traefik.http.middlewares.wowclassic-redirect.redirectregex.permanent=true
-        # Actual endpoint
-        - traefik.http.routers.ui.rule=Host(`nexushub.co`)
-        - traefik.http.routers.ui.entrypoints=https
-        - traefik.http.routers.ui.tls=true
-        - traefik.http.routers.ui.middlewares=global@file
+        # Warframe redirect
+        - traefik.http.middlewares.warframe-redirect.redirectregex.regex=^https://warframe\.nexushub\.co/(.*)
+        - traefik.http.middlewares.warframe-redirect.redirectregex.replacement=https://nexushub.co/warframe/$${1}
+        - traefik.http.middlewares.warframe-redirect.redirectregex.permanent=true
     networks:
       - app
     secrets:
