@@ -64,7 +64,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.http.routers.ui.rule=Host(`staging.nexushub.co`, `wow-classic.staging.nexushub.co`)
+        - traefik.http.routers.ui.rule=Host(`staging.nexushub.co`, `wow-classic.staging.nexushub.co`, `warframe.staging.nexushub.co`)
         # WoW Classic redirect
         - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https://wow-classic\.staging\.nexushub\.co/(.*)
         - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://staging.nexushub.co/wow-classic/$${1}

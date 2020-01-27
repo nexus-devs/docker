@@ -219,7 +219,7 @@ services:
         - traefik.enable=true
         - traefik.service=ui
         - traefik.http.services.ui.loadbalancer.server.port=3000
-        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`)
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`, `warframe.nexushub.co`)
         - traefik.http.routers.ui.entrypoints=https
         - traefik.http.routers.ui.tls=true
         - traefik.http.routers.ui.middlewares=global@file,wowclassic-redirect@docker,warframe-redirect@docker
