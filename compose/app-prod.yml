@@ -22,7 +22,8 @@ services:
         - traefik.http.routers.traefik_api.entrypoints=https
         - traefik.http.routers.traefik_api.service=api@internal
         - traefik.http.routers.traefik_api.tls=true
-        - traefik.http.routers.traefik_api.middlewares=global@file
+        - traefik.http.routers.traefik_api.middlewares=global@file,traefik_auth@docker
+        - traefik.http.middlewares.traefik_auth.basicauth.users=admin:$$apr1$$VHyt3TXy$$NbDHZCRoTJI31LdUhk7q20
         # HTTP to HTTPS redirection
         - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
         - traefik.http.routers.http_catchall.entrypoints=http
