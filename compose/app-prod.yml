@@ -115,7 +115,8 @@ services:
         - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
         - traefik.http.routers.api-warframe.entrypoints=https
         - traefik.http.routers.api-warframe.tls=true
-        - traefik.http.routers.api-warframe.middlewares=global@file
+        - traefik.http.routers.api-warframe.middlewares=global@file,sslheader@docker
+        - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https
     networks:
       - app
     secrets:
@@ -190,7 +191,8 @@ services:
         - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
         - traefik.http.routers.auth.entrypoints=https
         - traefik.http.routers.auth.tls=true
-        - traefik.http.routers.auth.middlewares=global@file
+        - traefik.http.routers.auth.middlewares=global@file,sslheader@docker
+        - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = https
     networks:
       - app
     secrets:
