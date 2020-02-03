@@ -87,3 +87,5 @@ services:
 
   wowclassic_scans:
     image: nexusstats/nexus-stats:staging
+    deploy:
+      replicas: 0
