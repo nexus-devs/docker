@@ -111,6 +111,7 @@ services:
         - traefik.enable=true
         - traefik.service=api-warframe
         - traefik.http.services.api-warframe.loadbalancer.server.port=3003
+        - traefik.http.services.api-warframe.loadbalancer.sticky=true
         - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
         - traefik.http.routers.api-warframe.entrypoints=https
         - traefik.http.routers.api-warframe.tls=true
@@ -185,6 +186,7 @@ services:
         - traefik.enable=true
         - traefik.service=auth
         - traefik.http.services.auth.loadbalancer.server.port=3030
+        - traefik.http.services.auth.loadbalancer.sticky=true
         - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
         - traefik.http.routers.auth.entrypoints=https
         - traefik.http.routers.auth.tls=true
