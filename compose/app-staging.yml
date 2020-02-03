@@ -5,6 +5,7 @@ services:
   traefik:
     image: traefik:v2.1.2
     deploy:
+      replicas: 1
       labels:
         - traefik.http.routers.traefik_api.rule=Host(`status.staging.nexushub.co`)
 
