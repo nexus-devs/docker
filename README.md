@@ -62,7 +62,7 @@ changes
 - Webpack will build for development, meaning no minification, ES6+
 transpilation, etc
 
-Other than that, all is desgined to be parallel to production to avoid sudden
+Other than that, all is designed to be parallel to production to avoid sudden
 surprises before going live :^)
 
 <br>
