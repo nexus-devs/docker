@@ -9,7 +9,7 @@ services:
   traefik:
     image: traefik:v2.1.2
     deploy:
-      replicas: 2
+      replicas: 1 # Can't run more due to host mode
       placement:
         constraints:
           - node.role == manager
