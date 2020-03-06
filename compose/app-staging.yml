@@ -3,7 +3,6 @@ version: '3.4'
 
 services:
   traefik:
-    image: traefik:v2.1.2
     deploy:
       replicas: 1
       labels:
