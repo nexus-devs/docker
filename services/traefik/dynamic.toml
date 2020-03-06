@@ -6,7 +6,5 @@ keyFile = "/certs/live/nexushub.co/privkey.pem"
 # Global middleware
 [http.middlewares]
 [http.middlewares.global.chain]
-middlewares = ["global-compress", "global-retry"]
-[http.middlewares.global-retry.retry]
-attempts = 5
+middlewares = ["global-compress"]
 [http.middlewares.global-compress.compress]
