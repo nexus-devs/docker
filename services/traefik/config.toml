@@ -20,7 +20,3 @@ filename = "/etc/traefik/dynamic.toml"
 address = ":80"
 [entryPoints.https]
 address = ":443"
-
-# Enable debug logs
-[log]
-level = "DEBUG"
