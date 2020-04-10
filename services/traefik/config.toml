@@ -1,7 +1,6 @@
 # Enable API
 [api]
 dashboard = true
-debug = true
 
 # Enable docker provider
 [providers.docker]
