@@ -354,6 +354,27 @@ services:
         max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/wow-classic/scans.js"
 
+  # Archive old TSM scans
+  wowclassic_archivist:
+    image: nexusstats/nexus-stats
+    deploy:
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/wow-classic/archivist.js"
+
 
 
 secrets:

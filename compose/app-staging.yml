@@ -89,3 +89,6 @@ services:
     image: nexusstats/nexus-stats:staging
     environment:
       - NEXUS_STAGING=true
+
+  wowclassic_archivist:
+    image: nexusstats/nexus-stats:staging
