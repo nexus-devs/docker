@@ -1,0 +1,10 @@
+# TLS config
+[[tls.certificates]]
+certFile = "/certs/live/nexushub.co/fullchain.pem"
+keyFile = "/certs/live/nexushub.co/privkey.pem"
+
+# Global middleware
+[http.middlewares]
+[http.middlewares.global.chain]
+middlewares = ["global-compress"]
+[http.middlewares.global-compress.compress]

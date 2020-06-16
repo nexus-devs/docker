@@ -3,10 +3,10 @@ version: '3.4'
 
 services:
   traefik:
-    image: traefik:alpine
     deploy:
+      replicas: 1
       labels:
-        - traefik.frontend.rule=Host:status.staging.nexushub.co
+        - traefik.http.routers.traefik_api.rule=Host(`status.staging.nexushub.co`)
 
   bosun:
     image: nexusstats/bosun
@@ -14,7 +14,7 @@ services:
       - DEPLOY_BRANCH=staging
     deploy:
       labels:
-        - traefik.frontend.rule=Host:cd.staging.nexushub.co
+        - traefik.http.routers.bosun.rule=Host(`cd.staging.nexushub.co`) && Path(`/deploy`)
 
   #
   # API nodes
@@ -29,18 +29,18 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co
-  api_wowclassic:
-    image: nexusstats/nexus-stats:staging
-    environment:
-      - NEXUS_STAGING=true
-    #      - NODE_DEBUG=true
-    #    volumes:
-    #      - /opt/debug:/app/nexushub
-    deploy:
-      replicas: 1
-      labels:
-        - traefik.frontend.rule=Host:api.staging.nexushub.co;PathPrefix=/wow-classic
+        - traefik.http.routers.api-warframe.rule=Host(`api.staging.nexushub.co`)
+#  api_wowclassic:
+#    image: nexusstats/nexus-stats:staging
+#    environment:
+#      - NEXUS_STAGING=true
+#    #      - NODE_DEBUG=true
+#    #    volumes:
+#    #      - /opt/debug:/app/nexushub
+#    deploy:
+#      replicas: 1
+#      labels:
+#        - traefik.http.routers.api-wowclassic.rule=Host(`api.staging.nexushub.co`) && PathPrefix(`/wow-classic`)
 
   auth:
     image: nexusstats/nexus-stats:staging
@@ -52,7 +52,7 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:auth.staging.nexushub.co
+        - traefik.http.routers.auth.rule=Host(`auth.staging.nexushub.co`)
 
   ui:
     image: nexusstats/nexus-stats:staging
@@ -64,10 +64,15 @@ services:
     deploy:
       replicas: 1
       labels:
-        - traefik.frontend.rule=Host:staging.nexushub.co,wow-classic.staging.nexushub.co
-        - traefik.frontend.redirect.regex=^https?://wow-classic.staging.nexushub.co/(.*)
-        - traefik.frontend.redirect.replacement=https://staging.nexushub.co/wow-classic/$${1}
-
+        - traefik.http.routers.ui.rule=Host(`staging.nexushub.co`, `wow-classic.staging.nexushub.co`, `warframe.staging.nexushub.co`)
+        # WoW Classic redirect
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https://wow-classic\.staging\.nexushub\.co/(.*)
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://staging.nexushub.co/wow-classic/$${1}
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.permanent=true
+        # Warframe redirect
+        - traefik.http.middlewares.warframe-redirect.redirectregex.regex=^https://warframe\.staging\.nexushub\.co/(.*)
+        - traefik.http.middlewares.warframe-redirect.redirectregex.replacement=https://staging.nexushub.co/warframe/$${1}
+        - traefik.http.middlewares.warframe-redirect.redirectregex.permanent=true
   #
   # Services
   #
@@ -81,4 +86,9 @@ services:
     image: nexusstats/nexus-stats:staging
 
   wowclassic_scans:
+    image: nexusstats/nexus-stats:staging
+    environment:
+      - NEXUS_STAGING=true
+
+  wowclassic_archivist:
     image: nexusstats/nexus-stats:staging

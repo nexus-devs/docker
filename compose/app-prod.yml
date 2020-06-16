@@ -7,29 +7,53 @@ services:
   #
   # Traefik for routing requests to API nodes
   traefik:
-    image: traefik:alpine
-    command: --logLevel=DEBUG
+    image: traefik:v2.1.6
     deploy:
+      replicas: 1 # Can't run more due to host mode
       placement:
         constraints:
           - node.role == manager
           - engine.labels.mongo != true
       labels:
-        - traefik.port=8080
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:status.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=traefik
+        - traefik.enable=true
+        - traefik.service=traefik
+        - traefik.http.services.traefik.loadbalancer.server.port=8080
+        - traefik.http.routers.traefik_api.rule=Host(`status.nexushub.co`)
+        - traefik.http.routers.traefik_api.entrypoints=https
+        - traefik.http.routers.traefik_api.service=api@internal
+        - traefik.http.routers.traefik_api.tls=true
+        - traefik.http.routers.traefik_api.middlewares=global@file,traefik_auth@docker
+        - traefik.http.middlewares.traefik_auth.basicauth.users=admin:$$apr1$$VHyt3TXy$$NbDHZCRoTJI31LdUhk7q20
+        # HTTP to HTTPS redirection
+        - traefik.http.routers.http_catchall.rule=HostRegexp(`{host:(www\.)?.+}`)
+        - traefik.http.routers.http_catchall.entrypoints=http
+        - traefik.http.routers.http_catchall.middlewares=https_redirect,global@file
+        # HTTPS (www.) to HTTPS redirection
+        - traefik.http.routers.https_catchall.rule=HostRegexp(`{host:(www\.).+}`)
+        - traefik.http.routers.https_catchall.entrypoints=https
+        - traefik.http.routers.https_catchall.tls=true
+        - traefik.http.routers.https_catchall.middlewares=https_redirect,global@file
+        # HTTP(S) / (www.) redirection middleware
+        - traefik.http.middlewares.https_redirect.redirectregex.regex=^https?://(?:www\.)?(.+)
+        - traefik.http.middlewares.https_redirect.redirectregex.replacement=https://$${1}
+        - traefik.http.middlewares.https_redirect.redirectregex.permanent=true
     networks:
       - app
     ports:
-      - 80:80
-      - 443:443
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
       - 8080:8080
     volumes:
       - nexus_certs:/certs
       - //var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
+      - /opt/docker/services/traefik/dynamic.toml:/etc/traefik/dynamic.toml
     logging:
       options:
         max-file: 5
@@ -65,11 +89,13 @@ services:
           - node.role == manager
           - engine.labels.mongo != true
       labels:
-        - traefik.port=5000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:cd.nexushub.co;Path:/deploy
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=bosun
+        - traefik.enable=true
+        - traefik.service=bosun
+        - traefik.http.services.bosun.loadbalancer.server.port=5000
+        - traefik.http.routers.bosun.rule=Host(`cd.nexushub.co`) && Path(`/deploy`)
+        - traefik.http.routers.bosun.entrypoints=https
+        - traefik.http.routers.bosun.tls=true
+        - traefik.http.routers.bosun.middlewares=global@file
     networks:
       - app
     secrets:
@@ -97,11 +123,14 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3003
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-warframe
+        - traefik.enable=true
+        - traefik.service=api-warframe
+        - traefik.http.services.api-warframe.loadbalancer.server.port=3003
+        - traefik.http.services.api-warframe.loadbalancer.sticky=true
+        - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
+        - traefik.http.routers.api-warframe.entrypoints=https
+        - traefik.http.routers.api-warframe.tls=true
+        - traefik.http.routers.api-warframe.middlewares=global@file
     networks:
       - app
     secrets:
@@ -112,6 +141,7 @@ services:
       - nexus-warframe-bot-key
       - nexus-warframe-bot-secret
       - tsm-api-key
+      - nexus-ga-key
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -120,41 +150,42 @@ services:
       options:
         max-file: 5
         max-size: 10m
-  api_wowclassic:
-    image: nexusstats/nexus-stats
-    deploy:
-      replicas: 2
-      update_config:
-        delay: 60s
-        order: start-first
-        failure_action: rollback
-      placement:
-        constraints:
-          - engine.labels.mongo != true
-      labels:
-        - traefik.port=3004
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co;PathPrefix=/wow-classic
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-wowclassic
-    networks:
-      - app
-    secrets:
-      - nexus-public-key
-      - mongo-admin-pwd
-      - nexus-cubic-key
-      - nexus-cubic-secret
-      - nexus-warframe-bot-key
-      - nexus-warframe-bot-secret
-      - tsm-api-key
-    environment:
-      - DOCKER=true
-      - NODE_ENV=production
-      - NEXUS_TARGET_NODE=api-wowclassic
-    logging:
-      options:
-        max-file: 5
-        max-size: 10m
+#  api_wowclassic:
+#    image: nexusstats/nexus-stats
+#    deploy:
+#      replicas: 2
+#      update_config:
+#        delay: 60s
+#        order: start-first
+#        failure_action: rollback
+#      placement:
+#        constraints:
+#          - engine.labels.mongo != true
+#      labels:
+#        - traefik.enable=true
+#        - traefik.service=api-wowclassic
+#        - traefik.http.services.api-wowclassic.loadbalancer.server.port=3004
+#        - traefik.http.routers.api-wowclassic.rule=Host(`api.nexushub.co`) && PathPrefix(`/wow-classic`)
+#        - traefik.http.routers.api-wowclassic.entrypoints=https
+#        - traefik.http.routers.api-wowclassic.tls=true
+#    networks:
+#      - app
+#    secrets:
+#      - nexus-public-key
+#      - mongo-admin-pwd
+#      - nexus-cubic-key
+#      - nexus-cubic-secret
+#      - nexus-warframe-bot-key
+#      - nexus-warframe-bot-secret
+#      - tsm-api-key
+#    environment:
+#      - DOCKER=true
+#      - NODE_ENV=production
+#      - NEXUS_TARGET_NODE=api-wowclassic
+#    logging:
+#      options:
+#        max-file: 5
+#        max-size: 10m
 
   auth:
     image: nexusstats/nexus-stats
@@ -168,11 +199,14 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3030
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:auth.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=auth
+        - traefik.enable=true
+        - traefik.service=auth
+        - traefik.http.services.auth.loadbalancer.server.port=3030
+        - traefik.http.services.auth.loadbalancer.sticky=true
+        - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
+        - traefik.http.routers.auth.entrypoints=https
+        - traefik.http.routers.auth.tls=true
+        - traefik.http.routers.auth.middlewares=global@file
     networks:
       - app
     secrets:
@@ -200,13 +234,21 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:nexushub.co,wow-classic.nexushub.co
-        - traefik.frontend.redirect.regex=^https?://wow-classic.nexushub.co/(.*)
-        - traefik.frontend.redirect.replacement=https://nexushub.co/wow-classic/$${1}
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=ui
+        - traefik.enable=true
+        - traefik.service=ui
+        - traefik.http.services.ui.loadbalancer.server.port=3000
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`, `warframe.nexushub.co`)
+        - traefik.http.routers.ui.entrypoints=https
+        - traefik.http.routers.ui.tls=true
+        - traefik.http.routers.ui.middlewares=global@file,wowclassic-redirect@docker,warframe-redirect@docker
+        # WoW Classic redirect
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https://wow-classic\.nexushub\.co/(.*)
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://nexushub.co/wow-classic/$${1}
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.permanent=true
+        # Warframe redirect
+        - traefik.http.middlewares.warframe-redirect.redirectregex.regex=^https://warframe\.nexushub\.co/(.*)
+        - traefik.http.middlewares.warframe-redirect.redirectregex.replacement=https://nexushub.co/warframe/$${1}
+        - traefik.http.middlewares.warframe-redirect.redirectregex.permanent=true
     networks:
       - app
     secrets:
@@ -311,6 +353,27 @@ services:
         max-file: 5
         max-size: 10m
     entrypoint: /bin/sh -c "cd /app/nexushub && node services/wow-classic/scans.js"
+
+  # Archive old TSM scans
+  wowclassic_archivist:
+    image: nexusstats/nexus-stats
+    deploy:
+      placement:
+        constraints:
+          - engine.labels.mongo != true
+    networks:
+      - app
+    secrets:
+      - nexus-cubic-key
+      - nexus-cubic-secret
+    environment:
+      - DOCKER=true
+      - NODE_ENV=production
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
+    entrypoint: /bin/sh -c "cd /app/nexushub && node services/wow-classic/archivist.js"
 
 
 

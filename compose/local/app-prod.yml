@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   traefik:
-    image: traefik:alpine
+    image: traefik:v2.1.2
     command: --logLevel=DEBUG
     deploy:
       placement:
@@ -13,11 +13,13 @@ services:
       update_config:
         delay: 10s
       labels:
-        - traefik.port=8080
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:status.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=traefik
+        - traefik.enable=true
+        - traefik.service=traefik
+        - traefik.http.services.traefik.loadbalancer.server.port=8080
+        - traefik.http.routers.traefik_api.rule=Host(`status.nexushub.co`)
+        - traefik.http.routers.traefik_api.entrypoints=http,https
+        - traefik.http.routers.traefik_api.service=api@internal
+        - traefik.http.routers.traefik_api.middlewares=global@file
     networks:
       - app
     ports:
@@ -28,6 +30,7 @@ services:
       - nexus_certs:/certs
       - //var/run/docker.sock:/var/run/docker.sock
       - /opt/docker/services/traefik/config.toml:/etc/traefik/traefik.toml
+      - /opt/docker/services/traefik/dynamic.toml:/etc/traefik/dynamic.toml
 
   certbot:
     image: 127.0.0.1:5000/certbot
@@ -57,11 +60,12 @@ services:
       update_config:
         delay: 10s
       labels:
-        - traefik.port=5000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:cd.nexushub.co;Path:/deploy
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=bosun
+        - traefik.enable=true
+        - traefik.service=bosun
+        - traefik.http.services.bosun.loadbalancer.server.port=5000
+        - traefik.http.routers.bosun.rule=Host(`cd.nexushub.co`) && Path(`/deploy`)
+        - traefik.http.routers.bosun.entrypoints=http,https
+        - traefik.http.routers.bosun.middlewares=global@file
     networks:
       - app
     secrets:
@@ -83,11 +87,12 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3003
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:api.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=api-warframe
+        - traefik.enable=true
+        - traefik.service=api-warframe
+        - traefik.http.services.api-warframe.loadbalancer.server.port=3003
+        - traefik.http.routers.api-warframe.rule=Host(`api.nexushub.co`)
+        - traefik.http.routers.api-warframe.entrypoints=http,https
+        - traefik.http.routers.api-warframe.middlewares=global@file
     networks:
       - app
     secrets:
@@ -111,11 +116,12 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3030
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:auth.nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=auth
+        - traefik.enable=true
+        - traefik.service=auth
+        - traefik.http.services.auth.loadbalancer.server.port=3030
+        - traefik.http.routers.auth.rule=Host(`auth.nexushub.co`)
+        - traefik.http.routers.auth.entrypoints=http,https
+        - traefik.http.routers.auth.middlewares=global@file
     networks:
       - app
     secrets:
@@ -137,11 +143,20 @@ services:
         constraints:
           - engine.labels.mongo != true
       labels:
-        - traefik.port=3000
-        - traefik.backend.loadbalancer.method=drr
-        - traefik.frontend.rule=Host:nexushub.co
-        - traefik.frontend.entryPoints=http,https
-        - traefik.backend=ui
+        - traefik.enable=true
+        - traefik.service=ui
+        - traefik.http.services.ui.loadbalancer.server.port=3000
+        - traefik.http.routers.ui.rule=Host(`nexushub.co`, `wow-classic.nexushub.co`, `warframe.nexushub.co`)
+        - traefik.http.routers.ui.entrypoints=http,https
+        - traefik.http.routers.ui.middlewares=global@file,wowclassic-redirect@docker,warframe-redirect@docker
+        # WoW Classic redirect
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.regex=^https?://wow-classic\.nexushub\.co/(.*)
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.replacement=https://nexushub.co/wow-classic/$${1}
+        - traefik.http.middlewares.wowclassic-redirect.redirectregex.permanent=true
+        # Warframe redirect
+        - traefik.http.middlewares.warframe-redirect.redirectregex.regex=^https?://warframe\.nexushub\.co/(.*)
+        - traefik.http.middlewares.warframe-redirect.redirectregex.replacement=https://nexushub.co/warframe/$${1}
+        - traefik.http.middlewares.warframe-redirect.redirectregex.permanent=true
     networks:
       - app
     secrets:
