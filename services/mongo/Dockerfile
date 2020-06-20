@@ -1,3 +1,4 @@
+# We use Ubuntu here because Alpine dropped support for mongodb
 FROM ubuntu:bionic
 
 # Install dependencies
