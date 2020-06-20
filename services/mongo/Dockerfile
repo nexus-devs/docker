@@ -1,10 +1,16 @@
-FROM alpine:edge
+FROM ubuntu:bionic
 
-# Install mongodb
-RUN apk add --update mongodb mongodb-tools \
-  && apk add --no-cache python3 build-base \
-  && pip3 install pymongo flask requests \
-  && apk del build-base
+# Install dependencies
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends gnupg build-essential python3 python3-pip wget \
+  && pip3 install pymongo flask requests
+
+# Install mongodb (DEBIAN_FRONTEND because tzdata package is interactive)
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add - \
+  && echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list \
+  && apt-get update \
+  && apt-get install -y mongodb-org
 
 # Create database directory
 RUN mkdir -p /data/logs /data/db /data/config /data/backups
