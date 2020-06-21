@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   mongo:
-    image: nexusstats/mongo
+    image: nexusstats/mongo:directoryperdb
     deploy:
       mode: global
       placement:
