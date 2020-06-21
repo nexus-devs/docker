@@ -7,7 +7,7 @@ services:
   #
   # Traefik for routing requests to API nodes
   traefik:
-    image: traefik:v2.1.6
+    image: traefik:v2.2.1.
     deploy:
       replicas: 1 # Can't run more due to host mode
       placement:
