@@ -12,4 +12,4 @@ mongod --shutdown
 nohup python3 -u /listener.py > ~/py.log &
 
 # Run replica mongod instance
-mongod --replSet nexus --keyFile /data/config/keyfile --bind_ip 0.0.0.0 --directoryperdb
+mongod --replSet nexus --keyFile /data/config/keyfile --bind_ip 0.0.0.0
