@@ -1,6 +1,9 @@
 # We use Ubuntu here because Alpine dropped support for mongodb
 FROM ubuntu:bionic
 
+# Add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN groupadd -r mongodb && useradd -r -g mongodb mongodb
+
 # Install dependencies
 RUN apt-get update \
   && apt-get install -y --no-install-recommends gnupg build-essential python3 python3-pip wget \
@@ -15,7 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 # Create database directory
 RUN mkdir -p /data/logs /data/db /data/config /data/backups
-RUN chown -R mongodb /data
+RUN chown -R mongodb:mongodb /data/logs /data/db /data/config /data/backups
 
 # Add listener for replica set initiation
 COPY listener.py /
@@ -27,4 +30,4 @@ USER mongodb
 
 # Entrypoint
 COPY entrypoint.sh /
-CMD [ "sh", "/entrypoint.sh" ]
+ENTRYPOINT ["/entrypoint.sh"]
