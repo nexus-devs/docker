@@ -17,8 +17,9 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && apt-get install -y mongodb-org
 
 # Create database directory
-RUN mkdir -p /data/logs /data/db /data/config /data/backups
-RUN chown -R mongodb:mongodb /data/logs /data/db /data/config /data/backups
+RUN mkdir -p /data/logs /data/db /data/config /data/backups /home/mongodb
+RUN touch /home/mongodb/py.log
+RUN chown -R mongodb:mongodb /data/logs /data/db /data/config /data/backups /home/mongodb
 
 # Add listener for replica set initiation
 COPY listener.py /
