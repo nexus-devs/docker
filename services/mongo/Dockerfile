@@ -19,7 +19,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # Create database directory
 RUN mkdir -p /data/logs /data/db /data/config /data/backups /home/mongodb
 RUN touch /home/mongodb/py.log
-RUN chown -R mongodb:mongodb /data/logs /data/db /data/config /data/backups /home/mongodb
+RUN chown -R mongodb:mongodb /data/logs /data/db /data/config /data/backups /home/mongodb /tmp/
 
 # Add listener for replica set initiation
 COPY listener.py /
