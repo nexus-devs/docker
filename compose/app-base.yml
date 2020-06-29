@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   mongo:
-    image: nexusstats/mongo:directoryperdb
+    image: nexusstats/mongo:latest
     deploy:
       mode: global
       placement:
@@ -22,8 +22,28 @@ services:
         max-file: 5
         max-size: 10m
 
+  mongo_secondary:
+    image: nexusstats/mongo:directoryperdb
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - engine.labels.mongo == true
+    networks:
+      - app
+    secrets:
+      - mongo-keyfile
+      - mongo-admin-pwd
+    volumes:
+      - mongo_directoryperdb:/data/db
+      - mongo_backup_directoryperdb:/data/backups
+    logging:
+      options:
+        max-file: 5
+        max-size: 10m
+
   mongoc:
-    image: nexusstats/mongoc
+    image: nexusstats/mongoc:directoryperdb-transition
     depends_on:
       - mongo
     deploy:
