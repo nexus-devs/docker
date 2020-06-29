@@ -12,7 +12,7 @@ import replica
 
 # Config
 docker = docker.APIClient(base_url='unix://var/run/docker.sock')
-service = os.environ['SERVICE_NAME'] or 'mongo'
+services = ['mongo', 'mongo_secondary']
 hosts = []
 timer = time.time()
 
@@ -37,14 +37,17 @@ def ping(hosts):
 def get_host_names():
     while True:
         try:
-            containers = docker.tasks(filters = { 'service': service })
+            containers = []
             host_names = []
 
+            for service in services:
+                containers = containers + docker.tasks(filters = { 'service': service })
+
             for container in containers:
-                host_names.append(service + '.' + container['NodeID'] + '.' + container['ID'])
+                host_names.append(container['NodeID'] + '.' + container['ID'])
             return host_names
         except:
-            print('Could not find service ' + service + '. Retrying in 1s...')
+            print('Could not find services ' + services + '. Retrying in 1s...')
             time.sleep(1)
 
 
