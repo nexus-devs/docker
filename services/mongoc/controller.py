@@ -44,8 +44,10 @@ def get_host_names():
                 containers = docker.tasks(filters = { 'service': service })
                 host_names.append(service +  '.' + container['NodeID'] + '.' + container['ID'])
             return host_names
-        except:
-            print('Could not find services ' + str(services) + '. Retrying in 1s...')
+        except Exception as e:
+            print('Could not find services ' + str(services)):
+            print(str(e))
+            print('Retrying in 1ms...')
             time.sleep(1)
 
 

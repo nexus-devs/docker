@@ -5,7 +5,7 @@ cp /run/secrets/mongo-keyfile /data/config/keyfile
 chmod 400 /data/config/keyfile
 
 # Run mongod without replica set, so it resets any existing config
-mongod --fork --logpath /data/fork.log
+mongod --directoryperdb --fork --logpath /data/fork.log
 mongo local --eval "db.dropDatabase()"
 mongod --shutdown
 
