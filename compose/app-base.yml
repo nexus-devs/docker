@@ -102,4 +102,6 @@ secrets:
 
 volumes:
   mongo:
+  mongo_directoryperdb:
   mongo_backup:
+  mongo_backup_directoryperdb:
