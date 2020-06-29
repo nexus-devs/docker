@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.9.6
 
 # Install dependencies
 RUN apk add --no-cache python3 docker mongodb \
