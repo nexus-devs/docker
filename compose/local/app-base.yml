@@ -56,7 +56,9 @@ secrets:
   nexus-public-key:
     external: true
 
-  tsm-api-key:
+  tsm-client-id:
+    external: true
+  tsm-client-secret:
     external: true
 
 

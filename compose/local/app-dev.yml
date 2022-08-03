@@ -22,7 +22,8 @@ services:
       - mongo-admin-pwd
       - nexus-private-key
       - nexus-public-key
-      - tsm-api-key
+      - tsm-client-id
+      - tsm-client-secret
     environment:
       - DOCKER=true
     tty: true

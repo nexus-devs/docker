@@ -140,7 +140,8 @@ services:
       - nexus-cubic-secret
       - nexus-warframe-bot-key
       - nexus-warframe-bot-secret
-      - tsm-api-key
+      - tsm-client-id
+      - tsm-client-secret
       - nexus-ga-key
     environment:
       - DOCKER=true
@@ -344,7 +345,8 @@ services:
     secrets:
       - nexus-cubic-key
       - nexus-cubic-secret
-      - tsm-api-key
+      - tsm-client-id
+      - tsm-client-secret
     environment:
       - DOCKER=true
       - NODE_ENV=production
@@ -398,7 +400,9 @@ secrets:
   nexus-warframe-bot-secret:
     external: true
 
-  tsm-api-key:
+  tsm-client-id:
+    external: true
+  tsm-client-secret:
     external: true
 
 
