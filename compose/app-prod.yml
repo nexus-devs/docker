@@ -114,7 +114,7 @@ services:
   api_warframe:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         delay: 60s
         order: start-first
@@ -154,7 +154,7 @@ services:
 #  api_wowclassic:
 #    image: nexusstats/nexus-stats
 #    deploy:
-#      replicas: 2
+#      replicas: 1
 #      update_config:
 #        delay: 60s
 #        order: start-first
@@ -191,7 +191,7 @@ services:
   auth:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         delay: 60s
         order: start-first
@@ -226,7 +226,7 @@ services:
   ui:
     image: nexusstats/nexus-stats
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         delay: 60s
         order: start-first
