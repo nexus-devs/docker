@@ -58,6 +58,7 @@ secrets:
 
   tsm-client-id:
     external: true
+
   tsm-client-secret:
     external: true
 
